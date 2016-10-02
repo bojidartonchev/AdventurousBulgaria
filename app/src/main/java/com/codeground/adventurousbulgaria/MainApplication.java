@@ -1,6 +1,9 @@
 package com.codeground.adventurousbulgaria;
 
 import android.app.Application;
+
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 import com.kinvey.android.Client;
 
 public class MainApplication extends Application {
@@ -16,6 +19,11 @@ public class MainApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
+        //Facebook SDK Initialization
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(this);
+
+        //Kinvey SDK Initialization
         mKinveyClient = new Client.Builder(KINVEY_APP_ID, KINVEY_APP_SECRET
                 , this.getApplicationContext()).build();
     }

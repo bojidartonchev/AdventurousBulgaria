@@ -1,4 +1,5 @@
 <resources>
+    <string name="facebook_app_id">158066377982644</string>
     <string name="app_name">Adventurous Bulgaria</string>
     <string name="sign_up_hint_text">You don\'t have an account?</string>
 </resources>
