@@ -62,14 +62,14 @@
         android:layout_alignTop="@+id/sign_up_btn"
         android:layout_centerHorizontal="true" />
 
-    <com.facebook.login.widget.LoginButton
+    <Button
         android:id="@+id/facebook_login_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="83dp"
         android:layout_below="@+id/sign_up_btn"
-        android:layout_alignLeft="@+id/sign_up_hint"
-        android:layout_alignStart="@+id/sign_up_hint" />
+        android:layout_alignLeft="@+id/sign_up_btn"
+        android:layout_alignStart="@+id/sign_up_btn"
+        android:layout_marginTop="37dp"
+        android:text="FB Login" />
 
 </RelativeLayout>

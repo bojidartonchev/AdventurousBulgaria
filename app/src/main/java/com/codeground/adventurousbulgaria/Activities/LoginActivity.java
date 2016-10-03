@@ -1,5 +1,6 @@
 package com.codeground.adventurousbulgaria.Activities;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -31,6 +32,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private EditText mEmailField;
     private EditText mPasswordField;
     private Client mKinveyClient;
+    private CallbackManager mCallbackManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +100,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void submitFacebook(View view){
         // The FB SDK has a bit of a delay in response
         final ProgressDialog progressDialog = ProgressDialog.show(this, "Connecting to Facebook", "Logging in with Facebook - just a moment");
-        CallbackManager mCallbackManager = CallbackManager.Factory.create();
+        mCallbackManager = CallbackManager.Factory.create();
         LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"));
         LoginManager.getInstance().registerCallback(mCallbackManager,
                 new FacebookCallback<LoginResult>() {
@@ -107,7 +109,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         if (progressDialog != null && progressDialog.isShowing()) {
                             progressDialog.dismiss();
                         }
-                        String accessToken = AccessToken.getCurrentAccessToken().toString();
+                        String accessToken = AccessToken.getCurrentAccessToken().getToken();
                         loginFacebookKinveyUser(progressDialog, accessToken);
                     }
 
@@ -131,7 +133,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
             @Override
             public void onSuccess(User u) {
-                Toast.makeText(LoginActivity.this, "Logged in Kinvey with Facebook.", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getApplicationContext(), UserHomeActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
     }
@@ -139,6 +143,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void error(ProgressDialog d, String msg){
         if (d != null) {
             d.setMessage(msg);
+            d.show();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            mCallbackManager.onActivityResult(requestCode, resultCode, data);
         }
     }
 }
