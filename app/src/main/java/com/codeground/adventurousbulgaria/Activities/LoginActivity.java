@@ -4,8 +4,9 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -24,7 +25,7 @@ import com.kinvey.java.User;
 
 import java.util.Arrays;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+public class LoginActivity extends Activity implements View.OnClickListener {
 
     private Button mSignUpBtn;
     private Button mLoginUpBtn;
@@ -45,6 +46,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             startActivity(intent);
             finish();
         }else {
+            requestWindowFeature(Window.FEATURE_NO_TITLE);
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
             setContentView(R.layout.activity_login);
 
             mSignUpBtn = (Button) findViewById(R.id.sign_up_btn);
