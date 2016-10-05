@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="0.5">
+
+        <Button
+            android:text="Profile"
+            android:layout_margin="0dp"
+            android:background="@color/colorPrimary"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/button8"
+            android:layout_weight="0.5" />
+
+        <Button
+            android:text="Button"
+            android:background="@color/colorPrimaryDark"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/button6"
+            android:layout_weight="0.5" />
+
+        <Button
+            android:text="Button"
+            android:layout_width="match_parent"
+            android:background="@color/colorPrimary"
+            android:layout_height="match_parent"
+            android:id="@+id/button5"
+            android:layout_weight="0.5" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="0.5">
+
+        <Button
+            android:text="Button"
+            android:background="@color/colorPrimaryDark"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/button9"
+            android:layout_weight="0.5" />
+
+        <Button
+            android:text="Button"
+            android:background="@color/colorPrimary"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/button7"
+            android:layout_weight="0.5" />
+
+        <Button
+            android:text="Button"
+            android:background="@color/colorPrimaryDark"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/button4"
+            android:layout_weight="0.5" />
+    </LinearLayout>
+
+</LinearLayout>

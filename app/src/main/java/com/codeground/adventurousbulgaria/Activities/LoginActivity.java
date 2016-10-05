@@ -42,7 +42,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         User user = mKinveyClient.user();
 
         if(user.isUserLoggedIn()){
-            Intent intent = new Intent(this, UserHomeActivity.class);
+            Intent intent = new Intent(this, MainMenuActivity.class);
             startActivity(intent);
             finish();
         }else {
@@ -94,7 +94,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             }
             @Override
             public void onSuccess(User u) {
-                Intent intent = new Intent(getApplicationContext(), UserHomeActivity.class);
+                Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
                 startActivity(intent);
                 finish();
             }
@@ -137,7 +137,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             }
             @Override
             public void onSuccess(User u) {
-                Intent intent = new Intent(getApplicationContext(), UserHomeActivity.class);
+                Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
                 startActivity(intent);
                 finish();
             }
