@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fb="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
@@ -16,21 +17,55 @@
         android:layout_height="wrap_content"
         android:inputType="textEmailAddress"
         android:ems="10"
+        android:backgroundTint="@android:color/white"
         android:layout_marginTop="135dp"
+        android:textColor="@android:color/white"
         android:id="@+id/email_login_field"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:textColorLink="@android:color/white"
+        android:textCursorDrawable="@android:color/white"
+        android:textColorHint="@color/hint_color" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:backgroundTint="@android:color/white"
+        android:layout_marginTop="15dp"
+        android:id="@+id/pass_login_field"
+        android:layout_below="@+id/email_login_field"
+        android:layout_alignLeft="@+id/email_login_field"
+        android:layout_alignStart="@+id/email_login_field"
+        android:textColor="@android:color/white"
+        android:textColorLink="@android:color/white"
+        android:textCursorDrawable="@android:color/white"
+        android:textColorHint="@color/hint_color"/>
 
     <Button
         android:text="Login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@drawable/custom_button_blue"
         android:id="@+id/login_btn"
+        android:textColor="@android:color/white"
         android:layout_below="@+id/pass_login_field"
-        android:layout_alignLeft="@+id/sign_up_btn"
-        android:layout_alignStart="@+id/sign_up_btn"
+        android:layout_alignLeft="@+id/pass_login_field"
+        android:layout_alignStart="@+id/pass_login_field"
         android:layout_marginTop="11dp"
-        android:textAllCaps="false" />
+        android:textAllCaps="false"
+        android:layout_alignRight="@+id/pass_login_field"
+        android:layout_alignEnd="@+id/pass_login_field" />
+
+    <TextView
+        android:text="@string/sign_up_hint_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/hint_color"
+        android:id="@+id/sign_up_hint"
+        android:layout_alignTop="@+id/sign_up_btn"
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:text="sign up"
@@ -39,18 +74,11 @@
         android:id="@+id/sign_up_btn"
         android:elevation="0dp"
         style="@style/Widget.AppCompat.Button.Borderless"
+        android:textColor="@android:color/white"
         android:layout_below="@+id/login_btn"
         android:layout_marginTop="11dp"
         android:layout_centerHorizontal="true"
         android:textAllCaps="false" />
-
-    <TextView
-        android:text="@string/sign_up_hint_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/sign_up_hint"
-        android:layout_alignTop="@+id/sign_up_btn"
-        android:layout_centerHorizontal="true" />
 
     <Button
         android:id="@+id/facebook_login_button"
@@ -61,16 +89,5 @@
         android:layout_alignStart="@+id/sign_up_btn"
         android:layout_marginTop="37dp"
         android:text="FB Login" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textPassword"
-        android:ems="10"
-        android:layout_marginTop="15dp"
-        android:id="@+id/pass_login_field"
-        android:layout_below="@+id/email_login_field"
-        android:layout_alignLeft="@+id/email_login_field"
-        android:layout_alignStart="@+id/email_login_field" />
 
 </RelativeLayout>

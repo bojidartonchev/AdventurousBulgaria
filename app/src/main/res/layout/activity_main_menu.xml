@@ -12,7 +12,7 @@
         <Button
             android:text="Profile"
             android:layout_margin="0dp"
-            android:background="@color/colorPrimary"
+            android:background="@color/menuColor1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/button8"
@@ -20,7 +20,7 @@
 
         <Button
             android:text="Button"
-            android:background="@color/colorPrimaryDark"
+            android:background="@color/menuColor3"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/button6"
@@ -29,7 +29,7 @@
         <Button
             android:text="Button"
             android:layout_width="match_parent"
-            android:background="@color/colorPrimary"
+            android:background="@color/menuColor5"
             android:layout_height="match_parent"
             android:id="@+id/button5"
             android:layout_weight="0.5" />
@@ -42,8 +42,8 @@
         android:layout_weight="0.5">
 
         <Button
-            android:text="Button"
-            android:background="@color/colorPrimaryDark"
+            android:text="All landmarks"
+            android:background="@color/menuColor2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/button9"
@@ -51,7 +51,7 @@
 
         <Button
             android:text="Button"
-            android:background="@color/colorPrimary"
+            android:background="@color/menuColor4"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/button7"
@@ -59,7 +59,7 @@
 
         <Button
             android:text="Button"
-            android:background="@color/colorPrimaryDark"
+            android:background="@color/menuColor6"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/button4"

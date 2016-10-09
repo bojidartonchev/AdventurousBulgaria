@@ -34,5 +34,8 @@ dependencies {
     compile 'com.android.support:appcompat-v7:24.2.1'
     compile(name:'kinvey-android-2.10.8', ext:'aar')
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
+    compile 'com.github.satyan:sugar:1.4'
     testCompile 'junit:junit:4.12'
+    compile 'com.android.support:recyclerview-v7:24.2.1'
+    compile 'com.squareup.picasso:picasso:2.5.2'
 }
