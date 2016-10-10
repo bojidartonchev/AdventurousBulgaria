@@ -2,6 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.codeground.adventurousbulgaria"
     xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-feature android:name="android.hardware.location.gps" />
+
     <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:name=".MainApplication"
@@ -53,6 +58,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
+        <service android:name=".Services.LocationService"/>
 
         <!-- [START Facebook] -->
         <activity

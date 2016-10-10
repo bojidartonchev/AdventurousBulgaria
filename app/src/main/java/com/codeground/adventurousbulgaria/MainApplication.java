@@ -1,8 +1,14 @@
 package com.codeground.adventurousbulgaria;
 
 import android.app.Application;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ContextWrapper;
+import android.content.Intent;
+import android.support.v4.app.NotificationCompat;
 
+import com.codeground.adventurousbulgaria.Activities.LoginActivity;
+import com.codeground.adventurousbulgaria.Services.LocationService;
 import com.codeground.adventurousbulgaria.Utilities.KinveyLandmarkJsonObject;
 import com.codeground.adventurousbulgaria.Utilities.Landmark;
 import com.facebook.FacebookSdk;
@@ -48,11 +54,28 @@ public class MainApplication extends Application {
             //Download all the landmarks data from Kinvey
             initDB();
         }
-
     }
 
     public Client getKinveyClient() {
         return mKinveyClient;
+    }
+
+    public void sendPushNotification(String title, String body){
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle(title)
+                .setContentText(body);
+
+        Intent resultIntent = new Intent(this, LoginActivity.class);
+
+        PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0,resultIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+
+        mBuilder.setContentIntent(resultPendingIntent);
+
+        int mNotificationId = 001;
+        NotificationManager mMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        mMgr.notify(mNotificationId,mBuilder.build());
     }
 
     private boolean doesDatabaseExists(ContextWrapper context, String dbName){
