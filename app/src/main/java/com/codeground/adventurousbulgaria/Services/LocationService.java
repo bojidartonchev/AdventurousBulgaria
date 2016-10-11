@@ -19,8 +19,8 @@ import com.codeground.adventurousbulgaria.MainApplication;
 public class LocationService extends Service {
     private static final String TAG = "AdventurousBulgaria";
     private LocationManager mLocationManager = null;
-    private static final int LOCATION_INTERVAL = 1000*60; //Update once a minute
-    private static final float LOCATION_DISTANCE = 100f;
+    private static final int LOCATION_INTERVAL = 1000; //Update once a minute
+    private static final float LOCATION_DISTANCE = 10f;
     private IOnLocationChange mCallback;
     private IBinder binder = new LocationServiceBinder();
 

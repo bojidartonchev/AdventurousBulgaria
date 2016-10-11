@@ -31,6 +31,7 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    compile 'com.android.support:multidex:1.0.0'
     compile 'com.android.support:appcompat-v7:24.2.1'
     compile(name:'kinvey-android-2.10.8', ext:'aar')
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
@@ -38,4 +39,5 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:recyclerview-v7:24.2.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.google.android.gms:play-services-maps:9.6.1'
 }

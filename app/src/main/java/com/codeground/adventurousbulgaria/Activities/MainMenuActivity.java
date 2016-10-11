@@ -19,8 +19,16 @@ import android.widget.Toast;
 import com.codeground.adventurousbulgaria.Interfaces.IOnLocationChange;
 import com.codeground.adventurousbulgaria.R;
 import com.codeground.adventurousbulgaria.Services.LocationService;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MainMenuActivity extends AppCompatActivity implements View.OnClickListener, ActivityCompat.OnRequestPermissionsResultCallback, IOnLocationChange {
+public class MainMenuActivity extends AppCompatActivity implements View.OnClickListener, ActivityCompat.OnRequestPermissionsResultCallback, IOnLocationChange,OnMapReadyCallback {
 
     private static final int INITIAL_REQUEST=1337;
 
@@ -32,26 +40,32 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     private Button mProfileBtn;
     private Button mAllLandmarksBtn;
 
+    private SupportMapFragment mMapFragment;
+    private GoogleMap mGoogleMap;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
-        mProfileBtn=(Button) findViewById(R.id.button8);
+        mProfileBtn=(Button) findViewById(R.id.profile_btn);
         mProfileBtn.setOnClickListener(this);
 
-        mAllLandmarksBtn=(Button) findViewById(R.id.button9);
+        mAllLandmarksBtn=(Button) findViewById(R.id.landmarks_btn);
         mAllLandmarksBtn.setOnClickListener(this);
 
         startLocationService();
+
+        mMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mMapFragment.getMapAsync(this);
     }
 
     @Override
     public void onClick(View v) {
-        if(v.getId() == R.id.button8){
+        if(v.getId() == R.id.profile_btn){
             Intent intent = new Intent(this, UserHomeActivity.class);
             startActivity(intent);
         }
-        if(v.getId() == R.id.button9){
+        if(v.getId() == R.id.landmarks_btn){
             Intent intent = new Intent(this, AllLandmarksActivity.class);
             startActivity(intent);
         }
@@ -110,8 +124,18 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     };
 
     @Override
-    public void OnLocationChange(Location l) {
-        //We have the location here if our app is active
+    public void OnLocationChange(Location loc) {
+        //Set our current location
+        LatLng latLng = new LatLng(loc.getLatitude(), loc.getLongitude());
+        MarkerOptions markerOptions = new MarkerOptions()
+                .position(latLng)
+                .title("My location")
+                .snippet("You are here");
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(15).build();
+
+        Marker markerFinal = mGoogleMap.addMarker(markerOptions);
+        markerFinal.showInfoWindow();//the marker comes with balloon already open
+        mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
 
     @Override
@@ -119,6 +143,16 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         super.onDestroy();
         if (conn != null) {
             unbindService(conn);
+        }
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mGoogleMap=googleMap;
+        if(ContextCompat.checkSelfPermission(this,
+            Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+        {
+            mGoogleMap.setMyLocationEnabled(true);
         }
     }
 }
