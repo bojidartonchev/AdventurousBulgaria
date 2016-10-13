@@ -6,11 +6,13 @@ import android.os.Parcelable;
 import com.orm.SugarRecord;
 
 public class Landmark extends SugarRecord implements Parcelable {
+    private String kinveyId;
     private String name;
     private String description;
     private String locationName;
-    private Location location;
     private String iconURL;
+    private double latitude;
+    private double longitude;
 
     public Landmark() {
 
@@ -30,6 +32,7 @@ public class Landmark extends SugarRecord implements Parcelable {
         this.setLocationName(template.getLocationName());
         this.setLocation(template.getLatitude(),template.getLongitude());
         this.setIconURL(template.getIconURL());
+        this.setKinveyId(template.getId());
     }
 
     public String getName() {
@@ -56,12 +59,20 @@ public class Landmark extends SugarRecord implements Parcelable {
         this.locationName = locationName;
     }
 
-    public Location getLocation() {
-        return location;
+    public double getLatitude() {
+        return latitude;
     }
 
-    public void setLocation(Location location) {
-        this.location = location;
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
     public String getIconURL() {
@@ -73,15 +84,26 @@ public class Landmark extends SugarRecord implements Parcelable {
     }
 
     public void setLocation(double latitude, double longitude) {
-        this.location = new Location(latitude, longitude);
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
+    public String getKinveyId() {
+        return kinveyId;
+    }
+
+    public void setKinveyId(String kinveyId) {
+        this.kinveyId = kinveyId;
     }
 
     protected Landmark(Parcel in) {
         name = in.readString();
         description = in.readString();
         locationName = in.readString();
-        location = (Location) in.readValue(Location.class.getClassLoader());
         iconURL = in.readString();
+        latitude = in.readDouble();
+        longitude = in.readDouble();
+        kinveyId = in.readString();
     }
 
     @Override
@@ -94,8 +116,10 @@ public class Landmark extends SugarRecord implements Parcelable {
         dest.writeString(name);
         dest.writeString(description);
         dest.writeString(locationName);
-        dest.writeValue(location);
         dest.writeString(iconURL);
+        dest.writeDouble(latitude);
+        dest.writeDouble(longitude);
+        dest.writeString(kinveyId);
     }
 
     @SuppressWarnings("unused")
@@ -110,4 +134,5 @@ public class Landmark extends SugarRecord implements Parcelable {
             return new Landmark[size];
         }
     };
+
 }

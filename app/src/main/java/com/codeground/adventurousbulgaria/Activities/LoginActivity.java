@@ -95,6 +95,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             @Override
             public void onSuccess(User u) {
                 Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
+                ((MainApplication) getApplication()).initDB();
                 startActivity(intent);
                 finish();
             }
@@ -138,6 +139,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             @Override
             public void onSuccess(User u) {
                 Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
+                ((MainApplication) getApplication()).initDB();
                 startActivity(intent);
                 finish();
             }

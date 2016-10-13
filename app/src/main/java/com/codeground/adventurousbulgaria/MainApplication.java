@@ -13,19 +13,29 @@ import com.codeground.adventurousbulgaria.Utilities.KinveyLandmarkJsonObject;
 import com.codeground.adventurousbulgaria.Utilities.Landmark;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
+import com.google.api.client.json.JsonParser;
 import com.kinvey.android.AsyncAppData;
 import com.kinvey.android.Client;
 import com.kinvey.android.callback.KinveyListCallback;
+import com.kinvey.android.callback.KinveyUserCallback;
+import com.kinvey.java.User;
 import com.orm.SugarContext;
 import com.orm.SugarDb;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
 
 public class MainApplication extends Application {
     //TODO Declare Kinvey IDs using a properties file if needed at some point
     private static final String KINVEY_APP_ID = "kid_r1TpUSAT";
     private static final String KINVEY_APP_SECRET = "34d8d77db3ad4a74a4c3d49627f648ef";
     private static final String LANDMARKS_DATABASE_NAME = "landmarks_database.db";
+
+    private ArrayList<String> mCompletedLocations;
 
     //Reference
     //http://devcenter.kinvey.com/android/guides/getting-started
@@ -48,12 +58,9 @@ public class MainApplication extends Application {
             new File(sugarDB.getDB().getPath()).delete();
         }
         SugarContext.init(getApplicationContext());
-        boolean dbExists = doesDatabaseExists(this,LANDMARKS_DATABASE_NAME);
-        if(!dbExists){
-            Landmark.findById(Landmark.class,(long) 1);
-            //Download all the landmarks data from Kinvey
-            initDB();
-        }
+
+        //Download all the landmarks data from Kinvey
+        initDB();
     }
 
     public Client getKinveyClient() {
@@ -63,9 +70,9 @@ public class MainApplication extends Application {
     public void sendPushNotification(String title, String body){
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle(title)
-                .setContentText(body);
+                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setContentTitle(title)
+                        .setContentText(body);
 
         Intent resultIntent = new Intent(this, LoginActivity.class);
 
@@ -78,13 +85,32 @@ public class MainApplication extends Application {
         mMgr.notify(mNotificationId,mBuilder.build());
     }
 
+    public void updateKinveyUser(String column, Object value){
+        mKinveyClient.user().put(column,value);
+            mKinveyClient.user().update(new KinveyUserCallback() {
+                @Override
+                public void onFailure(Throwable e) {
+
+                }
+                @Override
+                public void onSuccess(User u) {
+
+                }
+        });
+    }
+
     private boolean doesDatabaseExists(ContextWrapper context, String dbName){
         File dbFile =  context.getDatabasePath(dbName);
 
         return dbFile.exists();
     }
 
-    private void initDB(){
+    public void initDB(){
+        boolean dbExists = doesDatabaseExists(this,LANDMARKS_DATABASE_NAME);
+        if(!dbExists){
+            Landmark.findById(Landmark.class,(long) 1);
+        }
+
         //The EventEntity class is defined above
         //Refered from http://devcenter.kinvey.com/android/guides/datastore
         AsyncAppData<KinveyLandmarkJsonObject> myevents = mKinveyClient.appData("landmarks", KinveyLandmarkJsonObject.class);

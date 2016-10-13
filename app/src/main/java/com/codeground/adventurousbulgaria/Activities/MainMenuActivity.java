@@ -13,6 +13,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -46,6 +47,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main_menu);
         mProfileBtn=(Button) findViewById(R.id.profile_btn);
         mProfileBtn.setOnClickListener(this);
@@ -127,14 +129,15 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     public void OnLocationChange(Location loc) {
         //Set our current location
         LatLng latLng = new LatLng(loc.getLatitude(), loc.getLongitude());
-        MarkerOptions markerOptions = new MarkerOptions()
-                .position(latLng)
-                .title("My location")
-                .snippet("You are here");
-        CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(15).build();
+       //MarkerOptions markerOptions = new MarkerOptions()
+       //        .position(latLng)
+       //        .title("My location")
+       //        .snippet("You are here");
+       //
 
-        Marker markerFinal = mGoogleMap.addMarker(markerOptions);
-        markerFinal.showInfoWindow();//the marker comes with balloon already open
+       //Marker markerFinal = mGoogleMap.addMarker(markerOptions);
+       //markerFinal.showInfoWindow();//the marker comes with balloon already open
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(15).build();
         mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
 

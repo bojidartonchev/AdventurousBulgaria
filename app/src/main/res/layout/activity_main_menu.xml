@@ -21,7 +21,7 @@
             android:background="@color/menuColor1"
             android:id="@+id/profile_btn"
             android:layout_width="0dp"
-            android:layout_height="150dp"
+            android:layout_height="180dp"
             android:layout_weight="0.5"
             />
 
@@ -30,7 +30,7 @@
             android:background="@color/menuColor2"
             android:layout_width="0dp"
             android:layout_weight="0.5"
-            android:layout_height="150dp"
+            android:layout_height="180dp"
             android:id="@+id/landmarks_btn"
             />
     </LinearLayout>
@@ -47,7 +47,7 @@
             android:id="@+id/button3"
             android:layout_width="0dp"
             android:layout_weight="0.5"
-            android:layout_height="150dp"
+            android:layout_height="180dp"
             />
 
         <Button
@@ -55,7 +55,7 @@
             android:background="@color/menuColor5"
             android:layout_width="0dp"
             android:layout_weight="0.5"
-            android:layout_height="150dp"
+            android:layout_height="180dp"
             android:id="@+id/button4"
             />
     </LinearLayout>

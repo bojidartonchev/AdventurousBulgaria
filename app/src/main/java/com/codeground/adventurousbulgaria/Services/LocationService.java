@@ -15,10 +15,16 @@ import android.util.Log;
 
 import com.codeground.adventurousbulgaria.Interfaces.IOnLocationChange;
 import com.codeground.adventurousbulgaria.MainApplication;
+import com.codeground.adventurousbulgaria.Utilities.Landmark;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.SphericalUtil;
+
+import java.util.List;
 
 public class LocationService extends Service {
     private static final String TAG = "AdventurousBulgaria";
     private LocationManager mLocationManager = null;
+    private static final int MINIMAL_DISTANCE_TO_LANDMARK = 1000; //In meters
     private static final int LOCATION_INTERVAL = 1000; //Update once a minute
     private static final float LOCATION_DISTANCE = 10f;
     private IOnLocationChange mCallback;
@@ -40,9 +46,18 @@ public class LocationService extends Service {
                 mCallback.OnLocationChange(location);
             }
 
-            //TODO change this only if landmark is reached
-            //TODO Use string declaration in resources
-            ((MainApplication)getApplication()).sendPushNotification("Location Changed",location.toString());
+            List<Landmark> mData = Landmark.listAll(Landmark.class);
+            LatLng myLocation = new LatLng(location.getLatitude(),location.getLongitude());
+            if(mData!=null) {
+                for (Landmark landmark : mData) {
+                    LatLng currentLandmarkLocation = new LatLng(landmark.getLatitude(), landmark.getLongitude());
+                    if (SphericalUtil.computeDistanceBetween(myLocation, currentLandmarkLocation) <= MINIMAL_DISTANCE_TO_LANDMARK) {
+                        ((MainApplication) getApplication()).updateKinveyUser("Completed", landmark.getKinveyId());
+                        ((MainApplication) getApplication()).sendPushNotification("Location Unlocked", landmark.getName());
+                    }
+                }
+            }
+
             mLastLocation.set(location);
         }
 
