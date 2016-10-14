@@ -64,10 +64,11 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             mKinveyClient.user().create(email, password, new KinveyUserCallback() {
                 @Override
                 public void onSuccess(User user) {
-                    Intent intent = new Intent(getApplicationContext(), UserHomeActivity.class);
                     String todaysDate = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
                     ((MainApplication) getApplication()).updateKinveyUser("Name", mNameField.getText().toString());
                     ((MainApplication) getApplication()).updateKinveyUser("DateCreated", todaysDate);
+
+                    Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
                     startActivity(intent);
                 }
 

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="167dp"
-    android:background="@color/white">
+    android:background="@drawable/landmark_grad">
 
     <RelativeLayout
         android:padding="20dp"
@@ -16,6 +16,8 @@
 
         <TextView
             android:text="TextView"
+            android:textSize="26sp"
+            android:layout_marginTop="13dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/title"
@@ -24,6 +26,7 @@
 
         <TextView
             android:text="TextView"
+            android:textStyle="italic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/location"

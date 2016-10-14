@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.codeground.adventurousbulgaria.Interfaces.IOnLocationChange;
+import com.codeground.adventurousbulgaria.MainApplication;
 import com.codeground.adventurousbulgaria.R;
 import com.codeground.adventurousbulgaria.Services.LocationService;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -49,6 +50,10 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main_menu);
+
+        //We are logged in so we can init our DB
+        ((MainApplication) getApplication()).initDB();
+
         mProfileBtn=(Button) findViewById(R.id.profile_btn);
         mProfileBtn.setOnClickListener(this);
 
@@ -129,14 +134,6 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     public void OnLocationChange(Location loc) {
         //Set our current location
         LatLng latLng = new LatLng(loc.getLatitude(), loc.getLongitude());
-       //MarkerOptions markerOptions = new MarkerOptions()
-       //        .position(latLng)
-       //        .title("My location")
-       //        .snippet("You are here");
-       //
-
-       //Marker markerFinal = mGoogleMap.addMarker(markerOptions);
-       //markerFinal.showInfoWindow();//the marker comes with balloon already open
         CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(15).build();
         mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }

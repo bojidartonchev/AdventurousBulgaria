@@ -51,9 +51,10 @@ public class LocationService extends Service {
             if(mData!=null) {
                 for (Landmark landmark : mData) {
                     LatLng currentLandmarkLocation = new LatLng(landmark.getLatitude(), landmark.getLongitude());
-                    if (SphericalUtil.computeDistanceBetween(myLocation, currentLandmarkLocation) <= MINIMAL_DISTANCE_TO_LANDMARK) {
-                        ((MainApplication) getApplication()).updateKinveyUser("Completed", landmark.getKinveyId());
-                        ((MainApplication) getApplication()).sendPushNotification("Location Unlocked", landmark.getName());
+                    if (SphericalUtil.computeDistanceBetween(myLocation, currentLandmarkLocation) <= 180000) {
+                        //Update Kinvey user's completed locations
+                        ((MainApplication) getApplication()).onLocationCompleted(landmark);
+                        Log.e(TAG,((MainApplication) getApplication()).todelete());
                     }
                 }
             }

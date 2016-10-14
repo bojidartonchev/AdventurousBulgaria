@@ -14,15 +14,12 @@ import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.codeground.adventurousbulgaria.MainApplication;
 import com.codeground.adventurousbulgaria.R;
-import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.kinvey.android.Client;
 import com.kinvey.java.User;
@@ -78,9 +75,10 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
     private void logout() {
         Client mKinveyClient = ((MainApplication) getApplication()).getKinveyClient();
         mKinveyClient.user().logout().execute();
+
         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-        startActivity(intent);
         finish();
+        startActivity(intent);
     }
 
     @Override

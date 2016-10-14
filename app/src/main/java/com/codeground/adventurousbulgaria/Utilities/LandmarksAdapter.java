@@ -83,7 +83,7 @@ public class LandmarksAdapter extends RecyclerView.Adapter<LandmarksAdapter.View
             Picasso.with(holder.mIcon.getContext()).load(mAdapterData.get(position).getIconURL()).into(holder.mIcon);
 
             //TODO CHECK IF THIS IS COMPLETED
-            holder.mParent.setBackgroundColor(Color.parseColor("#00FF00"));
+            //holder.mParent.setBackgroundColor(Color.parseColor("#00FF00"));
         }
     }
 }
