@@ -14,10 +14,15 @@ import com.kinvey.android.Client;
 import com.kinvey.android.callback.KinveyUserCallback;
 import com.kinvey.java.User;
 
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
     private Button mRegBtn;
     private EditText mEmailField;
+    private EditText mNameField;
     private EditText mPasswordField;
     private EditText mConfirmPasswordField;
 
@@ -27,6 +32,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_sign_up);
 
         mEmailField = (EditText) findViewById(R.id.email_field);
+        mNameField = (EditText) findViewById(R.id.name_field);
         mPasswordField = (EditText) findViewById(R.id.password_field);
         mConfirmPasswordField = (EditText) findViewById(R.id.confirm_password_field);
 
@@ -38,7 +44,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View v) {
         if(v!=null){
             if(v.getId() == R.id.register_btn){
-                if(mEmailField!=null && mPasswordField!=null && mConfirmPasswordField!=null){
+                if(mEmailField!=null && mNameField!=null && mPasswordField!=null && mConfirmPasswordField!=null){
                     RegisterUser(mEmailField.getText().toString(),mPasswordField.getText().toString(),mConfirmPasswordField.getText().toString());
                 }
             }
@@ -59,6 +65,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 @Override
                 public void onSuccess(User user) {
                     Intent intent = new Intent(getApplicationContext(), UserHomeActivity.class);
+                    String todaysDate = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+                    ((MainApplication) getApplication()).updateKinveyUser("Name", mNameField.getText().toString());
+                    ((MainApplication) getApplication()).updateKinveyUser("DateCreated", todaysDate);
                     startActivity(intent);
                 }
 
