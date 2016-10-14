@@ -149,12 +149,10 @@ public class MainApplication extends Application {
     private void initCompletedLandmarks(){
         if (mKinveyRawData!=null) {
             mCompletedLocations = new Gson().fromJson(mKinveyRawData.toString(), new TypeToken<ArrayList<String>>(){}.getType());
-            Toast.makeText(this,mKinveyRawData.toString(),Toast.LENGTH_SHORT).show();
             Log.e("TAG", mKinveyRawData.toString());
         }else{
             //new user -> add empty json value
             mCompletedLocations = new ArrayList<>();
-            Toast.makeText(this,"FUCK THIS SHIT",Toast.LENGTH_SHORT).show();
         }
     }
 
