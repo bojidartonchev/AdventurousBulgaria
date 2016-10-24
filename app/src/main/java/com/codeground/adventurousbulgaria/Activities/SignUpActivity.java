@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
     private Button mRegBtn;
     private EditText mEmailField;

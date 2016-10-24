@@ -60,8 +60,6 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".Services.LocationService"/>
-
         <!-- [START Facebook] -->
         <activity
             tools:replace="android:theme"

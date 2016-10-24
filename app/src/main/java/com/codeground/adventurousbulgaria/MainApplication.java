@@ -35,9 +35,6 @@ public class MainApplication extends Application {
     private static final String KINVEY_APP_SECRET = "34d8d77db3ad4a74a4c3d49627f648ef";
     private static final String LANDMARKS_DATABASE_NAME = "landmarks_database.db";
 
-    private ArrayList<String> mCompletedLocations;
-    private Object mKinveyRawData;
-
     //Reference
     //http://devcenter.kinvey.com/android/guides/getting-started
     private Client mKinveyClient;
@@ -83,21 +80,6 @@ public class MainApplication extends Application {
         mMgr.notify(mNotificationId,mBuilder.build());
     }
 
-    public void onLocationCompleted(Landmark landmark){
-        if(mCompletedLocations == null){
-            return;
-        }
-
-        if(landmark!=null && !mCompletedLocations.contains(landmark.getKinveyId())){
-            mCompletedLocations.add(landmark.getKinveyId());
-
-            //Notify user
-            sendPushNotification("Location Unlocked", landmark.getName());
-
-            updateCompletedLandmarks();
-        }
-    }
-
     private boolean doesDatabaseExists(ContextWrapper context, String dbName){
         File dbFile =  context.getDatabasePath(dbName);
 
@@ -121,7 +103,6 @@ public class MainApplication extends Application {
     }
 
     public void initDB(){
-        mKinveyRawData = mKinveyClient.user().get("Completed");
         boolean dbExists = doesDatabaseExists(this,LANDMARKS_DATABASE_NAME);
         if(!dbExists){
             Landmark.findById(Landmark.class,(long) 1);
@@ -133,7 +114,6 @@ public class MainApplication extends Application {
         myevents.get(new KinveyListCallback<KinveyLandmarkJsonObject>() {
             @Override
             public void onSuccess(KinveyLandmarkJsonObject[] result) {
-                initCompletedLandmarks();
                 for (KinveyLandmarkJsonObject item : result) {
                     Landmark currentLandmark = new Landmark(item);
                     currentLandmark.save();
@@ -144,28 +124,5 @@ public class MainApplication extends Application {
                 //TODO notify user and retry
             }
         });
-    }
-
-    private void initCompletedLandmarks(){
-        if (mKinveyRawData!=null) {
-            mCompletedLocations = new Gson().fromJson(mKinveyRawData.toString(), new TypeToken<ArrayList<String>>(){}.getType());
-            Log.e("TAG", mKinveyRawData.toString());
-        }else{
-            //new user -> add empty json value
-            mCompletedLocations = new ArrayList<>();
-        }
-    }
-
-    private void updateCompletedLandmarks(){
-        String json = new Gson().toJson(mCompletedLocations);
-        updateKinveyUser("Completed", json);
-    }
-
-    public String todelete(){
-        if(mKinveyRawData != null){
-
-            return mKinveyRawData.toString();
-        }
-        return "NULL DATA";
     }
 }
