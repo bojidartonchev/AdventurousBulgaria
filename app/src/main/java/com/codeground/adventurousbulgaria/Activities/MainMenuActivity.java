@@ -9,6 +9,7 @@ import android.widget.Button;
 
 import com.codeground.adventurousbulgaria.MainApplication;
 import com.codeground.adventurousbulgaria.R;
+import com.codeground.adventurousbulgaria.Services.LocationUpdateService;
 
 public class MainMenuActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -23,6 +24,8 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
         //We are logged in so we can init our DB
         ((MainApplication) getApplication()).initDB();
+
+        startService(new Intent(this, LocationUpdateService.class));
 
         mProfileBtn=(Button) findViewById(R.id.profile_btn);
         mProfileBtn.setOnClickListener(this);

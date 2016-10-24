@@ -19,7 +19,6 @@ import android.widget.TextView;
 
 import com.codeground.adventurousbulgaria.MainApplication;
 import com.codeground.adventurousbulgaria.R;
-import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.kinvey.android.Client;
 import com.kinvey.java.User;
@@ -62,7 +61,7 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+        client = new GoogleApiClient.Builder(this).build();
     }
 
     @Override
