@@ -11,6 +11,7 @@ public class Landmark extends SugarRecord implements Parcelable {
     private String description;
     private String locationName;
     private String iconURL;
+    private String photoURL;
     private double latitude;
     private double longitude;
 
@@ -33,6 +34,7 @@ public class Landmark extends SugarRecord implements Parcelable {
         this.setLocation(template.getLatitude(),template.getLongitude());
         this.setIconURL(template.getIconURL());
         this.setKinveyId(template.getId());
+        this.setPhotoURL(template.getPhotoURL());
     }
 
     public String getName() {
@@ -88,6 +90,14 @@ public class Landmark extends SugarRecord implements Parcelable {
         this.longitude = longitude;
     }
 
+    public String getPhotoURL() {
+        return photoURL;
+    }
+
+    public void setPhotoURL(String photoURL) {
+        this.photoURL = photoURL;
+    }
+
     public String getKinveyId() {
         return kinveyId;
     }
@@ -101,6 +111,7 @@ public class Landmark extends SugarRecord implements Parcelable {
         description = in.readString();
         locationName = in.readString();
         iconURL = in.readString();
+        photoURL = in.readString();
         latitude = in.readDouble();
         longitude = in.readDouble();
         kinveyId = in.readString();
@@ -117,6 +128,7 @@ public class Landmark extends SugarRecord implements Parcelable {
         dest.writeString(description);
         dest.writeString(locationName);
         dest.writeString(iconURL);
+        dest.writeString(photoURL);
         dest.writeDouble(latitude);
         dest.writeDouble(longitude);
         dest.writeString(kinveyId);

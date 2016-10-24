@@ -51,11 +51,13 @@ public class MainApplication extends Application {
         mKinveyClient = new Client.Builder(KINVEY_APP_ID, KINVEY_APP_SECRET
                 , this.getApplicationContext()).build();
 
+        SugarContext.init(getApplicationContext());
+
+        //TODO REMOVE IN RELEASE VERSION
         if(doesDatabaseExists(this,LANDMARKS_DATABASE_NAME)){
             SugarDb sugarDB = new SugarDb(getApplicationContext());
             new File(sugarDB.getDB().getPath()).delete();
         }
-        SugarContext.init(getApplicationContext());
     }
 
     public Client getKinveyClient() {
@@ -80,12 +82,6 @@ public class MainApplication extends Application {
         mMgr.notify(mNotificationId,mBuilder.build());
     }
 
-    private boolean doesDatabaseExists(ContextWrapper context, String dbName){
-        File dbFile =  context.getDatabasePath(dbName);
-
-        return dbFile.exists();
-    }
-
     public void updateKinveyUser(String column, Object value){
         if(mKinveyClient!=null){
             mKinveyClient.user().put(column,value);
@@ -104,25 +100,32 @@ public class MainApplication extends Application {
 
     public void initDB(){
         boolean dbExists = doesDatabaseExists(this,LANDMARKS_DATABASE_NAME);
+
         if(!dbExists){
             Landmark.findById(Landmark.class,(long) 1);
-        }
 
-        //The EventEntity class is defined above
-        //Refered from http://devcenter.kinvey.com/android/guides/datastore
-        AsyncAppData<KinveyLandmarkJsonObject> myevents = mKinveyClient.appData("landmarks", KinveyLandmarkJsonObject.class);
-        myevents.get(new KinveyListCallback<KinveyLandmarkJsonObject>() {
-            @Override
-            public void onSuccess(KinveyLandmarkJsonObject[] result) {
-                for (KinveyLandmarkJsonObject item : result) {
-                    Landmark currentLandmark = new Landmark(item);
-                    currentLandmark.save();
+            //The EventEntity class is defined above
+            //Refered from http://devcenter.kinvey.com/android/guides/datastore
+            AsyncAppData<KinveyLandmarkJsonObject> myevents = mKinveyClient.appData("landmarks", KinveyLandmarkJsonObject.class);
+            myevents.get(new KinveyListCallback<KinveyLandmarkJsonObject>() {
+                @Override
+                public void onSuccess(KinveyLandmarkJsonObject[] result) {
+                    for (KinveyLandmarkJsonObject item : result) {
+                        Landmark currentLandmark = new Landmark(item);
+                        currentLandmark.save();
+                    }
                 }
-            }
-            @Override
-            public void onFailure(Throwable error)  {
-                //TODO notify user and retry
-            }
-        });
+                @Override
+                public void onFailure(Throwable error)  {
+                    //TODO notify user and retry
+                }
+            });
+        }
+    }
+
+    private boolean doesDatabaseExists(ContextWrapper context, String dbName){
+        File dbFile =  context.getDatabasePath(dbName);
+
+        return dbFile.exists();
     }
 }

@@ -25,6 +25,9 @@ public class KinveyLandmarkJsonObject extends GenericJson {
     @Key("IconURL")
     private String iconUrl;
 
+    @Key("Photo")
+    private String photoUrl;
+
     public KinveyLandmarkJsonObject() {
     }
 
@@ -54,5 +57,9 @@ public class KinveyLandmarkJsonObject extends GenericJson {
 
     public String getIconURL() {
         return iconUrl;
+    }
+
+    public String getPhotoURL() {
+        return photoUrl;
     }
 }
