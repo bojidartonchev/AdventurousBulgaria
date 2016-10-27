@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <application
@@ -14,10 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <service
-            android:name=".Services.LocationUpdateService"
-            android:enabled="true"
-            android:exported="false"></service>
+        <service android:name=".Services.LocationUpdateService"/>
 
         <meta-data android:name="DATABASE" android:value="landmarks_database.db" />
         <meta-data android:name="VERSION" android:value="1" />

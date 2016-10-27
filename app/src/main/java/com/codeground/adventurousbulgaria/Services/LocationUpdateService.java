@@ -3,9 +3,9 @@ package com.codeground.adventurousbulgaria.Services;
 import android.app.Service;
 import android.content.Intent;
 import android.location.Location;
+import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -21,11 +21,11 @@ import java.util.Date;
 public class LocationUpdateService extends Service implements
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
     protected static final String TAG = "LocationUpdateService";
+    private IBinder binder = new LocationServiceBinder();
     /**
      * The desired interval for location updates. Inexact. Updates may be more or less frequent.
      */
-    public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
-
+    public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 20000;
     /**
      * The fastest rate for active location updates. Exact. Updates will never be more frequent
      * than this value.
@@ -33,10 +33,6 @@ public class LocationUpdateService extends Service implements
     public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
             UPDATE_INTERVAL_IN_MILLISECONDS / 2;
 
-    // Keys for storing activity state in the Bundle.
-    protected final static String REQUESTING_LOCATION_UPDATES_KEY = "requesting-location-updates-key";
-    protected final static String LOCATION_KEY = "location-key";
-    protected final static String LAST_UPDATED_TIME_STRING_KEY = "last-updated-time-string-key";
     /**
      * Tracks the status of the location updates request. Value changes when the user presses the
      * Start Updates and Stop Updates buttons.
@@ -62,17 +58,16 @@ public class LocationUpdateService extends Service implements
     protected Location mCurrentLocation;
     public static boolean isEnded = false;
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        // Kick off the process of building a GoogleApiClient and requesting the LocationServices
-        // API.
+    public class LocationServiceBinder extends Binder
+    {
+        public LocationUpdateService getService(){
+            return LocationUpdateService.this;
+        }
     }
 
-    @Nullable
     @Override
-    public IBinder onBind(Intent intent) {
-        return null;
+    public IBinder onBind(Intent arg0) {
+        return binder;
     }
 
 
@@ -89,7 +84,7 @@ public class LocationUpdateService extends Service implements
         if (mGoogleApiClient.isConnected() && mRequestingLocationUpdates) {
             startLocationUpdates();
         }
-        return Service.START_REDELIVER_INTENT;
+        return START_STICKY;
     }
 
 
@@ -111,7 +106,9 @@ public class LocationUpdateService extends Service implements
         mCurrentLocation = location;
         mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
         //updateUI();
-        Toast.makeText(this, location.toString(),Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, ""+location.getLatitude() + " " + location.getLongitude(), Toast.LENGTH_SHORT).show();
+        Log.e(TAG, ""+location.getLatitude() + " " + location.getLongitude());
+        //((MainApplication)getApplication()).sendPushNotification("TITLE", ""+location.getLatitude() + " " + location.getLongitude());
     }
 
     @Override
@@ -176,8 +173,9 @@ public class LocationUpdateService extends Service implements
 
             // The final argument to {@code requestLocationUpdates()} is a LocationListener
             // (http://developer.android.com/reference/com/google/android/gms/location/LocationListener.html).
+
             //noinspection MissingPermission
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient,mLocationRequest,this);
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
             Log.i(TAG, " startLocationUpdates===");
             isEnded = true;
         }
@@ -203,7 +201,7 @@ public class LocationUpdateService extends Service implements
     @Override
     public void onDestroy() {
         super.onDestroy();
-        stopLocationUpdates();
+        //stopLocationUpdates();
     }
 
 

@@ -19,7 +19,6 @@ import android.widget.TextView;
 
 import com.codeground.adventurousbulgaria.MainApplication;
 import com.codeground.adventurousbulgaria.R;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.kinvey.android.Client;
 import com.kinvey.java.User;
 
@@ -34,11 +33,6 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
     private ImageView mPersonPicture;
     private Button mLogoutButton;
     private User mCurrentUser;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,10 +52,6 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
         mPersonName.setText(mCurrentUser.get("Name").toString());
         mDateCreated.setText(mCurrentUser.get("DateCreated").toString());
         mTravelledKm.setText("0.00km");
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).build();
     }
 
     @Override
