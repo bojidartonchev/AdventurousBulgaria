@@ -10,6 +10,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.codeground.adventurousbulgaria.Activities.LoginActivity;
+import com.codeground.adventurousbulgaria.Interfaces.IOnDataBaseInitialized;
 import com.codeground.adventurousbulgaria.Utilities.KinveyLandmarkJsonObject;
 import com.codeground.adventurousbulgaria.Utilities.Landmark;
 import com.facebook.FacebookSdk;
@@ -98,7 +99,7 @@ public class MainApplication extends Application {
         }
     }
 
-    public void initDB(){
+    public void initDB(final IOnDataBaseInitialized cb){
         boolean dbExists = doesDatabaseExists(this,LANDMARKS_DATABASE_NAME);
 
         if(!dbExists){
@@ -114,6 +115,7 @@ public class MainApplication extends Application {
                         Landmark currentLandmark = new Landmark(item);
                         currentLandmark.save();
                     }
+                    cb.OnDBInit();
                 }
                 @Override
                 public void onFailure(Throwable error)  {

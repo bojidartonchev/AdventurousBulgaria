@@ -18,9 +18,11 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.codeground.adventurousbulgaria.Interfaces.IOnDataBaseInitialized;
 import com.codeground.adventurousbulgaria.MainApplication;
 import com.codeground.adventurousbulgaria.R;
 import com.codeground.adventurousbulgaria.Services.LocationUpdateService;
+import com.codeground.adventurousbulgaria.Utilities.Landmark;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -29,12 +31,15 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.List;
 
 public class MainMenuActivity extends AppCompatActivity implements View.OnClickListener,
         OnMapReadyCallback,
         GoogleMap.OnMapLoadedCallback,
         GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+        GoogleApiClient.OnConnectionFailedListener,IOnDataBaseInitialized {
 
     private static final int INITIAL_REQUEST = 1337;
     private Intent mServiceIntent;
@@ -58,7 +63,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_main_menu);
 
         //We are logged in so we can init our DB
-        ((MainApplication) getApplication()).initDB();
+        ((MainApplication) getApplication()).initDB(this);
 
         checkForPermissions();
 
@@ -146,8 +151,6 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         }
         googleMap.setOnMapLoadedCallback(this);
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-
-        //TODO Add markers
     }
 
     @Override
@@ -200,6 +203,21 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
         }else{
             startLocationService();
+        }
+    }
+
+    @Override
+    public void OnDBInit() {
+        List<Landmark> mData = Landmark.listAll(Landmark.class);
+
+        if(mMap == null){
+            return;
+        }
+
+        for (Landmark landmark : mData) {
+            mMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(landmark.getLatitude(), landmark.getLongitude()))
+                    .title(landmark.getName()));
         }
     }
 }
