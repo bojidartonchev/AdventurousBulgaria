@@ -2,6 +2,7 @@ package com.codeground.adventurousbulgaria.Activities;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,9 +13,9 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -24,14 +25,10 @@ import android.widget.Toast;
 import com.codeground.adventurousbulgaria.MainApplication;
 import com.codeground.adventurousbulgaria.R;
 import com.kinvey.android.Client;
-import com.kinvey.java.Query;
 import com.kinvey.java.User;
-import com.kinvey.java.core.DownloaderProgressListener;
-import com.kinvey.java.core.MediaHttpDownloader;
 import com.kinvey.java.core.MediaHttpUploader;
 import com.kinvey.java.core.UploaderProgressListener;
 import com.kinvey.java.model.FileMetaData;
-import com.kinvey.java.model.KinveyFile;
 import com.kinvey.java.model.KinveyMetaData;
 
 import java.io.ByteArrayOutputStream;
@@ -49,8 +46,6 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
     private ImageView mUserPicture;
     private Button mLogoutButton;
     private User mCurrentUser;
-    private FileMetaData mMetaData;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,18 +108,11 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
                 e.printStackTrace();
             }
             //Saving bitmap to internal storage
-            try {
-                FileOutputStream fos = getApplicationContext().openFileOutput(mUserName.getText().toString()+ ".png", Context.MODE_PRIVATE);
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
-                fos.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            savePictureToStorage(bitmap);
             //Saving bitmap to kinvey
-
             KinveyMetaData.AccessControlList acl = new KinveyMetaData.AccessControlList();
             acl.setGloballyReadable(true);
-            mMetaData = new FileMetaData("test");  //create the FileMetaData object
+            FileMetaData mMetaData = new FileMetaData(mCurrentUser.getId());  //create the FileMetaData object
             mMetaData.setPublic(true);  //set the file to be pubicly accesible
             mMetaData.setAcl(acl); //allow all users to see this file
             mMetaData.setFileName(mUserName.getText().toString()+"_picture");
@@ -136,24 +124,12 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
             FileOutputStream fos = null;
             try {
                 fos = new FileOutputStream(kinveyFile);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-            try {
                 fos.write(bitmapdata);
-            } catch (IOException e) {
-                e.printStackTrace();
-                Toast.makeText(getApplicationContext(), "Failed to save to phone", Toast.LENGTH_SHORT).show();
-            }
-            try {
                 fos.flush();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
                 fos.close();
             } catch (IOException e) {
                 e.printStackTrace();
+                Toast.makeText(getApplicationContext(), "Failed to save to phone", Toast.LENGTH_SHORT).show();
             }
 
             ((MainApplication) getApplication()).getKinveyClient().file().upload(mMetaData, kinveyFile, new UploaderProgressListener() {
@@ -167,15 +143,37 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
                 @Override
                 public void onFailure(Throwable error) {
                     Toast.makeText(getApplicationContext(), "Failed to upload picture.", Toast.LENGTH_SHORT).show();
+
                 }
 
             });
-
 
             mUserPicture.setImageBitmap(bitmap);
         }
     }
 
+    private Boolean savePictureToStorage(Bitmap bitmap) {
+        ContextWrapper cw = new ContextWrapper(getApplicationContext());
+        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
+        File mypath = new File(directory, R.string.profile_picture_title+".png");
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(mypath);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+        PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString(getString(R.string.profile_picture_title), directory.getAbsolutePath()).apply();
+        return true;
+    }
 
     private Bitmap getCroppedBitmap(Bitmap bitmap) {
         Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
@@ -196,20 +194,15 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void loadProfilePicture() {
-        Bitmap bmp = null;
-        File filePath = getApplicationContext().getFileStreamPath(mUserName.getText().toString() + ".png");
-
-        try {
-
-            FileInputStream fi = new FileInputStream(filePath);
-            bmp = BitmapFactory.decodeStream(fi);
-        } catch (Exception e) {
-
+        if(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).contains(getString(R.string.profile_picture_title))) {
+            String mPicturePath = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getString(R.string.profile_picture_title), "");
+            try {
+                File f = new File(mPicturePath, R.string.profile_picture_title+".png");
+                Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
+                mUserPicture.setImageBitmap(b);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
         }
-        if (bmp != null) {
-            mUserPicture.setImageBitmap(bmp);
-        }
-
-
     }
 }
