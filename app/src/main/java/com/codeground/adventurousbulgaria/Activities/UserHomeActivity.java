@@ -1,8 +1,10 @@
 package com.codeground.adventurousbulgaria.Activities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
@@ -12,27 +14,43 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.codeground.adventurousbulgaria.MainApplication;
 import com.codeground.adventurousbulgaria.R;
 import com.kinvey.android.Client;
+import com.kinvey.java.Query;
 import com.kinvey.java.User;
+import com.kinvey.java.core.DownloaderProgressListener;
+import com.kinvey.java.core.MediaHttpDownloader;
+import com.kinvey.java.core.MediaHttpUploader;
+import com.kinvey.java.core.UploaderProgressListener;
+import com.kinvey.java.model.FileMetaData;
+import com.kinvey.java.model.KinveyFile;
+import com.kinvey.java.model.KinveyMetaData;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class UserHomeActivity extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener {
 
     private TextView mDateCreated;
     private TextView mTravelledKm;
-    private TextView mPersonName;
-    private ImageView mPersonPicture;
+    private TextView mUserName;
+    private ImageView mUserPicture;
     private Button mLogoutButton;
     private User mCurrentUser;
+    private FileMetaData mMetaData;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,17 +59,19 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
         mLogoutButton = (Button) findViewById(R.id.logout_btn);
         mDateCreated = (TextView) findViewById(R.id.membersince_date);
         mTravelledKm = (TextView) findViewById(R.id.travelled_km);
-        mPersonName = (TextView) findViewById(R.id.person_name);
-        mPersonPicture = (ImageView) findViewById(R.id.profile_picture);
+        mUserName = (TextView) findViewById(R.id.person_name);
+        mUserPicture = (ImageView) findViewById(R.id.profile_picture);
 
-        mPersonPicture.setOnLongClickListener(this);
+        mUserPicture.setOnLongClickListener(this);
         mLogoutButton.setOnClickListener(this);
 
         mCurrentUser = ((MainApplication) getApplication()).getKinveyClient().user();
 
-        mPersonName.setText(mCurrentUser.get("Name").toString());
+        mUserName.setText(mCurrentUser.get("Name").toString());
         mDateCreated.setText(mCurrentUser.get("DateCreated").toString());
         mTravelledKm.setText("0.00km");
+
+        loadProfilePicture();
     }
 
     @Override
@@ -61,6 +81,14 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
+    @Override
+    public boolean onLongClick(View v) {
+        if (v.getId() == R.id.profile_picture) {
+            startActivityForResult(new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI), 1);
+        }
+        return true;
+    }
+
     private void logout() {
         Client mKinveyClient = ((MainApplication) getApplication()).getKinveyClient();
         mKinveyClient.user().logout().execute();
@@ -68,14 +96,6 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
         finish();
         startActivity(intent);
-    }
-
-    @Override
-    public boolean onLongClick(View v) {
-        if (v.getId() == R.id.profile_picture) {
-            startActivityForResult(new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI), 1);
-        }
-        return true;
     }
 
     @Override
@@ -92,16 +112,75 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            mPersonPicture.setImageBitmap(bitmap);
+            //Saving bitmap to internal storage
+            try {
+                FileOutputStream fos = getApplicationContext().openFileOutput(mUserName.getText().toString()+ ".png", Context.MODE_PRIVATE);
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                fos.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            //Saving bitmap to kinvey
+
+            KinveyMetaData.AccessControlList acl = new KinveyMetaData.AccessControlList();
+            acl.setGloballyReadable(true);
+            mMetaData = new FileMetaData("test");  //create the FileMetaData object
+            mMetaData.setPublic(true);  //set the file to be pubicly accesible
+            mMetaData.setAcl(acl); //allow all users to see this file
+            mMetaData.setFileName(mUserName.getText().toString()+"_picture");
+
+            File kinveyFile = new File(getApplicationContext().getCacheDir(),mUserName.getText().toString()+"_picture");
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 0 /*ignored for PNG*/, bos);
+            byte[] bitmapdata = bos.toByteArray();
+            FileOutputStream fos = null;
+            try {
+                fos = new FileOutputStream(kinveyFile);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            try {
+                fos.write(bitmapdata);
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toast.makeText(getApplicationContext(), "Failed to save to phone", Toast.LENGTH_SHORT).show();
+            }
+            try {
+                fos.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            ((MainApplication) getApplication()).getKinveyClient().file().upload(mMetaData, kinveyFile, new UploaderProgressListener() {
+                @Override
+                public void progressChanged(MediaHttpUploader mediaHttpUploader) throws IOException {
+                }
+                @Override
+                public void onSuccess(FileMetaData fileMetaData) {
+                    Toast.makeText(getApplicationContext(), "Profile picture uploaded!", Toast.LENGTH_SHORT).show();
+                }
+                @Override
+                public void onFailure(Throwable error) {
+                    Toast.makeText(getApplicationContext(), "Failed to upload picture.", Toast.LENGTH_SHORT).show();
+                }
+
+            });
+
+
+            mUserPicture.setImageBitmap(bitmap);
         }
     }
 
 
-    public Bitmap getCroppedBitmap(Bitmap bitmap) {
+    private Bitmap getCroppedBitmap(Bitmap bitmap) {
         Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
                 bitmap.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(output);
-
         final int color = 0xff424242;
         final Paint paint = new Paint();
         final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
@@ -109,15 +188,28 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
         paint.setAntiAlias(true);
         canvas.drawARGB(0, 0, 0, 0);
         paint.setColor(color);
-        // canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
         canvas.drawCircle(bitmap.getWidth() / 2, bitmap.getHeight() / 2,
                 bitmap.getWidth() / 2, paint);
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
         canvas.drawBitmap(bitmap, rect, rect, paint);
-        //Bitmap _bmp = Bitmap.createScaledBitmap(output, 60, 60, false);
-        //return _bmp;
         return output;
     }
 
+    private void loadProfilePicture() {
+        Bitmap bmp = null;
+        File filePath = getApplicationContext().getFileStreamPath(mUserName.getText().toString() + ".png");
 
+        try {
+
+            FileInputStream fi = new FileInputStream(filePath);
+            bmp = BitmapFactory.decodeStream(fi);
+        } catch (Exception e) {
+
+        }
+        if (bmp != null) {
+            mUserPicture.setImageBitmap(bmp);
+        }
+
+
+    }
 }
