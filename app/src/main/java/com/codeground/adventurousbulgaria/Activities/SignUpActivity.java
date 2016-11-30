@@ -14,7 +14,6 @@ import com.kinvey.android.Client;
 import com.kinvey.android.callback.KinveyUserCallback;
 import com.kinvey.java.User;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -44,13 +43,13 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         if(v!=null){
             if(v.getId() == R.id.register_btn){
                 if(mEmailField!=null && mNameField!=null && mPasswordField!=null && mConfirmPasswordField!=null){
-                    RegisterUser(mEmailField.getText().toString(),mPasswordField.getText().toString(),mConfirmPasswordField.getText().toString());
+                    registerUser(mEmailField.getText().toString(),mPasswordField.getText().toString(),mConfirmPasswordField.getText().toString());
                 }
             }
         }
     }
 
-    private void RegisterUser(String email, String password, String confirmPassword)
+    private void registerUser(String email, String password, String confirmPassword)
     {
         if(password.equals(confirmPassword)==false){
             //Passwords do not match

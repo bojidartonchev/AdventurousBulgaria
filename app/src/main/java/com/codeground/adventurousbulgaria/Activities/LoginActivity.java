@@ -110,9 +110,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                 new FacebookCallback<LoginResult>() {
                     @Override
                     public void onSuccess(LoginResult loginResult) {
-                        if (progressDialog != null && progressDialog.isShowing()) {
-                            progressDialog.dismiss();
-                        }
                         String accessToken = AccessToken.getCurrentAccessToken().getToken();
                         loginFacebookKinveyUser(progressDialog, accessToken);
                     }
@@ -137,6 +134,9 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             }
             @Override
             public void onSuccess(User u) {
+                if (progressDialog != null && progressDialog.isShowing()) {
+                    progressDialog.dismiss();
+                }
                 Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
                 startActivity(intent);
                 finish();

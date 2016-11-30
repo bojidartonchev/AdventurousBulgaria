@@ -6,8 +6,6 @@ import android.app.PendingIntent;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.codeground.adventurousbulgaria.Activities.LoginActivity;
 import com.codeground.adventurousbulgaria.Interfaces.IOnDataBaseInitialized;
@@ -15,20 +13,18 @@ import com.codeground.adventurousbulgaria.Utilities.KinveyLandmarkJsonObject;
 import com.codeground.adventurousbulgaria.Utilities.Landmark;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.kinvey.android.AsyncAppData;
 import com.kinvey.android.Client;
 import com.kinvey.android.callback.KinveyListCallback;
 import com.kinvey.android.callback.KinveyUserCallback;
 import com.kinvey.java.User;
+import com.kinvey.java.model.KinveyReference;
 import com.orm.SugarContext;
 import com.orm.SugarDb;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Set;
 
 public class MainApplication extends Application {
     //TODO Declare Kinvey IDs using a properties file if needed at some point
@@ -129,5 +125,19 @@ public class MainApplication extends Application {
         File dbFile =  context.getDatabasePath(dbName);
 
         return dbFile.exists();
+    }
+
+    public void visitLandmark(Landmark landmark){
+        KinveyReference landmarkRef = new KinveyReference("landmarks", landmark.getKinveyId());
+
+        Object visitedObj = mKinveyClient.user().get("visitedLandmarks");
+        HashSet<KinveyReference> visitedLandmarks = new HashSet<>();
+
+        if(visitedObj != null){
+            visitedLandmarks.addAll(((ArrayList<KinveyReference>) visitedObj));
+        }
+
+        visitedLandmarks.add(landmarkRef);
+        updateKinveyUser("visitedLandmarks", new ArrayList<>(visitedLandmarks));
     }
 }
