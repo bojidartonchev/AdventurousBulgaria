@@ -1,6 +1,7 @@
 package com.codeground.adventurousbulgaria.Activities;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
@@ -12,6 +13,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
@@ -24,6 +26,7 @@ import android.widget.Toast;
 
 import com.codeground.adventurousbulgaria.MainApplication;
 import com.codeground.adventurousbulgaria.R;
+import com.codeground.adventurousbulgaria.Utilities.ProfileManager;
 import com.kinvey.android.Client;
 import com.kinvey.java.User;
 import com.kinvey.java.core.MediaHttpUploader;
@@ -66,7 +69,7 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
         mDateCreated.setText(mCurrentUser.get("DateCreated").toString());
         mTravelledKm.setText("0.00km");
 
-        loadProfilePicture();
+        ProfileManager.loadProfilePicture(mCurrentUser,mUserPicture,this);
     }
 
     @Override
@@ -94,115 +97,34 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode,final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
+
             Uri selectedImage = data.getData();
-            Bitmap bitmap = null;
+
             try {
-                bitmap = getCroppedBitmap(MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage));
+                final Bitmap bitmap = ProfileManager.getCroppedBitmap(MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), selectedImage));
+                AsyncTask.execute(new Runnable()  {
+                    @Override
+                    public void run() {
+
+                        //Saving bitmap to internal storage
+                        ProfileManager.savePictureToStorage(bitmap, mCurrentUser);
+                        //Saving bitmap to kinvey
+                        ProfileManager.savePictureToKinvey(bitmap, mCurrentUser, UserHomeActivity.this);
+                    }
+                });
+                mUserPicture.setImageBitmap(bitmap);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            //Saving bitmap to internal storage
-            savePictureToStorage(bitmap);
-            //Saving bitmap to kinvey
-            KinveyMetaData.AccessControlList acl = new KinveyMetaData.AccessControlList();
-            acl.setGloballyReadable(true);
-            FileMetaData mMetaData = new FileMetaData(mCurrentUser.getId());  //create the FileMetaData object
-            mMetaData.setPublic(true);  //set the file to be pubicly accesible
-            mMetaData.setAcl(acl); //allow all users to see this file
-            mMetaData.setFileName(mUserName.getText().toString()+"_picture");
 
-            File kinveyFile = new File(getApplicationContext().getCacheDir(),mUserName.getText().toString()+"_picture");
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 0 /*ignored for PNG*/, bos);
-            byte[] bitmapdata = bos.toByteArray();
-            FileOutputStream fos = null;
-            try {
-                fos = new FileOutputStream(kinveyFile);
-                fos.write(bitmapdata);
-                fos.flush();
-                fos.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-                Toast.makeText(getApplicationContext(), "Failed to save to phone", Toast.LENGTH_SHORT).show();
-            }
-
-            ((MainApplication) getApplication()).getKinveyClient().file().upload(mMetaData, kinveyFile, new UploaderProgressListener() {
-                @Override
-                public void progressChanged(MediaHttpUploader mediaHttpUploader) throws IOException {
-                }
-                @Override
-                public void onSuccess(FileMetaData fileMetaData) {
-                    Toast.makeText(getApplicationContext(), "Profile picture uploaded!", Toast.LENGTH_SHORT).show();
-                }
-                @Override
-                public void onFailure(Throwable error) {
-                    Toast.makeText(getApplicationContext(), "Failed to upload picture.", Toast.LENGTH_SHORT).show();
-
-                }
-
-            });
-
-            mUserPicture.setImageBitmap(bitmap);
         }
     }
 
-    private Boolean savePictureToStorage(Bitmap bitmap) {
-        ContextWrapper cw = new ContextWrapper(getApplicationContext());
-        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
-        File mypath = new File(directory, R.string.profile_picture_title+".png");
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(mypath);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        } finally {
-            try {
-                fos.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-                return false;
-            }
-        }
-        PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString(getString(R.string.profile_picture_title), directory.getAbsolutePath()).apply();
-        return true;
-    }
 
-    private Bitmap getCroppedBitmap(Bitmap bitmap) {
-        Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
-                bitmap.getHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(output);
-        final int color = 0xff424242;
-        final Paint paint = new Paint();
-        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
-
-        paint.setAntiAlias(true);
-        canvas.drawARGB(0, 0, 0, 0);
-        paint.setColor(color);
-        canvas.drawCircle(bitmap.getWidth() / 2, bitmap.getHeight() / 2,
-                bitmap.getWidth() / 2, paint);
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-        canvas.drawBitmap(bitmap, rect, rect, paint);
-        return output;
-    }
-
-    private void loadProfilePicture() {
-        if(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).contains(getString(R.string.profile_picture_title))) {
-            String mPicturePath = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getString(R.string.profile_picture_title), "");
-            try {
-                File f = new File(mPicturePath, R.string.profile_picture_title+".png");
-                Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
-                mUserPicture.setImageBitmap(b);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 }
