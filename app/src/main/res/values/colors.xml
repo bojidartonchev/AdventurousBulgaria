@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#684ccd</color>
     <color name="colorAccent">#9a88dd</color>
     <color name="white">#FFFFFF</color>
+    <color name="grey">#262626</color>
 
     <color name="menuColor1">#8974d8</color>
     <color name="menuColor2">#9a88dd</color>
