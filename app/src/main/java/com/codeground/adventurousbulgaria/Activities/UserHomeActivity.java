@@ -87,20 +87,20 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
 
             try {
                 final Bitmap bitmap = ProfileManager.getCroppedBitmap(MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), selectedImage));
-                AsyncTask.execute(new Runnable()  {
-                    @Override
-                    public void run() {
+                if(bitmap!=null){
+                    mUserPicture.setImageBitmap(bitmap);
 
-                        //Saving bitmap to internal storage
-                        ProfileManager.savePictureToStorage(bitmap, mCurrentUser);
-                        //Saving bitmap to kinvey
-                        ProfileManager.savePictureToKinvey(bitmap, mCurrentUser, UserHomeActivity.this);
-                    }
-                });
-                if(bitmap != null){
+                    AsyncTask.execute(new Runnable()  {
+                        @Override
+                        public void run() {
 
+                            //Saving bitmap to internal storage
+                            ProfileManager.savePictureToStorage(bitmap, mCurrentUser);
+                            //Saving bitmap to kinvey
+                            ProfileManager.savePictureToKinvey(bitmap, mCurrentUser, UserHomeActivity.this);
+                        }
+                    });
                 }
-
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {

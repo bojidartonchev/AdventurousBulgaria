@@ -40,6 +40,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 public class ProfileManager {
 
     public static Boolean savePictureToStorage(Bitmap bitmap,User currentUser) {
+        //check bitmap for null
         Context ctx = getApplicationContext();
         ContextWrapper cw = new ContextWrapper(ctx);
         File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
