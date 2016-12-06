@@ -15,6 +15,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.widget.Toast;
 
+import com.codeground.adventurousbulgaria.MainApplication;
+import com.codeground.adventurousbulgaria.Tasks.CheckLocationTask;
+
 public class LocationUpdateService extends Service{
     public static final int TWO_MINUTES = 120000; // 120 seconds
     public static Boolean isRunning = false;
@@ -87,7 +90,8 @@ public class LocationUpdateService extends Service{
             if (isBetterLocation(location, previousBestLocation)) {
                 previousBestLocation = location;
                 try {
-                    Toast.makeText(getApplicationContext(), location.toString(), Toast.LENGTH_SHORT).show();
+                    //Start async task to check the location
+                    new CheckLocationTask((MainApplication) getApplication()).execute(location);
                 }
                 catch (Exception e) {
                     e.printStackTrace();

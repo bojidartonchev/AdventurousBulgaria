@@ -158,4 +158,10 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             mCallbackManager.onActivityResult(requestCode, resultCode, data);
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        // disable going back to the MainMenuActivity
+        moveTaskToBack(true);
+    }
 }

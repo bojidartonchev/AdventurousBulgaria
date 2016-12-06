@@ -1,44 +1,25 @@
 package com.codeground.adventurousbulgaria.Activities;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.codeground.adventurousbulgaria.MainApplication;
 import com.codeground.adventurousbulgaria.R;
 import com.codeground.adventurousbulgaria.Utilities.ProfileManager;
 import com.kinvey.android.Client;
 import com.kinvey.java.User;
-import com.kinvey.java.core.MediaHttpUploader;
-import com.kinvey.java.core.UploaderProgressListener;
-import com.kinvey.java.model.FileMetaData;
-import com.kinvey.java.model.KinveyMetaData;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class UserHomeActivity extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener {
@@ -116,7 +97,10 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
                         ProfileManager.savePictureToKinvey(bitmap, mCurrentUser, UserHomeActivity.this);
                     }
                 });
-                mUserPicture.setImageBitmap(bitmap);
+                if(bitmap != null){
+
+                }
+
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {

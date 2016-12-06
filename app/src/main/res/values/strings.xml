@@ -5,4 +5,6 @@
     <string name="sign_up_hint_text">You don\'t have an account?</string>
     <string name="profile_button">Profile</string>
     <string name="landmarks_button">All landmarks</string>
+    <string name="push_notification_title_unlock_landmark">Landmark Unlocked</string>
+    <string name="push_notification_content_unlock_landmark">Congratulations! You have just visited %1$s</string>
 </resources>
