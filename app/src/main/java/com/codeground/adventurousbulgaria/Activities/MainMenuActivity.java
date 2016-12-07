@@ -1,13 +1,10 @@
 package com.codeground.adventurousbulgaria.Activities;
 
 import android.Manifest;
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -18,10 +15,10 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.codeground.adventurousbulgaria.BroadcastReceivers.BootReceiver;
 import com.codeground.adventurousbulgaria.Interfaces.IOnDataBaseInitialized;
 import com.codeground.adventurousbulgaria.MainApplication;
 import com.codeground.adventurousbulgaria.R;
-import com.codeground.adventurousbulgaria.Services.LocationUpdateService;
 import com.codeground.adventurousbulgaria.Utilities.Landmark;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -42,7 +39,6 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         GoogleApiClient.OnConnectionFailedListener,IOnDataBaseInitialized {
 
     private static final int INITIAL_REQUEST = 1337;
-    private Intent mServiceIntent;
 
     private static final String[] INITIAL_PERMS = {
             Manifest.permission.ACCESS_FINE_LOCATION,
@@ -115,8 +111,8 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
             case INITIAL_REQUEST:
                 if ((grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED) && (grantResults[1] == PackageManager.PERMISSION_GRANTED)) {
                     onConnected(null);
-                    startLocationService();
-
+                    //startLocationService();
+                    BootReceiver.scheduleAlarm(this);
                     if(mMap !=null){
                         //noinspection MissingPermission you kidding me?
                         mMap.setMyLocationEnabled(true);
@@ -129,16 +125,6 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
             default:
                 break;
         }
-    }
-
-    private void startLocationService() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-
-            mServiceIntent = new Intent(this, LocationUpdateService.class);
-            startService(mServiceIntent);
-        }
-        Toast.makeText(this, "starting background service", Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -202,7 +188,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
                     INITIAL_REQUEST);
 
         }else{
-            startLocationService();
+            BootReceiver.scheduleAlarm(this);
         }
     }
 

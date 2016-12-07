@@ -1,7 +1,7 @@
 package com.codeground.adventurousbulgaria.Services;
 
 import android.Manifest;
-import android.app.Service;
+import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -11,20 +11,24 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.widget.Toast;
 
 import com.codeground.adventurousbulgaria.MainApplication;
 import com.codeground.adventurousbulgaria.Tasks.CheckLocationTask;
 
-public class LocationUpdateService extends Service{
+public class LocationUpdateService extends IntentService {
     public static final int TWO_MINUTES = 120000; // 120 seconds
     public static Boolean isRunning = false;
 
     public LocationManager mLocationManager;
     public LocationUpdaterListener mLocationListener;
     public Location previousBestLocation = null;
+
+    public LocationUpdateService() {
+        super("LocationUpdateService");
+    }
 
     @Nullable
     @Override
@@ -33,9 +37,15 @@ public class LocationUpdateService extends Service{
     }
 
     @Override
+    protected void onHandleIntent(Intent intent) {
+        mHandlerTask.run();
+    }
+
+    @Override
     public void onCreate() {
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         mLocationListener = new LocationUpdaterListener();
+
         super.onCreate();
     }
 
@@ -46,15 +56,9 @@ public class LocationUpdateService extends Service{
             if (!isRunning) {
                 startListening();
             }
-            mHandler.postDelayed(mHandlerTask, TWO_MINUTES);
+            //mHandler.postDelayed(mHandlerTask, TWO_MINUTES);
         }
     };
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        mHandlerTask.run();
-        return START_STICKY;
-    }
 
     @Override
     public void onDestroy() {
@@ -92,6 +96,9 @@ public class LocationUpdateService extends Service{
                 try {
                     //Start async task to check the location
                     new CheckLocationTask((MainApplication) getApplication()).execute(location);
+
+                    Vibrator v = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
+                    v.vibrate(1000);
                 }
                 catch (Exception e) {
                     e.printStackTrace();

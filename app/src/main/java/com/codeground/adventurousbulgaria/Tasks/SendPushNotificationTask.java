@@ -4,6 +4,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v4.app.NotificationCompat;
 
@@ -39,11 +41,13 @@ public class SendPushNotificationTask extends AsyncTask<PushNotificationData, Vo
     @Override
     protected NotificationCompat.Builder doInBackground(PushNotificationData... data) {
         PushNotificationData pushNotificationData = data[0];
+        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(mCtx)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(pushNotificationData.getTitle())
-                .setContentText(pushNotificationData.getContent());
+                .setContentText(pushNotificationData.getContent())
+                .setSound(alarmSound);
 
         return mBuilder;
     }
