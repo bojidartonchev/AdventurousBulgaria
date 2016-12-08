@@ -1,7 +1,7 @@
 package com.codeground.adventurousbulgaria.Services;
 
 import android.Manifest;
-import android.app.IntentService;
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -14,21 +14,18 @@ import android.os.IBinder;
 import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.widget.Toast;
 
 import com.codeground.adventurousbulgaria.MainApplication;
 import com.codeground.adventurousbulgaria.Tasks.CheckLocationTask;
 
-public class LocationUpdateService extends IntentService {
+public class LocationUpdateService extends Service{
     public static final int TWO_MINUTES = 120000; // 120 seconds
     public static Boolean isRunning = false;
 
     public LocationManager mLocationManager;
     public LocationUpdaterListener mLocationListener;
     public Location previousBestLocation = null;
-
-    public LocationUpdateService() {
-        super("LocationUpdateService");
-    }
 
     @Nullable
     @Override
@@ -37,33 +34,25 @@ public class LocationUpdateService extends IntentService {
     }
 
     @Override
-    protected void onHandleIntent(Intent intent) {
-        mHandlerTask.run();
-    }
-
-    @Override
     public void onCreate() {
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         mLocationListener = new LocationUpdaterListener();
-
         super.onCreate();
     }
 
-    Handler mHandler = new Handler();
-    Runnable mHandlerTask = new Runnable(){
-        @Override
-        public void run() {
-            if (!isRunning) {
-                startListening();
-            }
-            //mHandler.postDelayed(mHandlerTask, TWO_MINUTES);
-        }
-    };
+
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+
+        startListening();
+        return START_STICKY;
+    }
 
     @Override
     public void onDestroy() {
         stopListening();
-        mHandler.removeCallbacks(mHandlerTask);
+
         super.onDestroy();
     }
 
@@ -91,14 +80,15 @@ public class LocationUpdateService extends IntentService {
     {
         @Override
         public void onLocationChanged(Location location) {
+
             if (isBetterLocation(location, previousBestLocation)) {
                 previousBestLocation = location;
                 try {
-                    //Start async task to check the location
+                    Toast.makeText(getApplicationContext(), location.toString(), Toast.LENGTH_SHORT).show();
                     new CheckLocationTask((MainApplication) getApplication()).execute(location);
-
-                    Vibrator v = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
-                    v.vibrate(1000);
+                   //Vibrator v = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
+                   //// Vibrate for 500 milliseconds
+                   //v.vibrate(500);
                 }
                 catch (Exception e) {
                     e.printStackTrace();
