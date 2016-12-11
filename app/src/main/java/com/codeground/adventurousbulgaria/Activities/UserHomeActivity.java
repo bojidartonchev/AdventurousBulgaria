@@ -11,16 +11,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.codeground.adventurousbulgaria.MainApplication;
 import com.codeground.adventurousbulgaria.R;
+import com.codeground.adventurousbulgaria.Utilities.ProfileAdapter;
+import com.codeground.adventurousbulgaria.Utilities.ProfileInfo;
 import com.codeground.adventurousbulgaria.Utilities.ProfileManager;
 import com.kinvey.android.Client;
 import com.kinvey.java.User;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 public class UserHomeActivity extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener {
 
@@ -28,8 +33,10 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
     private TextView mTravelledKm;
     private TextView mUserName;
     private ImageView mUserPicture;
+    private ListView mProfileData;
     private Button mLogoutButton;
     private User mCurrentUser;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +47,7 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
         mTravelledKm = (TextView) findViewById(R.id.travelled_km);
         mUserName = (TextView) findViewById(R.id.person_name);
         mUserPicture = (ImageView) findViewById(R.id.profile_picture);
+        mProfileData = (ListView) findViewById(R.id.profile_data);
 
         mUserPicture.setOnLongClickListener(this);
         mLogoutButton.setOnClickListener(this);
@@ -49,7 +57,9 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
         mUserName.setText(mCurrentUser.get("Name").toString());
         mDateCreated.setText(mCurrentUser.get("DateCreated").toString());
         mTravelledKm.setText("0.00km");
-
+        List<ProfileInfo> userInfo = ProfileManager.getProfileData(mCurrentUser);
+        ProfileAdapter data = new ProfileAdapter(getApplicationContext(),userInfo);
+        mProfileData.setAdapter(data);
         ProfileManager.loadProfilePicture(mCurrentUser,mUserPicture,this);
     }
 

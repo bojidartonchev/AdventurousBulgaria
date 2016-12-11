@@ -89,18 +89,24 @@
             android:id="@+id/travelled_km"
             />
     </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/menuColor7"
-        android:weightSum="1">
+    <LinearLayout android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/aliceBlue">
 
-    <Button
-        android:text="Logout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/logout_btn"
-        android:textAllCaps="false" />
-        </LinearLayout>
+        <ListView android:id="@+id/profile_data"
+            android:layout_height="0dip"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:divider="@color/lightGray"
+            android:dividerHeight="2dp"/>
+
+        <Button android:id="@+id/logout_btn"
+            android:text="Logout"
+            android:textAllCaps="false"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
 
 </LinearLayout>

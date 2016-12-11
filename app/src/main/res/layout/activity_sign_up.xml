@@ -4,6 +4,15 @@
     android:layout_height="match_parent"
     android:layout_margin="20dp">
 
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/username_field"
+        android:hint="Username" />
+
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,8 +26,8 @@
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
         android:ems="10"
-        android:id="@+id/name_field"
-        android:hint="Name" />
+        android:id="@+id/profile_name_field"
+        android:hint="Profile name" />
 
     <EditText
         android:layout_width="match_parent"

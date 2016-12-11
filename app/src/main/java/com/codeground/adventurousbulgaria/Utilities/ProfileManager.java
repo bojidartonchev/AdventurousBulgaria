@@ -33,6 +33,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
@@ -178,5 +180,22 @@ public class ProfileManager {
         return output;
     }
 
+    public static List<ProfileInfo> getProfileData(User currUser){
+        List<ProfileInfo> data = new ArrayList<ProfileInfo>();
+        ProfileInfo userField = new ProfileInfo();
+        ProfileInfo mailField = new ProfileInfo();
+        ProfileInfo nameField = new ProfileInfo();
+        userField.mName="Username";
+        userField.mValue=currUser.get("username").toString();
+        mailField.mName="E-mail";
+        mailField.mValue=currUser.get("E-mail").toString();
+        nameField.mName="Profile name";
+        nameField.mValue=currUser.get("Name").toString();
+        data.add(userField);
+        data.add(mailField);
+        data.add(nameField);
+
+        return data;
+    }
 
 }
