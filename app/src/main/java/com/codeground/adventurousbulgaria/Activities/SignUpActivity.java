@@ -13,6 +13,9 @@ import com.codeground.adventurousbulgaria.R;
 import com.kinvey.android.Client;
 import com.kinvey.android.callback.KinveyUserCallback;
 import com.kinvey.java.User;
+import com.parse.ParseException;
+import com.parse.ParseUser;
+import com.parse.SignUpCallback;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -26,6 +29,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     private EditText mProfileNameField;
     private EditText mPasswordField;
     private EditText mConfirmPasswordField;
+    private ParseUser mCurrentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +59,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
     private void registerUser(String username, String password, String confirmPassword)
     {
+        //Validations
         if(mUsernameField.getText().toString().length()<=4 || mUsernameField.getText().toString().length()>12){
             //Check username length
             Toast.makeText(this, "Username must be between 4 and 12 characters long.", Toast.LENGTH_SHORT).show();
@@ -75,28 +80,27 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             Toast.makeText(this, "Password must be between 5 and 12 characters long.", Toast.LENGTH_SHORT).show();
             return;
         }
-        Client mKinveyClient = ((MainApplication)getApplication()).getKinveyClient();
 
-        if(mKinveyClient!=null){
-            mKinveyClient.user().create(username, password, new KinveyUserCallback() {
-                @Override
-                public void onSuccess(User user) {
-                    String todaysDate = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
-                    ((MainApplication) getApplication()).updateKinveyUser("Name", mProfileNameField.getText().toString(), null);
-                    ((MainApplication) getApplication()).updateKinveyUser("E-mail", mEmailField.getText().toString(), null);
-                    ((MainApplication) getApplication()).updateKinveyUser("DateCreated", todaysDate, null);
-
+        mCurrentUser = new ParseUser();
+        mCurrentUser.setUsername(username);
+        mCurrentUser.setPassword(password);
+        mCurrentUser.setEmail(mEmailField.getText().toString());
+        mCurrentUser.put("first_name",mProfileNameField.getText().toString());
+        mCurrentUser.put("last_name",mProfileNameField.getText().toString());
+        mCurrentUser.signUpInBackground(new SignUpCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e == null) {
                     Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
                     startActivity(intent);
-                }
-
-                @Override
-                public void onFailure(Throwable throwable) {
+                } else {
                     CharSequence text = "Could not sign up.";
+                    e.printStackTrace();
                     Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
                 }
-            });
-        }
+            }
+        });
+
     }
 
     private boolean validateEmail(String email){

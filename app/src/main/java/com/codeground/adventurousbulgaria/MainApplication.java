@@ -24,6 +24,7 @@ import com.kinvey.java.User;
 import com.kinvey.java.model.KinveyReference;
 import com.orm.SugarContext;
 import com.orm.SugarDb;
+import com.parse.Parse;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -42,6 +43,12 @@ public class MainApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
+        //Parse Initialization
+        Parse.initialize(new Parse.Configuration.Builder(this)
+                        .applicationId("Aev0cw9ckqsWq9BGiGfnPXACPbLTHypE0ZpejrPQ")
+                        .clientKey("6pLQaBu3BcEceHbTXGkOyWZs4J4qVe8EVwEUlfkN")
+                        .server("https://parseapi.back4app.com/").build());
+
         //Facebook SDK Initialization
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
@@ -54,6 +61,7 @@ public class MainApplication extends Application {
 
         //TODO REMOVE IN RELEASE VERSION
         if(doesDatabaseExists(this,LANDMARKS_DATABASE_NAME)){
+
             SugarDb sugarDB = new SugarDb(getApplicationContext());
             new File(sugarDB.getDB().getPath()).delete();
         }

@@ -22,6 +22,9 @@ import com.facebook.login.LoginResult;
 import com.kinvey.android.Client;
 import com.kinvey.android.callback.KinveyUserCallback;
 import com.kinvey.java.User;
+import com.parse.LogInCallback;
+import com.parse.ParseException;
+import com.parse.ParseUser;
 
 import java.util.Arrays;
 
@@ -34,10 +37,13 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     private EditText mPasswordField;
     private Client mKinveyClient;
     private CallbackManager mCallbackManager;
+    private ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+        mProgressDialog = new ProgressDialog(this);
         mKinveyClient = ((MainApplication)getApplication()).getKinveyClient();
         User user = mKinveyClient.user();
 
@@ -63,6 +69,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             mEmailField = (EditText) findViewById(R.id.email_login_field);
             mPasswordField = (EditText) findViewById(R.id.pass_login_field);
         }
+
     }
 
     @Override
@@ -73,11 +80,24 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                 startActivity(intent);
             }else if(v.getId() == R.id.login_btn){
                 if(mEmailField!=null && mPasswordField!=null){
-                    String username = mEmailField.getText().toString();
-                    String pass = mPasswordField.getText().toString();
 
-                    //Attempt to login with user credentials
-                    login(username,pass);
+
+                    mProgressDialog.setMessage("Please Wait");
+                    mProgressDialog.setTitle("Logging in");
+                    mProgressDialog.show();
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                //Attempt to login with user credentials
+                                login(mEmailField.getText().toString(),mPasswordField.getText().toString());
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }).start();
+
+
                 }
             }else if(v.getId() == R.id.facebook_login_button){
                 submitFacebook(v);
@@ -86,19 +106,23 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     }
 
     private void login(String username, String password){
-        mKinveyClient.user().login(username, password, new KinveyUserCallback() {
+        ParseUser.logInInBackground(username, password, new LogInCallback() {
             @Override
-            public void onFailure(Throwable t) {
-                CharSequence text = "Wrong username or password.";
-                Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
-            }
-            @Override
-            public void onSuccess(User u) {
-                Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
-                startActivity(intent);
-                finish();
+            public void done(ParseUser parseUser, ParseException e) {
+                if (parseUser != null) {
+                    mProgressDialog.dismiss();
+                    Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
+                    startActivity(intent);
+                    finish();
+
+                } else {
+                    mProgressDialog.dismiss();
+                    CharSequence text = "Wrong username or password.";
+                    Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
+                }
             }
         });
+
     }
 
     public void submitFacebook(View view){
