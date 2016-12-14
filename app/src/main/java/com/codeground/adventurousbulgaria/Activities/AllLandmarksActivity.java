@@ -8,19 +8,19 @@ import android.support.v7.widget.RecyclerView;
 
 import com.codeground.adventurousbulgaria.Interfaces.IOnItemClicked;
 import com.codeground.adventurousbulgaria.R;
-import com.codeground.adventurousbulgaria.Utilities.Landmark;
 import com.codeground.adventurousbulgaria.Utilities.LandmarksAdapter;
+import com.codeground.adventurousbulgaria.Utilities.ParseLocation;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
 
 import java.util.List;
-
-
 public class AllLandmarksActivity extends AppCompatActivity implements IOnItemClicked {
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-
-    private List<Landmark> mData;
+    private List<ParseLocation> mData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,18 +33,35 @@ public class AllLandmarksActivity extends AppCompatActivity implements IOnItemCl
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        //Get all Landmarks from the localDB;
-        mData = Landmark.listAll(Landmark.class);
-        mAdapter = new LandmarksAdapter(mData, this);
-        mRecyclerView.setAdapter(mAdapter);
+        ParseQuery<ParseLocation> query = ParseQuery.getQuery(ParseLocation.class);
+        query.findInBackground(new FindCallback<ParseLocation>() {
+            @Override
+            public void done(List<ParseLocation> results, ParseException e) {
+                mData = results;
+                mAdapter = new LandmarksAdapter(results, AllLandmarksActivity.this);
+                mRecyclerView.setAdapter(mAdapter);
+            }
+        });
     }
 
     @Override
     public void onItemClicked(int pos) {
         if(mData!=null){
             Intent intent = new Intent(getApplicationContext(), LandmarkActivity.class);
-            intent.putExtra("landmark", mData.get(pos));
-            startActivity(intent);
+            ParseLocation currentLocation = mData.get(pos);
+            if(currentLocation!=null){
+                intent.putExtra("locationName", currentLocation.getName());
+                intent.putExtra("locationDescription", currentLocation.getDescription());
+                intent.putExtra("locationCity", currentLocation.getCity());
+
+                try {
+                    intent.putExtra("locationPhoto", currentLocation.getPhoto().getFile());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                startActivity(intent);
+            }
+
         }
     }
 }

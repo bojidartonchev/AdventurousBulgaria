@@ -17,7 +17,6 @@ import android.widget.Toast;
 
 import com.codeground.adventurousbulgaria.BroadcastReceivers.BootReceiver;
 import com.codeground.adventurousbulgaria.Interfaces.IOnDataBaseInitialized;
-import com.codeground.adventurousbulgaria.MainApplication;
 import com.codeground.adventurousbulgaria.R;
 import com.codeground.adventurousbulgaria.Utilities.Landmark;
 import com.google.android.gms.common.ConnectionResult;
@@ -57,9 +56,6 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main_menu);
-
-        //We are logged in so we can init our DB
-        ((MainApplication) getApplication()).initDB(this);
 
         checkForPermissions();
 

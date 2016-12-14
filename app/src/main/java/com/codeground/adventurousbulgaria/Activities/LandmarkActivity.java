@@ -6,8 +6,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.codeground.adventurousbulgaria.R;
-import com.codeground.adventurousbulgaria.Utilities.Landmark;
 import com.squareup.picasso.Picasso;
+
+import java.io.File;
 
 public class LandmarkActivity extends AppCompatActivity {
     private TextView mTitle;
@@ -25,22 +26,24 @@ public class LandmarkActivity extends AppCompatActivity {
         mLocation = (TextView)findViewById(R.id.landmark_location);
         mPhoto = (ImageView) findViewById(R.id.monument_picture);
 
-        Landmark currentLandmark = getIntent().getParcelableExtra("landmark");
+        String currentLandmarkName = getIntent().getStringExtra("locationName");
+        String currentLandmarkDesc = getIntent().getStringExtra("locationDescription");
+        String currentLandmarkCity = getIntent().getStringExtra("locationCity");
+        File currentLandmarkPhoto = (File)getIntent().getExtras().get("locationPhoto");
 
-        if(currentLandmark!=null){
-            if(mTitle!=null){
-                mTitle.setText(currentLandmark.getName());
-            }
-            if(mDescription!=null){
-                mDescription.setText(currentLandmark.getDescription());
-            }
-            if(mLocation!=null){
-                mLocation.setText(currentLandmark.getLocationName());
-            }
-            if(mPhoto!=null){
-                //Load the icon
-                Picasso.with(this).load(currentLandmark.getPhotoURL()).into(mPhoto);
-            }
+        if(mTitle!=null){
+            mTitle.setText(currentLandmarkName);
         }
+        if(mDescription!=null){
+            mDescription.setText(currentLandmarkDesc);
+        }
+        if(mLocation!=null){
+            mLocation.setText(currentLandmarkCity);
+        }
+        if(mPhoto!=null){
+            //Load the icon
+            Picasso.with(this).load(currentLandmarkPhoto).into(mPhoto);
+        }
+
     }
 }

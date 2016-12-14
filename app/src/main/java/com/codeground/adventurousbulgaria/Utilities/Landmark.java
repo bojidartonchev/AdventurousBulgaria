@@ -26,17 +26,6 @@ public class Landmark extends SugarRecord implements Parcelable {
         this.setLocation(latitude,longitude);
         this.setIconURL(iconURL);
     }
-
-    public Landmark(KinveyLandmarkJsonObject template) {
-        this.setName(template.getName());
-        this.setDescription(template.getDescription());
-        this.setLocationName(template.getLocationName());
-        this.setLocation(template.getLatitude(),template.getLongitude());
-        this.setIconURL(template.getIconURL());
-        this.setKinveyId(template.getId());
-        this.setPhotoURL(template.getPhotoURL());
-    }
-
     public String getName() {
         return name;
     }
@@ -89,7 +78,6 @@ public class Landmark extends SugarRecord implements Parcelable {
         this.latitude = latitude;
         this.longitude = longitude;
     }
-
     public String getPhotoURL() {
         return photoURL;
     }

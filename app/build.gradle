@@ -34,7 +34,6 @@ dependencies {
     })
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.android.support:appcompat-v7:24.2.1'
-    compile(name:'kinvey-android-2.10.8', ext:'aar')
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
     compile 'com.github.satyan:sugar:1.4'
     testCompile 'junit:junit:4.12'
@@ -42,5 +41,6 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.google.android.gms:play-services:9.8.0'
     compile 'com.parse.bolts:bolts-android:1.+'
+    compile 'com.parse:parsefacebookutils-v4-android:1.10.3@aar'
     compile 'com.parse:parse-android:1.13.1'
 }

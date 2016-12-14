@@ -1,7 +1,6 @@
 package com.codeground.adventurousbulgaria.Utilities;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.graphics.Bitmap;
@@ -12,18 +11,11 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.codeground.adventurousbulgaria.MainApplication;
-import com.codeground.adventurousbulgaria.R;
 import com.kinvey.java.Query;
 import com.kinvey.java.User;
-import com.kinvey.java.core.DownloaderProgressListener;
-import com.kinvey.java.core.MediaHttpDownloader;
-import com.kinvey.java.core.MediaHttpUploader;
-import com.kinvey.java.core.UploaderProgressListener;
 import com.kinvey.java.model.FileMetaData;
 import com.kinvey.java.model.KinveyMetaData;
 
@@ -33,8 +25,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
@@ -90,25 +80,25 @@ public class ProfileManager {
             e.printStackTrace();
             Toast.makeText(getApplicationContext(), "Failed to save to phone", Toast.LENGTH_SHORT).show();
         }
-        ((MainApplication) activity.getApplication()).getKinveyClient().file().upload(mMetaData, kinveyFile, new UploaderProgressListener() {
-            @Override
-            public void progressChanged(MediaHttpUploader mediaHttpUploader) throws IOException {
+       //((MainApplication) activity.getApplication()).getKinveyClient().file().upload(mMetaData, kinveyFile, new UploaderProgressListener() {
+       //    @Override
+       //    public void progressChanged(MediaHttpUploader mediaHttpUploader) throws IOException {
 
 
 
-            }
-            @Override
-            public void onSuccess(FileMetaData fileMetaData) {
-                Toast.makeText(getApplicationContext(), "Profile picture uploaded to Kinvey.", Toast.LENGTH_SHORT).show();
+       //    }
+       //    @Override
+       //    public void onSuccess(FileMetaData fileMetaData) {
+       //        Toast.makeText(getApplicationContext(), "Profile picture uploaded to Kinvey.", Toast.LENGTH_SHORT).show();
 
-            }
-            @Override
-            public void onFailure(Throwable error) {
-                Toast.makeText(getApplicationContext(), "Failed to upload picture to Kinvey.", Toast.LENGTH_SHORT).show();
+       //    }
+       //    @Override
+       //    public void onFailure(Throwable error) {
+       //        Toast.makeText(getApplicationContext(), "Failed to upload picture to Kinvey.", Toast.LENGTH_SHORT).show();
 
-            }
+       //    }
 
-        });
+       //});
     }
 
     public static void loadProfilePicture(final User currentUser, final ImageView userPicture, Activity activity) {
@@ -138,28 +128,28 @@ public class ProfileManager {
         Query q = new Query();
         q.equals("_filename",currentUser.getId()+"_picture");
 
-        ((MainApplication) activity.getApplication()).getKinveyClient().file().download(q, fos, new DownloaderProgressListener() {
-            @Override
-            public void onSuccess(Void result) {
-                Log.i("KinveyPicture", "successfully downloaded file");
-                try {
-                    Bitmap bmp = BitmapFactory.decodeStream(new FileInputStream(picture));
-                    userPicture.setImageBitmap(bmp);
-                    savePictureToStorage(bmp,currentUser);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-            }
-            @Override
-            public void onFailure(Throwable error) {
-                Log.e("KinveyPicture", "failed to download file.", error);
-            }
-            @Override
-            public void progressChanged(MediaHttpDownloader downloader) throws IOException {
-                Log.i("KinveyPicture", "progress updated: "+downloader.getDownloadState());
-                // any updates to UI widgets must be done on the UI thread
-            }
-        });
+        //((MainApplication) activity.getApplication()).getKinveyClient().file().download(q, fos, new DownloaderProgressListener() {
+        //    @Override
+        //    public void onSuccess(Void result) {
+        //        Log.i("KinveyPicture", "successfully downloaded file");
+        //        try {
+        //            Bitmap bmp = BitmapFactory.decodeStream(new FileInputStream(picture));
+        //            userPicture.setImageBitmap(bmp);
+        //            savePictureToStorage(bmp,currentUser);
+        //        } catch (FileNotFoundException e) {
+        //            e.printStackTrace();
+        //        }
+        //    }
+        //    @Override
+        //    public void onFailure(Throwable error) {
+        //        Log.e("KinveyPicture", "failed to download file.", error);
+        //    }
+        //    @Override
+        //    public void progressChanged(MediaHttpDownloader downloader) throws IOException {
+        //        Log.i("KinveyPicture", "progress updated: "+downloader.getDownloadState());
+        //        // any updates to UI widgets must be done on the UI thread
+        //    }
+        //});
 
     }
     public static Bitmap getCroppedBitmap(Bitmap bitmap) {
@@ -180,22 +170,5 @@ public class ProfileManager {
         return output;
     }
 
-    public static List<ProfileInfo> getProfileData(User currUser){
-        List<ProfileInfo> data = new ArrayList<ProfileInfo>();
-        ProfileInfo userField = new ProfileInfo();
-        ProfileInfo mailField = new ProfileInfo();
-        ProfileInfo nameField = new ProfileInfo();
-        userField.mName="Username";
-        userField.mValue=currUser.get("username").toString();
-        mailField.mName="E-mail";
-        mailField.mValue=currUser.get("E-mail").toString();
-        nameField.mName="Profile name";
-        nameField.mValue=currUser.get("Name").toString();
-        data.add(userField);
-        data.add(mailField);
-        data.add(nameField);
-
-        return data;
-    }
 
 }

@@ -2,9 +2,6 @@ package com.codeground.adventurousbulgaria.Activities;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
@@ -14,18 +11,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.codeground.adventurousbulgaria.MainApplication;
 import com.codeground.adventurousbulgaria.R;
-import com.codeground.adventurousbulgaria.Utilities.ProfileAdapter;
-import com.codeground.adventurousbulgaria.Utilities.ProfileInfo;
-import com.codeground.adventurousbulgaria.Utilities.ProfileManager;
-import com.kinvey.android.Client;
-import com.kinvey.java.User;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
+import com.parse.ParseUser;
 
 public class UserHomeActivity extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener {
 
@@ -35,7 +22,7 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
     private ImageView mUserPicture;
     private ListView mProfileData;
     private Button mLogoutButton;
-    private User mCurrentUser;
+    private ParseUser mCurrentUser;
 
 
     @Override
@@ -47,20 +34,12 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
         mTravelledKm = (TextView) findViewById(R.id.travelled_km);
         mUserName = (TextView) findViewById(R.id.person_name);
         mUserPicture = (ImageView) findViewById(R.id.profile_picture);
-        mProfileData = (ListView) findViewById(R.id.profile_data);
-
         mUserPicture.setOnLongClickListener(this);
         mLogoutButton.setOnClickListener(this);
 
-        mCurrentUser = ((MainApplication) getApplication()).getKinveyClient().user();
-
-        mUserName.setText(mCurrentUser.get("Name").toString());
-        mDateCreated.setText(mCurrentUser.get("DateCreated").toString());
+        mCurrentUser = ParseUser.getCurrentUser();
+        mUserName.setText(mCurrentUser.getString("first_name"));
         mTravelledKm.setText("0.00km");
-        List<ProfileInfo> userInfo = ProfileManager.getProfileData(mCurrentUser);
-        ProfileAdapter data = new ProfileAdapter(getApplicationContext(),userInfo);
-        mProfileData.setAdapter(data);
-        ProfileManager.loadProfilePicture(mCurrentUser,mUserPicture,this);
     }
 
     @Override
@@ -79,8 +58,7 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void logout() {
-        Client mKinveyClient = ((MainApplication) getApplication()).getKinveyClient();
-        mKinveyClient.user().logout().execute();
+        mCurrentUser.logOut();
 
         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
         finish();
@@ -93,29 +71,7 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
 
         if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
 
-            Uri selectedImage = data.getData();
 
-            try {
-                final Bitmap bitmap = ProfileManager.getCroppedBitmap(MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), selectedImage));
-                if(bitmap!=null){
-                    mUserPicture.setImageBitmap(bitmap);
-
-                    AsyncTask.execute(new Runnable()  {
-                        @Override
-                        public void run() {
-
-                            //Saving bitmap to internal storage
-                            ProfileManager.savePictureToStorage(bitmap, mCurrentUser);
-                            //Saving bitmap to kinvey
-                            ProfileManager.savePictureToKinvey(bitmap, mCurrentUser, UserHomeActivity.this);
-                        }
-                    });
-                }
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
 
         }
     }

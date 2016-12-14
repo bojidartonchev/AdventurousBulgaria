@@ -10,20 +10,22 @@ import android.widget.TextView;
 
 import com.codeground.adventurousbulgaria.Interfaces.IOnItemClicked;
 import com.codeground.adventurousbulgaria.R;
+import com.parse.ParseException;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 public class LandmarksAdapter extends RecyclerView.Adapter<LandmarksAdapter.ViewHolder> {
 
+    private List<ParseLocation> mAdapterData;
 
-    private List<Landmark> mAdapterData;
     private static IOnItemClicked mCaller;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView mTitle;
         public TextView mLocation;
         public ImageView mIcon;
+        public TextView mCompletedHolder;
         public RelativeLayout mParent;
 
         private int position;
@@ -34,6 +36,7 @@ public class LandmarksAdapter extends RecyclerView.Adapter<LandmarksAdapter.View
             mLocation = (TextView) itemView.findViewById(R.id.location);
             mIcon = (ImageView) itemView.findViewById(R.id.icon);
             mParent = (RelativeLayout) itemView.findViewById(R.id.row_parent);
+            mCompletedHolder = (TextView) itemView.findViewById(R.id.completed_container);
 
             mParent.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -50,7 +53,7 @@ public class LandmarksAdapter extends RecyclerView.Adapter<LandmarksAdapter.View
         }
     }
 
-    public LandmarksAdapter(List<Landmark> data, IOnItemClicked caller) {
+    public LandmarksAdapter(List<ParseLocation> data, IOnItemClicked caller) {
         this.mAdapterData = data;
         this.mCaller = caller;
     }
@@ -76,13 +79,14 @@ public class LandmarksAdapter extends RecyclerView.Adapter<LandmarksAdapter.View
         if (holder != null) {
             holder.setPosition(position);
             holder.mTitle.setText(mAdapterData.get(position).getName());
-            holder.mLocation.setText(mAdapterData.get(position).getLocationName());
+            holder.mLocation.setText(mAdapterData.get(position).getCity());
 
             //Load the icon
-            Picasso.with(holder.mIcon.getContext()).load(mAdapterData.get(position).getIconURL()).into(holder.mIcon);
-
-            //TODO CHECK IF THIS IS COMPLETED
-            //holder.mParent.setBackgroundColor(Color.parseColor("#00FF00"));
+            try {
+                Picasso.with(holder.mIcon.getContext()).load(mAdapterData.get(position).getIcon().getFile()).into(holder.mIcon);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
