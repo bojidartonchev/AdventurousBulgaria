@@ -18,16 +18,19 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.codeground.adventurousbulgaria.R;
+import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -133,7 +136,14 @@ public class SubmitLocationActivity extends AppCompatActivity implements View.On
            location.put("photo3",mPhoto3);
        }
 
-        location.saveInBackground();
+        location.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if(e!=null){
+                    Log.d("Save",e.getMessage());
+                }
+            }
+        });
     }
 
     private Location getLastKnownLocation() {
