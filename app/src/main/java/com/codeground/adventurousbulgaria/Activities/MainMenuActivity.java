@@ -239,6 +239,12 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
+        if (id == R.id.search_users) {
+            Intent intent = new Intent(getApplicationContext(), SearchUsersActivity.class);
+            finish();
+            startActivity(intent);
+        }
+
         if (id == R.id.logout) {
             logout();
         }
