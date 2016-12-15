@@ -16,6 +16,10 @@ import android.widget.Toast;
 
 import com.codeground.adventurousbulgaria.MainApplication;
 import com.codeground.adventurousbulgaria.Tasks.CheckLocationTask;
+import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 public class LocationUpdateService extends Service{
     public static final int TWO_MINUTES = 120000; // 120 seconds
@@ -78,15 +82,23 @@ public class LocationUpdateService extends Service{
     {
         @Override
         public void onLocationChanged(Location location) {
-
             if (isBetterLocation(location, previousBestLocation)) {
                 previousBestLocation = location;
                 try {
+                    ParseGeoPoint point = new ParseGeoPoint(location.getLatitude(), location.getLongitude());
+                    ParseUser user = ParseUser.getCurrentUser();
+                    user.put("last_location", point);
+                    user.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            if(e!=null)
+                            {
+                                Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
+
                     Toast.makeText(getApplicationContext(), location.toString(), Toast.LENGTH_SHORT).show();
-                    new CheckLocationTask((MainApplication) getApplication()).execute(location);
-                   //Vibrator v = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
-                   //// Vibrate for 500 milliseconds
-                   //v.vibrate(500);
                 }
                 catch (Exception e) {
                     e.printStackTrace();
