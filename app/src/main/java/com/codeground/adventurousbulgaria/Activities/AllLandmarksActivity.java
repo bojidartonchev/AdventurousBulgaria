@@ -34,6 +34,7 @@ public class AllLandmarksActivity extends AppCompatActivity implements IOnItemCl
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         ParseQuery<ParseLocation> query = ParseQuery.getQuery(ParseLocation.class);
+
         query.findInBackground(new FindCallback<ParseLocation>() {
             @Override
             public void done(List<ParseLocation> results, ParseException e) {
