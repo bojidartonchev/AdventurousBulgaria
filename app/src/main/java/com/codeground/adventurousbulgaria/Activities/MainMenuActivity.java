@@ -244,6 +244,11 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
             finish();
             startActivity(intent);
         }
+        if (id == R.id.submit_location) {
+            Intent intent = new Intent(getApplicationContext(), SubmitLocationActivity.class);
+            finish();
+            startActivity(intent);
+        }
 
         if (id == R.id.logout) {
             logout();
