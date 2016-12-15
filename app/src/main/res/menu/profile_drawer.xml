@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item android:id="@+id/nav_camara" android:icon="@android:drawable/ic_menu_camera"
+            android:title="Submit location" />
+        <item android:id="@+id/nav_gallery" android:icon="@android:drawable/ic_menu_gallery"
+            android:title="Last visited locations" />
+        <item android:id="@+id/nav_slideshow" android:icon="@android:drawable/ic_menu_slideshow"
+            android:title="Slideshow" />
+        <item android:id="@+id/nav_manage" android:icon="@android:drawable/ic_menu_manage"
+            android:title="Settings" />
+    </group>
+
+    <item android:title="Social">
+        <menu>
+            <item android:id="@+id/search_users" android:icon="@android:drawable/ic_menu_search"
+                android:title="Find friends" />
+            <item android:id="@+id/logout" android:icon="@android:drawable/ic_menu_manage"
+                android:title="Logout" />
+        </menu>
+    </item>
+
+</menu>

@@ -3,6 +3,8 @@ package com.codeground.adventurousbulgaria.Activities;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -25,6 +27,12 @@ import com.parse.SaveCallback;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.Arrays;
 import java.util.List;
 
@@ -149,8 +157,9 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     void getUserDetailFromFB(){
         GraphRequest request = GraphRequest.newMeRequest(AccessToken.getCurrentAccessToken(),new GraphRequest.GraphJSONObjectCallback(){
             @Override
-            public void onCompleted(JSONObject object, GraphResponse response) {
-                String fname = "",lname = "", email = "";
+            public void onCompleted(final JSONObject object, GraphResponse response) {
+                String fname = "",lname = "", email = "", id = "";
+
                 try {
                     fname = object.getString("first_name");
                 } catch (JSONException e) {
@@ -166,20 +175,34 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                try{
+                    id= object.getString("id");
+                } catch(JSONException e){
+                    e.printStackTrace();
+                }
+
+
+
+
 
                 saveNewUser(fname, lname, email);
 
             }
         });
+
+
         Bundle parameters = new Bundle();
-        parameters.putString("fields","first_name,last_name,email");
+        parameters.putString("fields","first_name,last_name,email,id");
         request.setParameters(parameters);
         request.executeAsync();
     }
     void saveNewUser(final String firstName, String lastName, String email){
+
         ParseUser user = ParseUser.getCurrentUser();
+
         user.put("first_name",firstName);
         user.put("last_name",lastName);
+        user.put("search_match",firstName.toLowerCase()+" "+lastName.toLowerCase());
         user.setEmail(email);
         user.saveInBackground(new SaveCallback() {
             @Override

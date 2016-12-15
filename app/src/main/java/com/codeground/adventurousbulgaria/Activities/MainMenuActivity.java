@@ -7,15 +7,21 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.codeground.adventurousbulgaria.BroadcastReceivers.BootReceiver;
+import com.codeground.adventurousbulgaria.Fragments.ProfileFragment;
 import com.codeground.adventurousbulgaria.Interfaces.IOnDataBaseInitialized;
 import com.codeground.adventurousbulgaria.R;
 import com.codeground.adventurousbulgaria.Utilities.Landmark;
@@ -28,10 +34,12 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.parse.ParseUser;
 
 import java.util.List;
 
 public class MainMenuActivity extends AppCompatActivity implements View.OnClickListener,
+        NavigationView.OnNavigationItemSelectedListener,
         OnMapReadyCallback,
         GoogleMap.OnMapLoadedCallback,
         GoogleApiClient.ConnectionCallbacks,
@@ -51,6 +59,10 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
 
+    private TextView mPersonName;
+    private NavigationView mProfileView;
+    private Toolbar mToolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +70,25 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_main_menu);
 
         checkForPermissions();
+
+        //Create profile fragment
+        ProfileFragment fragment = new ProfileFragment();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().
+                beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container,fragment);
+        fragmentTransaction.commit();
+        //mToolbar = (Toolbar)findViewById(R.id.toolbar);
+        //setSupportActionBar(mToolbar);
+        mProfileView = (NavigationView) findViewById(R.id.profile_view);
+        mPersonName = (TextView) mProfileView.getHeaderView(0).findViewById(R.id.profile_name);
+        String currUserName = ParseUser.getCurrentUser().get("first_name").toString()+" "+ParseUser.getCurrentUser().get("last_name").toString();
+        mPersonName.setText(currUserName);
+        mProfileView.setNavigationItemSelectedListener(this);
+        //mPersonName.setText(currUserName);
+
+
+
+
 
         mProfileBtn = (Button) findViewById(R.id.profile_btn);
         mProfileBtn.setOnClickListener(this);
@@ -90,10 +121,10 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.profile_btn) {
-            Intent intent = new Intent(this, UserHomeActivity.class);
-            startActivity(intent);
-        }
+        //if (v.getId() == R.id.profile_btn) {
+        //    Intent intent = new Intent(this, UserHomeActivity.class);
+        //    startActivity(intent);
+        //}
         if (v.getId() == R.id.landmarks_btn) {
             Intent intent = new Intent(this, AllLandmarksActivity.class);
             startActivity(intent);
@@ -201,5 +232,24 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
                     .position(new LatLng(landmark.getLatitude(), landmark.getLongitude()))
                     .title(landmark.getName()));
         }
+    }
+
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.logout) {
+            logout();
+        }
+
+        return false;
+    }
+
+    private void logout() {
+        ParseUser.getCurrentUser().logOut();
+        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        finish();
+        startActivity(intent);
     }
 }

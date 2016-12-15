@@ -19,8 +19,8 @@ import java.util.regex.Pattern;
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
     private Button mRegBtn;
     private EditText mEmailField;
-    private EditText mUsernameField;
-    private EditText mProfileNameField;
+    private EditText mFirstNameField;
+    private EditText mLastNameField;
     private EditText mPasswordField;
     private EditText mConfirmPasswordField;
     private ParseUser mCurrentUser;
@@ -29,10 +29,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
-
-        mProfileNameField = (EditText) findViewById(R.id.profile_name_field) ;
         mEmailField = (EditText) findViewById(R.id.email_field);
-        mUsernameField = (EditText) findViewById(R.id.username_field);
+        mFirstNameField = (EditText) findViewById(R.id.first_name_field) ;
+        mLastNameField = (EditText) findViewById(R.id.last_name_field) ;
         mPasswordField = (EditText) findViewById(R.id.password_field);
         mConfirmPasswordField = (EditText) findViewById(R.id.confirm_password_field);
 
@@ -44,8 +43,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View v) {
         if(v!=null){
             if(v.getId() == R.id.register_btn){
-                if(mProfileNameField!=null && mEmailField!=null && mUsernameField!=null && mPasswordField!=null && mConfirmPasswordField!=null){
-                    registerUser(mUsernameField.getText().toString(),mPasswordField.getText().toString(),mConfirmPasswordField.getText().toString());
+                if(mEmailField!=null && mFirstNameField!=null && mLastNameField!=null && mPasswordField!=null ){
+                    registerUser(mEmailField.getText().toString(),mPasswordField.getText().toString(),mConfirmPasswordField.getText().toString());
                 }
             }
         }
@@ -54,11 +53,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     private void registerUser(String username, String password, String confirmPassword)
     {
         //Validations
-        if(mUsernameField.getText().toString().length()<=4 || mUsernameField.getText().toString().length()>12){
-            //Check username length
-            Toast.makeText(this, "Username must be between 4 and 12 characters long.", Toast.LENGTH_SHORT).show();
-            return;
-        }
+
         if(!validateEmail(mEmailField.getText().toString())) {
             //Invalid email
             Toast.makeText(this, "Invalid E-mail address. Please try again.", Toast.LENGTH_SHORT).show();
@@ -75,12 +70,15 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             return;
         }
 
+        String firstName = mFirstNameField.getText().toString();
+        String lastName = mLastNameField.getText().toString();
         mCurrentUser = new ParseUser();
         mCurrentUser.setUsername(username);
         mCurrentUser.setPassword(password);
-        mCurrentUser.setEmail(mEmailField.getText().toString());
-        mCurrentUser.put("first_name",mProfileNameField.getText().toString());
-        mCurrentUser.put("last_name",mProfileNameField.getText().toString());
+        mCurrentUser.put("first_name",firstName);
+        mCurrentUser.put("last_name",lastName);
+        mCurrentUser.put("search_match",firstName.toLowerCase()+" "+lastName.toLowerCase());
+
         mCurrentUser.signUpInBackground(new SignUpCallback() {
             @Override
             public void done(ParseException e) {
@@ -103,10 +101,11 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
         Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(email);
-        if (matcher.matches()) {
+        if (matcher.matches()&&email.length()<30) {
             isValid = true;
 
         }
+
         return isValid;
     }
 }

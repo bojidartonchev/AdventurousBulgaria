@@ -5,13 +5,6 @@
     android:layout_margin="20dp">
 
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:ems="10"
-        android:id="@+id/username_field"
-        android:hint="Username" />
 
     <EditText
         android:layout_width="match_parent"
@@ -26,8 +19,16 @@
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
         android:ems="10"
-        android:id="@+id/profile_name_field"
-        android:hint="Profile name" />
+        android:id="@+id/first_name_field"
+        android:hint="First name" />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/last_name_field"
+        android:hint="Last name" />
+
 
     <EditText
         android:layout_width="match_parent"
