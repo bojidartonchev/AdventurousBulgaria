@@ -33,13 +33,10 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
+
 import java.io.IOException;
 import java.util.List;
 
-/**
- * Created by xlrrr on 15.12.2016 г..
- */
 
 public class SubmitLocationActivity extends AppCompatActivity implements View.OnClickListener {
 

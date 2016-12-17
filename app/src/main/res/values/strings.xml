@@ -8,6 +8,20 @@
     <string name="push_notification_title_unlock_landmark">Landmark Unlocked</string>
     <string name="push_notification_content_unlock_landmark">Congratulations! You have just visited %1$s</string>
 
+    <!--CATEGORIES-->
+    <string name="cat_mountain">Mountains</string>
+    <string name="cat_lakes">Lakes</string>
+    <string name="cat_cycling">Cycling</string>
+    <string name="cat_food">Food</string>
+    <string name="cat_ecopath">Ecopath</string>
+    <string name="cat_fishing">Fishing</string>
+    <string name="cat_beach">Beach</string>
+    <string name="cat_waterfall">Waterfalls</string>
+    <string name="cat_caves">Caves</string>
+    <string name="cat_fortress">Fortress</string>
+    <string name="cat_festival">Festival</string>
+    <string name="cat_camping">Camping</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

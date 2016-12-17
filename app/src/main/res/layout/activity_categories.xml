@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backgroundColor"
+    android:weightSum="4">
+
+    <TextView
+        android:text="CATEGORIES"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView"
+        android:fontFamily="sans-serif"
+        android:textSize="23sp"
+        android:layout_marginTop="5dp"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:layout_weight="0.2" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:layout_weight="1"
+        android:weightSum="3" >
+        <Button
+            android:id="@+id/cat_mountains"
+
+            android:layout_width="60dp"
+            android:layout_height="150dp"
+            android:layout_weight="1"
+            android:layout_marginRight="6dp"
+            android:layout_marginBottom="6dp"
+            android:drawableTop="@drawable/mountain"
+            android:background="@color/menuColor"/>
+
+        <Button
+            android:id="@+id/cat_ecopath"
+            android:layout_width="60dp"
+            android:layout_height="150dp"
+            android:layout_weight="1"
+            android:layout_marginRight="6dp"
+            android:layout_marginBottom="6dp"
+            android:drawableTop="@drawable/path"
+            android:background="@color/menuColor" />
+
+        <Button
+            android:id="@+id/cat_camping"
+            android:layout_width="60dp"
+            android:layout_height="150dp"
+            android:layout_weight="1"
+            android:layout_marginBottom="6dp"
+            android:drawableTop="@drawable/camp"
+            android:background="@color/menuColor" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:layout_weight="1"
+        android:weightSum="3" >
+        <Button
+            android:id="@+id/cat_cycling"
+            android:layout_width="60dp"
+            android:layout_height="150dp"
+            android:layout_weight="1"
+            android:layout_marginRight="6dp"
+            android:layout_marginBottom="6dp"
+            android:drawableTop="@drawable/bike"
+            android:background="@color/menuColor"/>
+
+        <Button
+            android:id="@+id/cat_lakes"
+            android:layout_width="60dp"
+            android:layout_height="150dp"
+            android:layout_weight="1"
+            android:layout_marginRight="6dp"
+            android:layout_marginBottom="6dp"
+            android:drawableTop="@drawable/lake"
+            android:background="@color/menuColor" />
+
+        <Button
+            android:id="@+id/cat_fishing"
+            android:layout_width="60dp"
+            android:layout_height="150dp"
+            android:layout_weight="1"
+            android:layout_marginBottom="6dp"
+            android:drawableTop="@drawable/fish"
+            android:background="@color/menuColor" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:layout_weight="1"
+        android:weightSum="3" >
+        <Button
+            android:id="@+id/cat_beach"
+            android:layout_width="60dp"
+            android:layout_height="150dp"
+            android:layout_weight="1"
+            android:layout_marginRight="6dp"
+            android:layout_marginBottom="6dp"
+            android:drawableTop="@drawable/beach"
+            android:background="@color/menuColor"/>
+
+        <Button
+            android:id="@+id/cat_waterfalls"
+            android:layout_width="60dp"
+            android:layout_height="150dp"
+            android:layout_weight="1"
+            android:layout_marginRight="6dp"
+            android:layout_marginBottom="6dp"
+            android:drawableTop="@drawable/waterfall"
+            android:background="@color/menuColor" />
+
+        <Button
+            android:id="@+id/cat_caves"
+            android:layout_width="60dp"
+            android:layout_height="150dp"
+            android:layout_weight="1"
+            android:layout_marginBottom="6dp"
+            android:drawableTop="@drawable/cave"
+            android:background="@color/menuColor" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:layout_weight="1"
+        android:weightSum="3" >
+        <Button
+            android:id="@+id/cat_fortress"
+            android:layout_width="60dp"
+            android:layout_height="150dp"
+            android:layout_weight="1"
+            android:layout_marginRight="6dp"
+
+            android:drawableTop="@drawable/fortress"
+            android:background="@color/menuColor"/>
+
+        <Button
+            android:id="@+id/cat_festival"
+            android:layout_width="60dp"
+            android:layout_height="150dp"
+            android:layout_weight="1"
+            android:layout_marginRight="6dp"
+
+            android:drawableTop="@drawable/festival"
+            android:background="@color/menuColor" />
+
+        <Button
+            android:id="@+id/cat_food"
+            android:layout_width="60dp"
+            android:layout_height="150dp"
+            android:layout_weight="1"
+
+            android:drawableTop="@drawable/meal"
+            android:background="@color/menuColor" />
+    </LinearLayout>
+
+
+</LinearLayout>

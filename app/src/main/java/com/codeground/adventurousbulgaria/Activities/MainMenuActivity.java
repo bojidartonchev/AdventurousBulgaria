@@ -126,7 +126,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         //    startActivity(intent);
         //}
         if (v.getId() == R.id.landmarks_btn) {
-            Intent intent = new Intent(this, AllLandmarksActivity.class);
+            Intent intent = new Intent(this, CategoriesActivity.class);
             startActivity(intent);
         }
     }
@@ -241,12 +241,12 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
         if (id == R.id.search_users) {
             Intent intent = new Intent(getApplicationContext(), SearchUsersActivity.class);
-            finish();
+
             startActivity(intent);
         }
         if (id == R.id.submit_location) {
             Intent intent = new Intent(getApplicationContext(), SubmitLocationActivity.class);
-            finish();
+
             startActivity(intent);
         }
 
