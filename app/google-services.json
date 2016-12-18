@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "838294079504",
+    "firebase_url": "https://wanderlust-bulgaria.firebaseio.com",
+    "project_id": "wanderlust-bulgaria",
+    "storage_bucket": "wanderlust-bulgaria.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:838294079504:android:60354a87d6c0dfff",
+        "android_client_info": {
+          "package_name": "com.codeground.adventurousbulgaria"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "838294079504-o1khnam49mfh02mcoj5883ub1l551ha4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBEY-jXAIfWjl9zXetV6WQm8_k2FkoML9w"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
