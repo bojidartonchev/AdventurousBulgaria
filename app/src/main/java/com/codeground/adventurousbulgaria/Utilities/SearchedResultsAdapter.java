@@ -1,7 +1,6 @@
 package com.codeground.adventurousbulgaria.Utilities;
 
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;

@@ -1,22 +1,19 @@
 package com.codeground.adventurousbulgaria;
 
 import android.app.Application;
-import android.content.ContextWrapper;
+import android.util.Log;
 
-import com.codeground.adventurousbulgaria.Utilities.Landmark;
 import com.codeground.adventurousbulgaria.Utilities.ParseLocation;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
-import com.orm.SugarContext;
-import com.orm.SugarDb;
 import com.parse.Parse;
+import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseObject;
-
-import java.io.File;
+import com.parse.ParsePush;
+import com.parse.SaveCallback;
 
 public class MainApplication extends Application {
-    private static final String LANDMARKS_DATABASE_NAME = "landmarks_database.db";
 
     @Override
     public void onCreate() {
@@ -34,55 +31,14 @@ public class MainApplication extends Application {
         AppEventsLogger.activateApp(this);
         ParseFacebookUtils.initialize(this);
 
-        SugarContext.init(getApplicationContext());
-
-        //TODO REMOVE IN RELEASE VERSION
-        if(doesDatabaseExists(this,LANDMARKS_DATABASE_NAME)){
-
-            SugarDb sugarDB = new SugarDb(getApplicationContext());
-            new File(sugarDB.getDB().getPath()).delete();
-        }
+        ParsePush.subscribeInBackground("visit_channel", new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if(e==null)
+                    Log.d("Parse","Success");
+                else
+                    Log.d("Parse","Failed");
+            }
+        });
     }
-
-    private boolean doesDatabaseExists(ContextWrapper context, String dbName){
-        File dbFile =  context.getDatabasePath(dbName);
-
-        return dbFile.exists();
-    }
-
-    public void visitLandmark(final Landmark landmark){
-       // KinveyReference landmarkRef = new KinveyReference("landmarks", landmark.getKinveyId());
-//
-       // Object visitedObj = mKinveyClient.user().get("visitedLandmarks");
-       // ArrayList<KinveyReference> list = new ArrayList<>();
-//
-       // if(visitedObj != null){
-       //     list = (ArrayList<KinveyReference>) visitedObj;
-       // }
-//
-       // if(list!=null && !list.contains(landmarkRef)){
-       //     list.add(landmarkRef);
-//
-       //     updateKinveyUser("visitedLandmarks", list, new KinveyUserCallback() {
-       //         @Override
-       //         public void onSuccess(User user) {
-       //             Resources res = getResources();
-       //             String title = res.getString(R.string.push_notification_title_unlock_landmark);
-       //             String content = String.format(res.getString(R.string.push_notification_content_unlock_landmark), landmark.getName());
-//
-       //             PushNotificationData mData = new PushNotificationData(title, content);
-//
-       //             //Start async task to send the notification
-       //             new SendPushNotificationTask(getApplicationContext()).execute(mData);
-       //         }
-//
-       //         @Override
-       //         public void onFailure(Throwable throwable) {
-//
-       //         }
-       //     });
-       // }
-    }
-
-
 }

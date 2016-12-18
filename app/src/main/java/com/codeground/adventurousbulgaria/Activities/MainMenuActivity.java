@@ -22,9 +22,7 @@ import android.widget.Toast;
 
 import com.codeground.adventurousbulgaria.BroadcastReceivers.BootReceiver;
 import com.codeground.adventurousbulgaria.Fragments.ProfileFragment;
-import com.codeground.adventurousbulgaria.Interfaces.IOnDataBaseInitialized;
 import com.codeground.adventurousbulgaria.R;
-import com.codeground.adventurousbulgaria.Utilities.Landmark;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -33,17 +31,14 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.ParseUser;
-
-import java.util.List;
 
 public class MainMenuActivity extends AppCompatActivity implements View.OnClickListener,
         NavigationView.OnNavigationItemSelectedListener,
         OnMapReadyCallback,
         GoogleMap.OnMapLoadedCallback,
         GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener,IOnDataBaseInitialized {
+        GoogleApiClient.OnConnectionFailedListener {
 
     private static final int INITIAL_REQUEST = 1337;
 
@@ -218,22 +213,6 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
             BootReceiver.scheduleAlarm(this);
         }
     }
-
-    @Override
-    public void OnDBInit() {
-        List<Landmark> mData = Landmark.listAll(Landmark.class);
-
-        if(mMap == null){
-            return;
-        }
-
-        for (Landmark landmark : mData) {
-            mMap.addMarker(new MarkerOptions()
-                    .position(new LatLng(landmark.getLatitude(), landmark.getLongitude()))
-                    .title(landmark.getName()));
-        }
-    }
-
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {

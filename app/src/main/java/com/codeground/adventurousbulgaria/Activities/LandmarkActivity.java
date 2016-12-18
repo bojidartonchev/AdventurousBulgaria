@@ -2,7 +2,6 @@ package com.codeground.adventurousbulgaria.Activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -10,19 +9,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.codeground.adventurousbulgaria.R;
-import com.codeground.adventurousbulgaria.Utilities.ParseComment;
 import com.codeground.adventurousbulgaria.Utilities.ParseLocation;
 import com.parse.FindCallback;
-import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseRelation;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
-import com.squareup.picasso.Picasso;
 
-import java.io.File;
 import java.util.List;
 
 public class LandmarkActivity extends AppCompatActivity implements View.OnClickListener{

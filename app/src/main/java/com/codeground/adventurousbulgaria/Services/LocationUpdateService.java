@@ -14,8 +14,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.widget.Toast;
 
-import com.codeground.adventurousbulgaria.MainApplication;
-import com.codeground.adventurousbulgaria.Tasks.CheckLocationTask;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
@@ -42,15 +40,12 @@ public class LocationUpdateService extends Service{
         super.onCreate();
     }
 
-
-
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         startListening();
         return START_STICKY;
     }
-
 
     @Override
     public void onDestroy() {
