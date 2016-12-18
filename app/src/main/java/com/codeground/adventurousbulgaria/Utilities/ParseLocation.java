@@ -4,6 +4,7 @@ import com.parse.ParseClassName;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
+import com.parse.ParseRelation;
 
 @ParseClassName("Location")
 public class ParseLocation extends ParseObject {
@@ -30,5 +31,7 @@ public class ParseLocation extends ParseObject {
     public ParseFile getPhoto(){
         return getParseFile("photo");
     }
+
+    public ParseRelation getComments() { return getRelation("comments"); }
 
 }

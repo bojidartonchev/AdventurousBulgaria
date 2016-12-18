@@ -51,15 +51,8 @@ public class AllLandmarksActivity extends AppCompatActivity implements IOnItemCl
             Intent intent = new Intent(getApplicationContext(), LandmarkActivity.class);
             ParseLocation currentLocation = mData.get(pos);
             if(currentLocation!=null){
-                intent.putExtra("locationName", currentLocation.getName());
-                intent.putExtra("locationDescription", currentLocation.getDescription());
-                intent.putExtra("locationCity", currentLocation.getCity());
+                intent.putExtra("locationId", currentLocation.getObjectId());
 
-                try {
-                    intent.putExtra("locationPhoto", currentLocation.getPhoto().getFile());
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
                 startActivity(intent);
             }
 

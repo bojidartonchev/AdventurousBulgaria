@@ -52,6 +52,20 @@
             android:layout_height="wrap_content"
             android:id="@+id/landmark_description"
             android:textSize="15sp" />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:ems="10"
+            android:id="@+id/comment_field"
+            android:hint="Leave a comment" />
+
+        <Button
+            android:text="SUBMIT COMMENT"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/comment_btn" />
+
     </LinearLayout>
 
 </LinearLayout>
