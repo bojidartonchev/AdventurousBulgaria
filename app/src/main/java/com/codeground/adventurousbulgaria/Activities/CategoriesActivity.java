@@ -40,6 +40,7 @@ public class CategoriesActivity extends AppCompatActivity implements View.OnClic
         mCaveBtn = (Button)findViewById(R.id.cat_caves);
         mFortressBtn = (Button)findViewById(R.id.cat_fortress);
         mFestivalBtn = (Button)findViewById(R.id.cat_festival);
+        mFoodBtn = (Button) findViewById(R.id.cat_food);
 
         mMountainBtn.setOnClickListener(this);
         mEcopathBtn.setOnClickListener(this);
@@ -52,6 +53,7 @@ public class CategoriesActivity extends AppCompatActivity implements View.OnClic
         mCaveBtn.setOnClickListener(this);
         mFortressBtn.setOnClickListener(this);
         mFestivalBtn.setOnClickListener(this);
+        mFoodBtn.setOnClickListener(this);
     }
 
     @Override

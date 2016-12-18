@@ -76,7 +76,8 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         //setSupportActionBar(mToolbar);
         mProfileView = (NavigationView) findViewById(R.id.profile_view);
         mPersonName = (TextView) mProfileView.getHeaderView(0).findViewById(R.id.profile_name);
-        String currUserName = ParseUser.getCurrentUser().get("first_name").toString()+" "+ParseUser.getCurrentUser().get("last_name").toString();
+        String currUserName = ParseUser.getCurrentUser().get(getString(R.string.db_user_firstname)).toString()+" "+
+                ParseUser.getCurrentUser().get(getString(R.string.db_user_lastname)).toString();
         mPersonName.setText(currUserName);
         mProfileView.setNavigationItemSelectedListener(this);
         //mPersonName.setText(currUserName);
@@ -140,7 +141,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
                         mMap.setMyLocationEnabled(true);
                     }
                 } else {
-                    Toast.makeText(this, "Sorry, you must allow access to GPS to use this app", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, getString(R.string.alert_no_gps), Toast.LENGTH_LONG).show();
                 }
                 break;
 

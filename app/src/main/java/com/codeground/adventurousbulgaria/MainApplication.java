@@ -22,9 +22,9 @@ public class MainApplication extends Application {
         //Parse Initialization
         ParseObject.registerSubclass(ParseLocation.class);
         Parse.initialize(new Parse.Configuration.Builder(this)
-                        .applicationId("Aev0cw9ckqsWq9BGiGfnPXACPbLTHypE0ZpejrPQ")
-                        .clientKey("6pLQaBu3BcEceHbTXGkOyWZs4J4qVe8EVwEUlfkN")
-                        .server("https://parseapi.back4app.com/").build());
+                        .applicationId(getString(R.string.parse_app_id))
+                        .clientKey(getString(R.string.parse_client_key))
+                        .server(getString(R.string.parse_server)).build());
 
         //Facebook SDK Initialization
         FacebookSdk.sdkInitialize(getApplicationContext());

@@ -56,17 +56,17 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
         if(!validateEmail(mEmailField.getText().toString())) {
             //Invalid email
-            Toast.makeText(this, "Invalid E-mail address. Please try again.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.alert_invalid_email), Toast.LENGTH_SHORT).show();
             return;
         }
         if(password.equals(confirmPassword)==false){
             //Passwords do not match
-            Toast.makeText(this, "Passwords do not match. Please try again.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.alert_password_nomatch), Toast.LENGTH_SHORT).show();
             return;
         }
 
         if(mPasswordField.getText().toString().length()<5 || mPasswordField.getText().toString().length()>12){
-            Toast.makeText(this, "Password must be between 5 and 12 characters long.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.alert_password_length), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -86,7 +86,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                     Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
                     startActivity(intent);
                 } else {
-                    CharSequence text = "Could not sign up.";
+                    CharSequence text = getString(R.string.alert_signup_fail);
                     e.printStackTrace();
                     Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
                 }
