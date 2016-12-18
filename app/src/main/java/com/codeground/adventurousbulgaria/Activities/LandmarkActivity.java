@@ -45,7 +45,7 @@ public class LandmarkActivity extends AppCompatActivity implements View.OnClickL
 
         String currentLandmarkName = getIntent().getStringExtra("locationName");
         String locId = getIntent().getStringExtra("locationId");
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Location");
+        ParseQuery<ParseObject> query = ParseQuery.getQuery(getString(R.string.db_location_dbname));
         query.whereEqualTo("objectId",locId);
         query.findInBackground(new FindCallback<ParseObject>() {
             public void done(List<ParseObject> objects, ParseException e) {
@@ -82,14 +82,14 @@ public class LandmarkActivity extends AppCompatActivity implements View.OnClickL
 
     private void submitComment() {
         String content = mCommentField.getText().toString();
-        final ParseObject comment = new ParseObject("Comments");
+        final ParseObject comment = new ParseObject(getString(R.string.db_commments_dbname));
 
-        comment.put("creator", ParseUser.getCurrentUser().getEmail());
-        comment.put("content", content);
+        comment.put(getString(R.string.db_commments_creator), ParseUser.getCurrentUser().getEmail());
+        comment.put(getString(R.string.db_commments_content), content);
         comment.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
-                ParseRelation<ParseObject> relation = mCurrLocation.getRelation("comments");
+                ParseRelation<ParseObject> relation = mCurrLocation.getRelation(getString(R.string.db_location_comments));
                 relation.add(comment);
                 mCurrLocation.saveInBackground();
             }

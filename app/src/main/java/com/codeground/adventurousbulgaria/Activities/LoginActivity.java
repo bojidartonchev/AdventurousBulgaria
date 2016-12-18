@@ -153,17 +153,17 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                 String fname = "",lname = "", email = "", id = "";
 
                 try {
-                    fname = object.getString("first_name");
+                    fname = object.getString(getString(R.string.db_user_firstname));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
                 try {
-                    lname = object.getString("last_name");
+                    lname = object.getString(getString(R.string.db_user_lastname));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
                 try {
-                    email = object.getString("email");
+                    email = object.getString(getString(R.string.db_user_email));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -192,9 +192,9 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
         ParseUser user = ParseUser.getCurrentUser();
 
-        user.put("first_name",firstName);
-        user.put("last_name",lastName);
-        user.put("search_match",firstName.toLowerCase()+" "+lastName.toLowerCase());
+        user.put(getString(R.string.db_user_firstname),firstName);
+        user.put(getString(R.string.db_user_lastname),lastName);
+        user.put(getString(R.string.db_user_searchmatch),firstName.toLowerCase()+" "+lastName.toLowerCase());
         user.setEmail(email);
         user.saveInBackground(new SaveCallback() {
             @Override

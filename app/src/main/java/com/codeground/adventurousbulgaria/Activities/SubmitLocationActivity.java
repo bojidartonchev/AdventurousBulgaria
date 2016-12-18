@@ -106,21 +106,21 @@ public class SubmitLocationActivity extends AppCompatActivity implements View.On
         double latitude = currLocation.getLatitude();
 
         ParseGeoPoint point = new ParseGeoPoint(latitude,longitude);
-        ParseObject location = new ParseObject("PendingLocation");
+        ParseObject location = new ParseObject(getString(R.string.db_pendinglocation_dbname));
 
-        location.put("name", mNameField.getText().toString());
-        location.put("city", mCityField.getText().toString());
-        location.put("description", mDescField.getText().toString());
-        location.put("location",point);
-       location.put("user_email",mail);
+        location.put(getString(R.string.db_pendinglocation_name), mNameField.getText().toString());
+        location.put(getString(R.string.db_pendinglocation_city), mCityField.getText().toString());
+        location.put(getString(R.string.db_pendinglocation_description), mDescField.getText().toString());
+        location.put(getString(R.string.db_pendinglocation_location),point);
+       location.put(getString(R.string.db_pendinglocation_user_email),mail);
        if(mPhoto1!=null) {
-           location.put("photo1", mPhoto1);
+           location.put(getString(R.string.db_pendinglocation_photol), mPhoto1);
        }
        if(mPhoto2!=null) {
-           location.put("photo2", mPhoto2);
+           location.put(getString(R.string.db_pendinglocation_photo2), mPhoto2);
        }
        if(mPhoto2!=null) {
-           location.put("photo3",mPhoto3);
+           location.put(getString(R.string.db_pendinglocation_photo3),mPhoto3);
        }
 
         location.saveInBackground(new SaveCallback() {

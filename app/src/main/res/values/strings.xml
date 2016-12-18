@@ -8,6 +8,11 @@
     <string name="push_notification_title_unlock_landmark">Landmark Unlocked</string>
     <string name="push_notification_content_unlock_landmark">Congratulations! You have just visited %1$s</string>
 
+    <!--PARSE-->
+    <string name="parse_app_id">Aev0cw9ckqsWq9BGiGfnPXACPbLTHypE0ZpejrPQ</string>
+    <string name="parse_client_key">6pLQaBu3BcEceHbTXGkOyWZs4J4qVe8EVwEUlfkN</string>
+    <string name="parse_server">https://parseapi.back4app.com/</string>
+
     <!--CATEGORIES-->
     <string name="cat_mountain">Mountains</string>
     <string name="cat_lakes">Lakes</string>
@@ -22,6 +27,43 @@
     <string name="cat_festival">Festival</string>
     <string name="cat_camping">Camping</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!--DB STRINGS-->
+    <string name="db_commments_dbname">Comments</string>
+    <string name="db_commments_creator">creator</string>
+    <string name="db_commments_content">content</string>
+
+    <string name="db_location_dbname">Location</string>
+    <string name="db_location_name">name</string>
+    <string name="db_location_city">city</string>
+    <string name="db_location_geopoint">location</string>
+    <string name="db_location_icon">icon</string>
+    <string name="db_location_description">description</string>
+    <string name="db_location_comments">comments</string>
+
+    <string name="db_pendinglocation_dbname">PendingLocation</string>
+    <string name="db_pendinglocation_name">name</string>
+    <string name="db_pendinglocation_city">city</string>
+    <string name="db_pendinglocation_description">description</string>
+    <string name="db_pendinglocation_location">location</string>
+    <string name="db_pendinglocation_user_email">user_email</string>
+    <string name="db_pendinglocation_photol">photo1</string>
+    <string name="db_pendinglocation_photo2">photo2</string>
+    <string name="db_pendinglocation_photo3">photo3</string>
+
+    <string name="db_user_dbname">User</string>
+    <string name="db_user_username">username</string>
+    <string name="db_user_email">email</string>
+    <string name="db_user_firstname">first_name</string>
+    <string name="db_user_lastname">last_name</string>
+    <string name="db_user_picture">profile_picture</string>
+    <string name="db_user_searchmatch">search_match</string>
+    <string name="db_user_lastlocation">last_location</string>
+
+    <!--ALERTS-->
+    <string name="alert_no_gps">Sorry, you must allow access to GPS to use this app</string>
+    <string name="alert_invalid_email">Invalid E-mail address. Please try again.</string>
+    <string name="alert_password_nomatch">Passwords do not match. Please try again.</string>
+    <string name="alert_password_length">Password must be between 5 and 12 characters long.</string>
+    <string name="alert_signup_fail">Could not sign up.</string>
+
 </resources>

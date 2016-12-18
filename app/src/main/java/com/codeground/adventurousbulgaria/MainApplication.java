@@ -9,7 +9,6 @@ import com.facebook.appevents.AppEventsLogger;
 import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
-import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 import com.parse.ParsePush;
 import com.parse.SaveCallback;
@@ -23,20 +22,14 @@ public class MainApplication extends Application {
         //Parse Initialization
         ParseObject.registerSubclass(ParseLocation.class);
         Parse.initialize(new Parse.Configuration.Builder(this)
-                        .applicationId("Aev0cw9ckqsWq9BGiGfnPXACPbLTHypE0ZpejrPQ")
-                        .clientKey("6pLQaBu3BcEceHbTXGkOyWZs4J4qVe8EVwEUlfkN")
-                        .server("https://parseapi.back4app.com/").build());
-        Parse.setLogLevel(Parse.LOG_LEVEL_VERBOSE);
+                        .applicationId(getString(R.string.parse_app_id))
+                        .clientKey(getString(R.string.parse_client_key))
+                        .server(getString(R.string.parse_server)).build());
 
         //Facebook SDK Initialization
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
         ParseFacebookUtils.initialize(this);
-
-        // Update Installation
-        ParseInstallation installation = ParseInstallation.getCurrentInstallation();
-        installation.put("GCMSenderId", "838294079504");
-        installation.saveInBackground();
 
         ParsePush.subscribeInBackground("visit_channel", new SaveCallback() {
             @Override
