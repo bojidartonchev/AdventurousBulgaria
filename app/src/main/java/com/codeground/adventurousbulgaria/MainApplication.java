@@ -33,8 +33,10 @@ public class MainApplication extends Application {
         AppEventsLogger.activateApp(this);
         ParseFacebookUtils.initialize(this);
 
-        ParseInstallation currentInstall = ParseInstallation.getCurrentInstallation();
-        currentInstall.put("username", ParseUser.getCurrentUser().get("username"));
-        currentInstall.saveInBackground();
+        if(ParseUser.getCurrentUser()!=null) {
+            ParseInstallation currentInstall = ParseInstallation.getCurrentInstallation();
+            currentInstall.put("username", ParseUser.getCurrentUser().get("username"));
+            currentInstall.saveInBackground();
+        }
     }
 }
