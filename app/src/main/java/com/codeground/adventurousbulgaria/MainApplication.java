@@ -9,8 +9,10 @@ import com.facebook.appevents.AppEventsLogger;
 import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
+import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 import com.parse.ParsePush;
+import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 public class MainApplication extends Application {
@@ -31,14 +33,8 @@ public class MainApplication extends Application {
         AppEventsLogger.activateApp(this);
         ParseFacebookUtils.initialize(this);
 
-        ParsePush.subscribeInBackground("visit_channel", new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if(e==null)
-                    Log.d("Parse","Success");
-                else
-                    Log.d("Parse","Failed");
-            }
-        });
+        ParseInstallation currentInstall = ParseInstallation.getCurrentInstallation();
+        currentInstall.put("username", ParseUser.getCurrentUser().get("username"));
+        currentInstall.saveInBackground();
     }
 }
