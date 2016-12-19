@@ -66,4 +66,7 @@
     <string name="alert_password_length">Password must be between 5 and 12 characters long.</string>
     <string name="alert_signup_fail">Could not sign up.</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

@@ -43,21 +43,6 @@ public class SearchUsersActivity extends AppCompatActivity implements View.OnCli
         mAdapter = new SearchedResultsAdapter(this,userToSearch);
         mAdapter.setTextKey("title");
         mResults.setAdapter(mAdapter);
-
-        //ParseQuery<ParseUser> query = ParseUser.getQuery();
-        //query.whereContains("search_match", userToSearch);
-        //query.findInBackground(new FindCallback<ParseUser>() {
-        //    public void done(List<ParseUser> objList, ParseException e) {
-        //        if (e == null) {
-        //            Log.d("User search","@@@@Retrieved " + objList.size()+ " users");
-
-        //        } else {
-        //            Log.d("User search", "@@@Error: " + e.getMessage());
-        //        }
-        //    }
-        //});
-
-
     }
 
 
@@ -66,7 +51,6 @@ public class SearchUsersActivity extends AppCompatActivity implements View.OnCli
     public void onClick(View v) {
         if(v.getId()==R.id.search_btn){
             search();
-
         }
 
     }
