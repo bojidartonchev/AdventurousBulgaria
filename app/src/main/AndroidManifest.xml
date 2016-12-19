@@ -124,6 +124,7 @@
 
         <meta-data android:name="com.parse.push.gcm_sender_id"
             android:value="id:838294079504" />
+        <meta-data android:name="com.parse.push.notification_icon" android:resource="@drawable/notification_icon"/>
         <service android:name="com.parse.PushService" />
         <receiver android:name="com.parse.GcmBroadcastReceiver" android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
