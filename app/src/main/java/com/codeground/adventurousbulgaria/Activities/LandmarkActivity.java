@@ -84,8 +84,9 @@ public class LandmarkActivity extends AppCompatActivity implements View.OnClickL
                     }
                     if (mComments != null) {
                         LocationCommentsAdapter commentsAdapter = new LocationCommentsAdapter(getApplicationContext(),mCurrLocation.getComments());
+                        mComments.setCurrLocation(mCurrLocation);
                         mComments.setCommentsAdapter(commentsAdapter);
-                       mPagerAdapter.notifyDataSetChanged();
+                        mPagerAdapter.notifyDataSetChanged();
                     }
                     if (mLocation != null) {
                         mLocation.setText(mCurrLocation.getCity());

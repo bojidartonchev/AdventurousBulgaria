@@ -1,14 +1,41 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="1"
-    tools:context="com.codeground.adventurousbulgaria.Fragments.ProfileFragment">
 
+    tools:context="com.codeground.adventurousbulgaria.Fragments.ProfileFragment">
     <ListView
         android:id="@+id/location_comments"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        />
+        android:layout_above="@+id/submit_area"
+/>
 
-</FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/submit_area"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical" >
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:hint="Write a comment"
+            android:ems="10"
+            android:id="@+id/comment_field" />
+
+        <Button
+            android:id="@+id/submit_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="SUBMIT" />
+
+    </LinearLayout>
+
+
+
+</RelativeLayout>
