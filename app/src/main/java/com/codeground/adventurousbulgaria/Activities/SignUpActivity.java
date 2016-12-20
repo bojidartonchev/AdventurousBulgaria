@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.codeground.adventurousbulgaria.R;
+import com.codeground.adventurousbulgaria.Utilities.DialogWindowManager;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
@@ -78,14 +79,16 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         mCurrentUser.put("first_name",firstName);
         mCurrentUser.put("last_name",lastName);
         mCurrentUser.put("search_match",firstName.toLowerCase()+" "+lastName.toLowerCase());
-
+        DialogWindowManager.show(this);
         mCurrentUser.signUpInBackground(new SignUpCallback() {
             @Override
             public void done(ParseException e) {
                 if (e == null) {
+                    DialogWindowManager.dismiss();
                     Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
                     startActivity(intent);
                 } else {
+                    DialogWindowManager.dismiss();
                     CharSequence text = getString(R.string.alert_signup_fail);
                     e.printStackTrace();
                     Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();

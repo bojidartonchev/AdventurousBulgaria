@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.codeground.adventurousbulgaria.R;
+import com.codeground.adventurousbulgaria.Utilities.DialogWindowManager;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
@@ -77,9 +78,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                 startActivity(intent);
             }else if(v.getId() == R.id.login_btn){
                 if(mEmailField!=null && mPasswordField!=null){
-                    mProgressDialog.setMessage("Please Wait");
-                    mProgressDialog.setTitle("Logging in");
-                    mProgressDialog.show();
+                    DialogWindowManager.show(this);
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
@@ -95,6 +94,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
                 }
             }else if(v.getId() == R.id.facebook_login_button){
+                DialogWindowManager.show(this);
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -115,13 +115,10 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             @Override
             public void done(ParseUser parseUser, ParseException e) {
                 if (parseUser != null) {
-                    mProgressDialog.dismiss();
-                    Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
-                    startActivity(intent);
-                    finish();
+                    switchToMainMenu();
 
                 } else {
-                    mProgressDialog.dismiss();
+                    DialogWindowManager.dismiss();
                     CharSequence text = "Wrong username or password.";
                     Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
                 }
@@ -173,15 +170,9 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                     e.printStackTrace();
                 }
 
-
-
-
-
                 saveNewUser(fname, lname, email);
-
             }
         });
-
 
         Bundle parameters = new Bundle();
         parameters.putString("fields","first_name,last_name,email,id");
@@ -217,6 +208,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     }
 
     private void switchToMainMenu(){
+        DialogWindowManager.dismiss();
         Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
         startActivity(intent);
         finish();

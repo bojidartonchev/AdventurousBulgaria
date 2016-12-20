@@ -33,9 +33,6 @@ public class SearchUsersActivity extends AppCompatActivity implements View.OnCli
         mResults=(ListView) findViewById(R.id.searched_users);
 
         mSearchBtn.setOnClickListener(this);
-
-
-
     }
 
     void search(){

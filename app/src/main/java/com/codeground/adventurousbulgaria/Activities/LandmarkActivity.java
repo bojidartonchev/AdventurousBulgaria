@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -20,13 +19,10 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
-import com.parse.ParseRelation;
-import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
 import java.util.List;
 
-public class LandmarkActivity extends AppCompatActivity implements View.OnClickListener{
+public class LandmarkActivity extends AppCompatActivity{
     private TextView mTitle;
     private TextView mDescription;
     private TextView mLocation;
@@ -56,15 +52,6 @@ public class LandmarkActivity extends AppCompatActivity implements View.OnClickL
         LocationPagerAdapter curr = (LocationPagerAdapter) mPager.getAdapter();
         mDesc =(LocationDescriptionFragment) curr.instantiateItem(mPager, 0);
         mComments =(LocationCommentsFragment) mPager.getAdapter().instantiateItem(mPager, 1);
-
-
-        // mDescription = (TextView) findViewById(R.id.landmark_description);
-       // mLocation = (TextView) findViewById(R.id.landmark_location);
-       // mPhoto = (ImageView) findViewById(R.id.monument_picture);
-       // mCommentField = (EditText) findViewById(R.id.comment_field);
-       // mCommentBtn = (Button) findViewById(R.id.comment_btn);
-//
-//        mCommentBtn.setOnClickListener(this);
 
         String currentLandmarkName = getIntent().getStringExtra("locationName");
 
@@ -98,36 +85,6 @@ public class LandmarkActivity extends AppCompatActivity implements View.OnClickL
                 }
             }
         });
-
-
-
-
-    }
-
-    @Override
-    public void onClick(View v) {
-        //if(v.getId()==R.id.comment_btn){
-        //    submitComment();
-        //}
-
-    }
-
-    private void submitComment() {
-        String content = mCommentField.getText().toString();
-        final ParseObject comment = new ParseObject(getString(R.string.db_commments_dbname));
-
-        comment.put(getString(R.string.db_commments_creator), ParseUser.getCurrentUser().getEmail());
-        comment.put(getString(R.string.db_commments_content), content);
-        comment.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                ParseRelation<ParseObject> relation = mCurrLocation.getRelation(getString(R.string.db_location_comments));
-                relation.add(comment);
-                mCurrLocation.saveInBackground();
-            }
-
-        });
-
 
     }
 }

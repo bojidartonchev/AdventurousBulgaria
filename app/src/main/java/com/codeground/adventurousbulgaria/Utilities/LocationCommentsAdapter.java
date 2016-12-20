@@ -1,6 +1,5 @@
 package com.codeground.adventurousbulgaria.Utilities;
 
-
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,17 +15,15 @@ public class LocationCommentsAdapter extends ParseQueryAdapter{
 
     public LocationCommentsAdapter(Context context,final ParseRelation comments)
     {
-
         super(context, new ParseQueryAdapter.QueryFactory<ParseComment>() {
             public ParseQuery create() {
 
                 ParseQuery query = comments.getQuery();
+                query.orderByDescending("createdAt");
                 return query;
             }
         });
-
     }
-
 
     @Override
     public View getItemView(ParseObject object, View v, ViewGroup parent) {
@@ -44,9 +41,6 @@ public class LocationCommentsAdapter extends ParseQueryAdapter{
         TextView commentContent = (TextView) v.findViewById(R.id.comment_content);
         commentContent.setText(object.getString("content"));
 
-
         return v;
     }
-
-
 }

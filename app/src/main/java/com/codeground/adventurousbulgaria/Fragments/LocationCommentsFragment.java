@@ -1,6 +1,5 @@
 package com.codeground.adventurousbulgaria.Fragments;
 
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,6 +10,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import com.codeground.adventurousbulgaria.R;
+import com.codeground.adventurousbulgaria.Utilities.DialogWindowManager;
 import com.codeground.adventurousbulgaria.Utilities.LocationCommentsAdapter;
 import com.codeground.adventurousbulgaria.Utilities.ParseLocation;
 import com.parse.ParseException;
@@ -19,13 +19,13 @@ import com.parse.ParseRelation;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
-
 public class LocationCommentsFragment extends Fragment implements View.OnClickListener {
 
     private ListView mComments;
     private Button mSubmitBtn;
     private ParseLocation mCurrLocation;
     private EditText mCommentField;
+    private LocationCommentsAdapter mAdapter;
 
 
     @Override
@@ -41,20 +41,17 @@ public class LocationCommentsFragment extends Fragment implements View.OnClickLi
     }
 
     public static LocationCommentsFragment newInstance() {
-
         LocationCommentsFragment f = new LocationCommentsFragment();
-
-
         return f;
     }
+
     public void setCommentsAdapter(LocationCommentsAdapter adapter){
+        mAdapter = adapter;
         mComments.setAdapter(adapter);
     }
     public void setCurrLocation(ParseLocation loc){
         mCurrLocation=loc;
     }
-
-
 
     @Override
     public void onClick(View v) {
@@ -67,6 +64,7 @@ public class LocationCommentsFragment extends Fragment implements View.OnClickLi
         String content = mCommentField.getText().toString();
         final ParseObject comment = new ParseObject(getString(R.string.db_commments_dbname));
 
+        DialogWindowManager.show(getContext());
         comment.put(getString(R.string.db_commments_creator), ParseUser.getCurrentUser().getEmail());
         comment.put(getString(R.string.db_commments_content), content);
         comment.saveInBackground(new SaveCallback() {
@@ -74,7 +72,13 @@ public class LocationCommentsFragment extends Fragment implements View.OnClickLi
             public void done(ParseException e) {
                 ParseRelation<ParseObject> relation = mCurrLocation.getRelation(getString(R.string.db_location_comments));
                 relation.add(comment);
-                mCurrLocation.saveInBackground();
+                mCurrLocation.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        DialogWindowManager.dismiss();
+                        mAdapter.loadObjects();
+                    }
+                });
             }
 
         });

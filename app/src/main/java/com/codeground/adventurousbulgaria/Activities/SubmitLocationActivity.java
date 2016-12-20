@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.codeground.adventurousbulgaria.R;
+import com.codeground.adventurousbulgaria.Utilities.DialogWindowManager;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
@@ -122,13 +123,15 @@ public class SubmitLocationActivity extends AppCompatActivity implements View.On
        if(mPhoto2!=null) {
            location.put(getString(R.string.db_pendinglocation_photo3),mPhoto3);
        }
-
+        DialogWindowManager.show(this);
         location.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
                 if(e!=null){
                     Log.d("Save",e.getMessage());
                 }
+                DialogWindowManager.dismiss();
+                finish();
             }
         });
     }

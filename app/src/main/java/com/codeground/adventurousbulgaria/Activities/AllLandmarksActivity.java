@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 
 import com.codeground.adventurousbulgaria.Interfaces.IOnItemClicked;
 import com.codeground.adventurousbulgaria.R;
+import com.codeground.adventurousbulgaria.Utilities.DialogWindowManager;
 import com.codeground.adventurousbulgaria.Utilities.LandmarksAdapter;
 import com.codeground.adventurousbulgaria.Utilities.ParseLocation;
 import com.parse.FindCallback;
@@ -35,12 +36,14 @@ public class AllLandmarksActivity extends AppCompatActivity implements IOnItemCl
 
         ParseQuery<ParseLocation> query = ParseQuery.getQuery(ParseLocation.class);
 
+        DialogWindowManager.show(this);
         query.findInBackground(new FindCallback<ParseLocation>() {
             @Override
             public void done(List<ParseLocation> results, ParseException e) {
                 mData = results;
                 mAdapter = new LandmarksAdapter(results, AllLandmarksActivity.this);
                 mRecyclerView.setAdapter(mAdapter);
+                DialogWindowManager.dismiss();
             }
         });
     }

@@ -18,7 +18,6 @@ public class SearchedResultsAdapter extends ParseQueryAdapter{
 
     public SearchedResultsAdapter(Context context,final String userToSearch)
     {
-
         super(context, new ParseQueryAdapter.QueryFactory<ParseUser>() {
             public ParseQuery create() {
                 ParseQuery<ParseUser> query = ParseUser.getQuery();
@@ -26,9 +25,7 @@ public class SearchedResultsAdapter extends ParseQueryAdapter{
                 return query;
             }
         });
-
     }
-
 
     @Override
     public View getItemView(ParseObject object, View v, ViewGroup parent) {
@@ -54,10 +51,6 @@ public class SearchedResultsAdapter extends ParseQueryAdapter{
         TextView timestampView = (TextView) v.findViewById(R.id.timestamp);
         timestampView.setText(object.getCreatedAt().toString());
 
-
-
         return v;
     }
-
-
 }
