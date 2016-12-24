@@ -14,9 +14,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.codeground.adventurousbulgaria.R;
 import com.codeground.adventurousbulgaria.Utilities.DialogWindowManager;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.maps.model.LatLng;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
@@ -31,10 +38,13 @@ import java.util.List;
 
 public class SubmitLocationActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private static final int PICTURE_ONE = 1;
-    private static final int PICTURE_TWO = 2;
-    private static final int PICTURE_THREE = 3;
+    private final int PICTURE_ONE = 1;
+    private final int PICTURE_TWO = 2;
+    private final int PICTURE_THREE = 3;
+    private final int PLACE_PICKER_REQUEST = 4;
 
+    private TextView mLatitudeField;
+    private TextView mLongitudeField;
     private EditText mNameField;
     private EditText mDescField;
     private EditText mCityField;
@@ -46,8 +56,11 @@ public class SubmitLocationActivity extends AppCompatActivity implements View.On
     private ParseFile mPhoto3;
 
     private LocationManager mLocationManager;
+    private Double mLongitude;
+    private Double mLatitude;
 
     private Button mSubmitBtn;
+    private Button mMapBtn;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,9 +74,14 @@ public class SubmitLocationActivity extends AppCompatActivity implements View.On
         mPhoto1Field = (ImageView) findViewById(R.id.photo1);
         mPhoto2Field = (ImageView) findViewById(R.id.photo2);
         mPhoto3Field = (ImageView) findViewById(R.id.photo3);
+        mPhoto3Field = (ImageView) findViewById(R.id.photo3);
+        mLatitudeField = (TextView) findViewById(R.id.latitude);
+        mLongitudeField = (TextView) findViewById(R.id.longitude);
         mSubmitBtn = (Button) findViewById(R.id.submit_btn);
+        mMapBtn = (Button) findViewById(R.id.location_btn);
 
         mSubmitBtn.setOnClickListener(this);
+        mMapBtn.setOnClickListener(this);
         mPhoto1Field.setOnClickListener(this);
         mPhoto2Field.setOnClickListener(this);
         mPhoto3Field.setOnClickListener(this);
@@ -72,11 +90,24 @@ public class SubmitLocationActivity extends AppCompatActivity implements View.On
         mPhoto2=null;
         mPhoto3=null;
 
+        initLocation();
+    }
 
+    private void initLocation() {
+        Location currLocation = getLastKnownLocation();
+
+        mLongitude =  currLocation.getLongitude();
+        mLatitude =  currLocation.getLatitude();
+        mLongitudeField.setText("Longitude: "+mLongitude);
+        mLatitudeField.setText("Latitude: "+mLatitude);
     }
 
     @Override
     public void onClick(View v) {
+        if(v.getId()==R.id.location_btn){
+            DialogWindowManager.show(this);
+            pickLocation();
+        }
         if(v.getId()==R.id.submit_btn){
             submitLocation();
         }
@@ -101,12 +132,8 @@ public class SubmitLocationActivity extends AppCompatActivity implements View.On
     private void submitLocation() {
         ParseUser user = ParseUser.getCurrentUser();
         String mail = user.getEmail();
-        Location currLocation = getLastKnownLocation();
 
-        double longitude = currLocation.getLongitude();
-        double latitude = currLocation.getLatitude();
-
-        ParseGeoPoint point = new ParseGeoPoint(latitude,longitude);
+        ParseGeoPoint point = new ParseGeoPoint(mLatitude,mLongitude);
         ParseObject location = new ParseObject(getString(R.string.db_pendinglocation_dbname));
 
         location.put(getString(R.string.db_pendinglocation_name), mNameField.getText().toString());
@@ -183,6 +210,31 @@ public class SubmitLocationActivity extends AppCompatActivity implements View.On
                     mPhoto3Field.setImageURI(selectedImageUri);
                 }
             }
+            if (requestCode == PLACE_PICKER_REQUEST) {
+                    Place place = PlacePicker.getPlace(getApplicationContext(),data);
+                    String toastMsg = String.format("Place: %s", place.getName());
+                    LatLng coords = place.getLatLng();
+                    mLatitudeField.setText("Latitude: "+coords.latitude);
+                    mLongitudeField.setText("Longitude: "+coords.longitude);
+                    DialogWindowManager.dismiss();
+                    Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show();
+            }
+        }
+        else {
+            DialogWindowManager.dismiss();
+        }
+    }
+
+    private void pickLocation(){
+
+        PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+
+        try {
+            startActivityForResult(builder.build(this), PLACE_PICKER_REQUEST);
+        } catch (GooglePlayServicesRepairableException e) {
+            e.printStackTrace();
+        } catch (GooglePlayServicesNotAvailableException e) {
+            e.printStackTrace();
         }
     }
 
@@ -211,7 +263,6 @@ public class SubmitLocationActivity extends AppCompatActivity implements View.On
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
 
