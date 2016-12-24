@@ -7,14 +7,20 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.codeground.adventurousbulgaria.Interfaces.IOnParseItemClicked;
 import com.codeground.adventurousbulgaria.R;
 import com.codeground.adventurousbulgaria.Utilities.SearchedResultsAdapter;
+import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseQueryAdapter;
+import com.parse.ParseRelation;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 
-
-public class SearchUsersActivity extends AppCompatActivity implements View.OnClickListener {
+public class SearchUsersActivity extends AppCompatActivity implements View.OnClickListener, IOnParseItemClicked {
 
     private Button mSearchBtn;
     private EditText mSearchField;
@@ -37,7 +43,7 @@ public class SearchUsersActivity extends AppCompatActivity implements View.OnCli
 
     void search(){
         String userToSearch = mSearchField.getText().toString().toLowerCase();
-        mAdapter = new SearchedResultsAdapter(this,userToSearch);
+        mAdapter = new SearchedResultsAdapter(this, this, userToSearch);
         mAdapter.setTextKey("title");
         mResults.setAdapter(mAdapter);
     }
@@ -50,5 +56,28 @@ public class SearchUsersActivity extends AppCompatActivity implements View.OnCli
             search();
         }
 
+    }
+
+    @Override
+    public void onItemClicked(ParseObject user) {
+        if(user!=null){
+            followUser(user);
+        }
+    }
+
+    private void followUser(ParseObject user) {
+        if(ParseUser.getCurrentUser() != null){
+            ParseRelation<ParseObject> relation = ParseUser.getCurrentUser().getRelation(getString(R.string.db_user_following));
+            relation.add(user);
+            ParseUser.getCurrentUser().saveInBackground(new SaveCallback() {
+                @Override
+                public void done(ParseException e) {
+                    if(e!=null){
+                        Toast.makeText(getApplicationContext(), e.getMessage(),Toast.LENGTH_LONG).show();
+                    }
+                    //mAdapter.loadObjects();
+                }
+            });
+        }
     }
 }

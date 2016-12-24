@@ -4,8 +4,10 @@ package com.codeground.adventurousbulgaria.Utilities;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
+import com.codeground.adventurousbulgaria.Interfaces.IOnParseItemClicked;
 import com.codeground.adventurousbulgaria.R;
 import com.parse.ParseFile;
 import com.parse.ParseImageView;
@@ -15,8 +17,9 @@ import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
 
 public class SearchedResultsAdapter extends ParseQueryAdapter{
+    private IOnParseItemClicked mListener;
 
-    public SearchedResultsAdapter(Context context,final String userToSearch)
+    public SearchedResultsAdapter(Context context, IOnParseItemClicked listener, final String userToSearch)
     {
         super(context, new ParseQueryAdapter.QueryFactory<ParseUser>() {
             public ParseQuery create() {
@@ -25,10 +28,11 @@ public class SearchedResultsAdapter extends ParseQueryAdapter{
                 return query;
             }
         });
+        mListener = listener;
     }
 
     @Override
-    public View getItemView(ParseObject object, View v, ViewGroup parent) {
+    public View getItemView(final ParseObject object, View v, ViewGroup parent) {
         if (v == null) {
             v = View.inflate(getContext(), R.layout.list_view_profile_row, null);
         }
@@ -50,6 +54,21 @@ public class SearchedResultsAdapter extends ParseQueryAdapter{
         // Add a reminder of how long this item has been outstanding
         TextView timestampView = (TextView) v.findViewById(R.id.timestamp);
         timestampView.setText(object.getCreatedAt().toString());
+
+        // Follow button
+        Button followBtn = (Button) v.findViewById(R.id.follow_btn);
+        if(followBtn != null){
+            followBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(v.getId() == R.id.follow_btn){
+                        if(mListener!=null){
+                            mListener.onItemClicked(object);
+                        }
+                    }
+                }
+            });
+        }
 
         return v;
     }
