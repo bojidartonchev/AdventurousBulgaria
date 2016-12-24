@@ -1,12 +1,10 @@
 package com.codeground.adventurousbulgaria.Activities;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -19,6 +17,7 @@ import android.widget.Toast;
 
 import com.codeground.adventurousbulgaria.R;
 import com.codeground.adventurousbulgaria.Utilities.DialogWindowManager;
+import com.codeground.adventurousbulgaria.Utilities.ParseUtilities;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
@@ -31,8 +30,6 @@ import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.List;
 
 
@@ -140,7 +137,7 @@ public class SubmitLocationActivity extends AppCompatActivity implements View.On
         location.put(getString(R.string.db_pendinglocation_city), mCityField.getText().toString());
         location.put(getString(R.string.db_pendinglocation_description), mDescField.getText().toString());
         location.put(getString(R.string.db_pendinglocation_location),point);
-       location.put(getString(R.string.db_pendinglocation_user_email),mail);
+        location.put(getString(R.string.db_pendinglocation_user_email),mail);
        if(mPhoto1!=null) {
            location.put(getString(R.string.db_pendinglocation_photol), mPhoto1);
        }
@@ -192,21 +189,21 @@ public class SubmitLocationActivity extends AppCompatActivity implements View.On
             if (requestCode == PICTURE_ONE) {
 
                 if (null != selectedImageUri) {
-                    createFile(selectedImageUri,PICTURE_ONE);
+                    mPhoto1= ParseUtilities.createParseFile(selectedImageUri,"photo.jpg");
                     mPhoto1Field.setImageURI(selectedImageUri);
                 }
             }
             if (requestCode == PICTURE_TWO) {
 
                 if (null != selectedImageUri) {
-                    createFile(selectedImageUri,PICTURE_TWO);
+                    mPhoto2= ParseUtilities.createParseFile(selectedImageUri,"photo.jpg");
                     mPhoto2Field.setImageURI(selectedImageUri);
                 }
             }
             if (requestCode == PICTURE_THREE) {
 
                 if (null != selectedImageUri) {
-                    createFile(selectedImageUri,PICTURE_THREE);
+                    mPhoto3= ParseUtilities.createParseFile(selectedImageUri,"photo.jpg");
                     mPhoto3Field.setImageURI(selectedImageUri);
                 }
             }
@@ -240,30 +237,6 @@ public class SubmitLocationActivity extends AppCompatActivity implements View.On
 
 
 
-
-
-
-    void createFile(Uri selectedImage,int id){
-        try {
-            Bitmap bmp = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), selectedImage);
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            // Compress image to lower quality scale 1 - 100
-            bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
-            byte[] image = stream.toByteArray();
-            if(id==1){
-                mPhoto1 = new ParseFile("mphoto.png",image);
-                return;
-            }
-            if(id==2){
-                mPhoto2 = new ParseFile("mphoto.png",image);
-            }
-            if(id==3){
-                mPhoto3 = new ParseFile("mphoto.png",image);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
 
 }

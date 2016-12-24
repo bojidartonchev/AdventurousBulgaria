@@ -9,9 +9,7 @@ import android.view.ViewGroup;
 
 import com.codeground.adventurousbulgaria.R;
 
-/**
- * A simple {@link Fragment} subclass.
- */
+
 public class ProfileFragment extends Fragment {
 
 
