@@ -81,4 +81,6 @@
     <string name="follow_btn_text">Follow</string>
     <string name="followed_btn_text">Followed</string>
     <string name="pending_follow_btn_text">Requested</string>
+    <string name="follow_positive_button">Continue</string>
+    <string name="follow_negative_button">Cancel</string>
 </resources>

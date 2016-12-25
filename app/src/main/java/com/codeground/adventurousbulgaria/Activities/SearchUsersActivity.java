@@ -1,7 +1,9 @@
 package com.codeground.adventurousbulgaria.Activities;
 
 
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -65,27 +67,30 @@ public class SearchUsersActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onItemClicked(ParseObject user, View v) {
         if(user!=null){
-            followUser(user, v);
+            Button followBtn = (Button) v.findViewById(R.id.follow_btn);
+            if(followBtn.getText().toString().equals(getString(R.string.follow_btn_text))){
+                followUser(user, followBtn);
+            }else if(followBtn.getText().toString().equals(getString(R.string.followed_btn_text))){
+                promptUnfollow(user, followBtn);
+            }else if(followBtn.getText().toString().equals(getString(R.string.pending_follow_btn_text))){
+                promptUnfollow(user, followBtn);
+            }
+
         }
     }
 
-    private void followUser(ParseObject user, final View v) {
+    private void followUser(ParseObject user, final Button followBtn) {
         if(ParseUser.getCurrentUser() != null && user != null){
             HashMap<String, Object> params = new HashMap<>();
             params.put("targetUserId", user.getObjectId());
             ParseCloud.callFunctionInBackground("followUser", params, new FunctionCallback<Integer>() {
                 public void done(Integer result, ParseException e) {
                     if (e == null){
-                        if(v != null){
-                            Button followBtn = (Button) v.findViewById(R.id.follow_btn);
+                        if(followBtn != null){
                             if(result == PARSE_CLOUD_CODE_RESPONSE_CODE_FOLLOWED){
-                                if(followBtn != null){
-                                    followBtn.setText(R.string.followed_btn_text);
-                                }
+                                followBtn.setText(R.string.followed_btn_text);
                             }else if(result == PARSE_CLOUD_CODE_RESPONSE_CODE_FOLLOW_REQUESTED){
-                                if(followBtn != null){
-                                    followBtn.setText(R.string.pending_follow_btn_text);
-                                }
+                                followBtn.setText(R.string.pending_follow_btn_text);
                             }
                         }
                     }else{
@@ -95,5 +100,30 @@ public class SearchUsersActivity extends AppCompatActivity implements View.OnCli
                 }
             });
         }
+    }
+
+    private void unfollowUser(ParseObject user, final Button followBtn) {
+       //TODO Implement
+    }
+
+    private void promptUnfollow(ParseObject user, final Button followBtn){
+        //TODO Use custom dialog here for better look
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        // Add the buttons
+        builder.setPositiveButton(R.string.follow_positive_button, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked OK button
+            }
+        });
+        builder.setNegativeButton(R.string.follow_negative_button, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+            }
+        });
+        // Set other dialog properties
+
+        // Create the AlertDialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }
