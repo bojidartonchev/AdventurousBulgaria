@@ -80,5 +80,5 @@
     <!--BUTTONS-->
     <string name="follow_btn_text">Follow</string>
     <string name="followed_btn_text">Followed</string>
-    <string name="pending_follow_btn_text">Pending...</string>
+    <string name="pending_follow_btn_text">Requested</string>
 </resources>
