@@ -94,7 +94,7 @@ public class LocationUpdateService extends Service{
                         }
                     });
 
-                    Toast.makeText(getApplicationContext(), location.toString(), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), location.toString(), Toast.LENGTH_SHORT).show();
                 }
                 catch (Exception e) {
                     e.printStackTrace();

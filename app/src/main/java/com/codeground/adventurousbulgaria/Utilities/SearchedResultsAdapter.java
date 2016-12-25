@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import com.codeground.adventurousbulgaria.Interfaces.IOnParseItemClicked;
 import com.codeground.adventurousbulgaria.R;
+import com.parse.CountCallback;
+import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseImageView;
 import com.parse.ParseObject;
@@ -56,7 +58,35 @@ public class SearchedResultsAdapter extends ParseQueryAdapter{
         timestampView.setText(object.getCreatedAt().toString());
 
         // Follow button
-        Button followBtn = (Button) v.findViewById(R.id.follow_btn);
+        final Button followBtn = (Button) v.findViewById(R.id.follow_btn);
+
+        //Check if is already followed
+        ParseQuery followingQuery = ParseUser.getCurrentUser().getRelation("following").getQuery();
+        followingQuery.whereContains("objectId", object.getObjectId());
+        followingQuery.countInBackground(new CountCallback() {
+            @Override
+            public void done(int count, ParseException e) {
+                if(count > 0){
+                    //Already followed
+                    followBtn.setText(R.string.followed_btn_text);
+                }else{
+                    ParseQuery pendingQuery = ParseUser.getCurrentUser().getRelation("pending_following").getQuery();
+                    pendingQuery.whereContains("objectId", object.getObjectId());
+                    pendingQuery.countInBackground(new CountCallback() {
+                        @Override
+                        public void done(int count, ParseException e) {
+                            if(count > 0){
+                                //Pending follow
+                                followBtn.setText(R.string.pending_follow_btn_text);
+                            }else{
+                                followBtn.setText(R.string.follow_btn_text);
+                            }
+                        }
+                    });
+                }
+            }
+        });
+
         if(followBtn != null){
             followBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -69,6 +99,8 @@ public class SearchedResultsAdapter extends ParseQueryAdapter{
                 }
             });
         }
+
+
 
         return v;
     }

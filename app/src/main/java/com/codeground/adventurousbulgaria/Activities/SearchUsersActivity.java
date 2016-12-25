@@ -80,11 +80,11 @@ public class SearchUsersActivity extends AppCompatActivity implements View.OnCli
                             Button followBtn = (Button) v.findViewById(R.id.follow_btn);
                             if(result == PARSE_CLOUD_CODE_RESPONSE_CODE_FOLLOWED){
                                 if(followBtn != null){
-                                    followBtn.setText("Followed");
+                                    followBtn.setText(R.string.followed_btn_text);
                                 }
                             }else if(result == PARSE_CLOUD_CODE_RESPONSE_CODE_FOLLOW_REQUESTED){
                                 if(followBtn != null){
-                                    followBtn.setText("Pending...");
+                                    followBtn.setText(R.string.pending_follow_btn_text);
                                 }
                             }
                         }
