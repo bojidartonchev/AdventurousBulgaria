@@ -12,15 +12,19 @@ import android.widget.Toast;
 import com.codeground.adventurousbulgaria.Interfaces.IOnParseItemClicked;
 import com.codeground.adventurousbulgaria.R;
 import com.codeground.adventurousbulgaria.Utilities.SearchedResultsAdapter;
+import com.parse.FunctionCallback;
+import com.parse.ParseCloud;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQueryAdapter;
-import com.parse.ParseRelation;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
+
+import java.util.HashMap;
 
 
 public class SearchUsersActivity extends AppCompatActivity implements View.OnClickListener, IOnParseItemClicked {
+    public static final int PARSE_CLOUD_CODE_RESPONSE_CODE_FOLLOWED = 0;
+    public static final int PARSE_CLOUD_CODE_RESPONSE_CODE_FOLLOW_REQUESTED = 1;
 
     private Button mSearchBtn;
     private EditText mSearchField;
@@ -59,23 +63,35 @@ public class SearchUsersActivity extends AppCompatActivity implements View.OnCli
     }
 
     @Override
-    public void onItemClicked(ParseObject user) {
+    public void onItemClicked(ParseObject user, View v) {
         if(user!=null){
-            followUser(user);
+            followUser(user, v);
         }
     }
 
-    private void followUser(ParseObject user) {
-        if(ParseUser.getCurrentUser() != null){
-            ParseRelation<ParseObject> relation = ParseUser.getCurrentUser().getRelation(getString(R.string.db_user_following));
-            relation.add(user);
-            ParseUser.getCurrentUser().saveInBackground(new SaveCallback() {
-                @Override
-                public void done(ParseException e) {
-                    if(e!=null){
-                        Toast.makeText(getApplicationContext(), e.getMessage(),Toast.LENGTH_LONG).show();
+    private void followUser(ParseObject user, final View v) {
+        if(ParseUser.getCurrentUser() != null && user != null){
+            HashMap<String, Object> params = new HashMap<>();
+            params.put("targetUserId", user.getObjectId());
+            ParseCloud.callFunctionInBackground("followUser", params, new FunctionCallback<Integer>() {
+                public void done(Integer result, ParseException e) {
+                    if (e == null){
+                        if(v != null){
+                            Button followBtn = (Button) v.findViewById(R.id.follow_btn);
+                            if(result == PARSE_CLOUD_CODE_RESPONSE_CODE_FOLLOWED){
+                                if(followBtn != null){
+                                    followBtn.setText("Followed");
+                                }
+                            }else if(result == PARSE_CLOUD_CODE_RESPONSE_CODE_FOLLOW_REQUESTED){
+                                if(followBtn != null){
+                                    followBtn.setText("Pending...");
+                                }
+                            }
+                        }
+                    }else{
+                        //error
+                        Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                     }
-                    //mAdapter.loadObjects();
                 }
             });
         }

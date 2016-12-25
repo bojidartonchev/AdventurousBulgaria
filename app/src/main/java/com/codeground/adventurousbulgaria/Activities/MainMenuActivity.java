@@ -113,17 +113,20 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     private void loadProfilePicture() {
         ParseUser currUser = ParseUser.getCurrentUser();
         ParseFile pic = (ParseFile) currUser.get("profile_picture");
-        pic.getDataInBackground(new GetDataCallback() {
-            @Override
-            public void done(byte[] data, ParseException e) {
-                if (e == null) {
-                    Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
-                    mProfilePicture.setImageBitmap(bmp);
-                } else {
+
+        if(pic != null){
+            pic.getDataInBackground(new GetDataCallback() {
+                @Override
+                public void done(byte[] data, ParseException e) {
+                    if (e == null) {
+                        Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
+                        mProfilePicture.setImageBitmap(bmp);
+                    } else {
+                    }
                 }
-            }
-        });
+            });
         }
+    }
 
     @Override
     protected void onResume() {

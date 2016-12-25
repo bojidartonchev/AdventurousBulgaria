@@ -32,6 +32,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
         android:id="@+id/follow_btn"
         android:layout_below="@+id/timestamp"
         android:layout_alignParentRight="true"

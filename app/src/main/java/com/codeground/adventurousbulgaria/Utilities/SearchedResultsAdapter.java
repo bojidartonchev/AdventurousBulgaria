@@ -63,7 +63,7 @@ public class SearchedResultsAdapter extends ParseQueryAdapter{
                 public void onClick(View v) {
                     if(v.getId() == R.id.follow_btn){
                         if(mListener!=null){
-                            mListener.onItemClicked(object);
+                            mListener.onItemClicked(object, v);
                         }
                     }
                 }
