@@ -15,7 +15,7 @@ import android.widget.Toast;
 import com.codeground.adventurousbulgaria.Enums.UnfollowActions;
 import com.codeground.adventurousbulgaria.Interfaces.IOnParseItemClicked;
 import com.codeground.adventurousbulgaria.R;
-import com.codeground.adventurousbulgaria.Utilities.SearchedResultsAdapter;
+import com.codeground.adventurousbulgaria.Utilities.Adapters.SearchedResultsAdapter;
 import com.parse.FunctionCallback;
 import com.parse.ParseCloud;
 import com.parse.ParseException;
@@ -58,8 +58,6 @@ public class SearchUsersActivity extends AppCompatActivity implements View.OnCli
         mAdapter.setTextKey("title");
         mResults.setAdapter(mAdapter);
     }
-
-
 
     @Override
     public void onClick(View v) {

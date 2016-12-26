@@ -10,9 +10,9 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import com.codeground.adventurousbulgaria.R;
+import com.codeground.adventurousbulgaria.Utilities.Adapters.LocationCommentsAdapter;
 import com.codeground.adventurousbulgaria.Utilities.DialogWindowManager;
-import com.codeground.adventurousbulgaria.Utilities.LocationCommentsAdapter;
-import com.codeground.adventurousbulgaria.Utilities.ParseLocation;
+import com.codeground.adventurousbulgaria.Utilities.ParseUtils.ParseLocation;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseRelation;

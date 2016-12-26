@@ -1,4 +1,4 @@
-package com.codeground.adventurousbulgaria.Utilities;
+package com.codeground.adventurousbulgaria.Utilities.ParseUtils;
 
 import com.parse.ParseClassName;
 import com.parse.ParseFile;

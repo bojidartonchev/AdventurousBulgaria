@@ -1,4 +1,4 @@
-package com.codeground.adventurousbulgaria.Utilities;
+package com.codeground.adventurousbulgaria.Utilities.Adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.codeground.adventurousbulgaria.Interfaces.IOnItemClicked;
 import com.codeground.adventurousbulgaria.R;
+import com.codeground.adventurousbulgaria.Utilities.ParseUtils.ParseLocation;
 import com.parse.ParseException;
 import com.squareup.picasso.Picasso;
 

@@ -32,9 +32,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
-        android:id="@+id/follow_btn"
+        android:id="@+id/accept_btn"
         android:layout_below="@+id/timestamp"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"/>
+        android:layout_alignParentEnd="true"
+        android:text="@string/pending_accept_button" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
+        android:id="@+id/reject_btn"
+        android:text="@string/pending_reject_button"
+        android:layout_alignBaseline="@+id/accept_btn"
+        android:layout_alignBottom="@+id/accept_btn"
+        android:layout_toLeftOf="@+id/accept_btn"
+        android:layout_toStartOf="@+id/accept_btn" />
 
 </RelativeLayout>

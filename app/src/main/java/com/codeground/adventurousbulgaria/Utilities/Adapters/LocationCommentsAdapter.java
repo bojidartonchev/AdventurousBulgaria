@@ -1,4 +1,4 @@
-package com.codeground.adventurousbulgaria.Utilities;
+package com.codeground.adventurousbulgaria.Utilities.Adapters;
 
 import android.content.Context;
 import android.view.View;
@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.codeground.adventurousbulgaria.R;
+import com.codeground.adventurousbulgaria.Utilities.ParseUtils.ParseComment;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;

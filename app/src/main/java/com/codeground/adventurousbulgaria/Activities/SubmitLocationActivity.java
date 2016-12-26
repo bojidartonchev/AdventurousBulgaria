@@ -17,7 +17,7 @@ import android.widget.Toast;
 
 import com.codeground.adventurousbulgaria.R;
 import com.codeground.adventurousbulgaria.Utilities.DialogWindowManager;
-import com.codeground.adventurousbulgaria.Utilities.ParseUtilities;
+import com.codeground.adventurousbulgaria.Utilities.ParseUtils.ParseUtilities;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;

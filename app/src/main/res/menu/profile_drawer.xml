@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <group android:checkableBehavior="single">
         <item android:id="@+id/submit_location" android:icon="@android:drawable/ic_menu_camera"
@@ -16,6 +17,9 @@
         <menu>
             <item android:id="@+id/search_users" android:icon="@android:drawable/ic_menu_search"
                 android:title="Find friends" />
+            <item android:id="@+id/pending_followers" android:icon="@android:drawable/ic_menu_myplaces"
+                android:title="Pending followers"
+                app:actionViewClass="android.widget.TextView"/>
             <item android:id="@+id/logout" android:icon="@android:drawable/ic_menu_manage"
                 android:title="Logout" />
         </menu>

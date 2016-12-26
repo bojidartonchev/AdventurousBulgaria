@@ -1,4 +1,4 @@
-package com.codeground.adventurousbulgaria.Utilities;
+package com.codeground.adventurousbulgaria.Utilities.Adapters;
 
 
 import android.content.Context;

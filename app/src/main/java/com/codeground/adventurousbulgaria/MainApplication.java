@@ -1,19 +1,15 @@
 package com.codeground.adventurousbulgaria;
 
 import android.app.Application;
-import android.util.Log;
 
-import com.codeground.adventurousbulgaria.Utilities.ParseLocation;
+import com.codeground.adventurousbulgaria.Utilities.ParseUtils.ParseLocation;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.parse.Parse;
-import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseInstallation;
 import com.parse.ParseObject;
-import com.parse.ParsePush;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
 public class MainApplication extends Application {
 

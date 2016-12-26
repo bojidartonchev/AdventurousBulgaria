@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.location.Location;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -15,9 +16,10 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -29,7 +31,7 @@ import android.widget.Toast;
 import com.codeground.adventurousbulgaria.BroadcastReceivers.BootReceiver;
 import com.codeground.adventurousbulgaria.Fragments.ProfileFragment;
 import com.codeground.adventurousbulgaria.R;
-import com.codeground.adventurousbulgaria.Utilities.ParseUtilities;
+import com.codeground.adventurousbulgaria.Utilities.ParseUtils.ParseUtilities;
 import com.codeground.adventurousbulgaria.Utilities.ProfileManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -39,9 +41,11 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.parse.CountCallback;
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 public class MainMenuActivity extends AppCompatActivity implements View.OnClickListener,
@@ -75,7 +79,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     private TextView mPersonName;
     private NavigationView mProfileView;
     private ImageView mProfilePicture;
-    private Toolbar mToolbar;
+    private TextView mPendingFollowersBadge;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +98,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         //mToolbar = (Toolbar)findViewById(R.id.toolbar);
         //setSupportActionBar(mToolbar);
         mProfileView = (NavigationView) findViewById(R.id.profile_view);
+        mPendingFollowersBadge = (TextView) MenuItemCompat.getActionView(mProfileView.getMenu().findItem(R.id.pending_followers));
         mPersonName = (TextView) mProfileView.getHeaderView(0).findViewById(R.id.profile_name);
         mProfilePicture = (ImageView) mProfileView.getHeaderView(0).findViewById(R.id.profile_image);
         mProfilePicture.setOnClickListener(this);
@@ -108,6 +113,9 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         mAllLandmarksBtn = (Button) findViewById(R.id.landmarks_btn);
         mAllLandmarksBtn.setOnClickListener(this);
         loadProfilePicture();
+
+        //This method will initialize the count value
+        initializeCountDrawer();
     }
 
     private void loadProfilePicture() {
@@ -227,7 +235,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     }
 
     protected synchronized void buildGoogleApiClient() {
-        Toast.makeText(this, "buildGoogleApiClient", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "buildGoogleApiClient", Toast.LENGTH_SHORT).show();
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -298,6 +306,12 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
             logout();
         }
 
+        if(id == R.id.pending_followers){
+            Intent intent = new Intent(getApplicationContext(), PendingFollowersActivity.class);
+
+            startActivity(intent);
+        }
+
         return false;
     }
 
@@ -343,5 +357,25 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
         finish();
         startActivity(intent);
+    }
+
+    private void initializeCountDrawer() {
+        //Gravity property aligns the text
+        mPendingFollowersBadge.setGravity(Gravity.CENTER_VERTICAL);
+        mPendingFollowersBadge.setTypeface(null, Typeface.BOLD);
+        mPendingFollowersBadge.setTextColor(ContextCompat.getColor(this, R.color.colorAccent));
+
+        ParseQuery followingQuery = ParseUser.getCurrentUser().getRelation("pending_followers").getQuery();
+        followingQuery.countInBackground(new CountCallback() {
+            @Override
+            public void done(int count, ParseException e) {
+                if(count > 0 && count <= 99){
+                    //Already followed
+                    mPendingFollowersBadge.setText(Integer.toString(count));
+                }else if(count > 99){
+                    mPendingFollowersBadge.setText("99+");
+                }
+            }
+        });
     }
 }

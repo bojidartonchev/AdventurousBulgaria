@@ -8,9 +8,9 @@ import android.support.v7.widget.RecyclerView;
 
 import com.codeground.adventurousbulgaria.Interfaces.IOnItemClicked;
 import com.codeground.adventurousbulgaria.R;
+import com.codeground.adventurousbulgaria.Utilities.Adapters.LandmarksAdapter;
 import com.codeground.adventurousbulgaria.Utilities.DialogWindowManager;
-import com.codeground.adventurousbulgaria.Utilities.LandmarksAdapter;
-import com.codeground.adventurousbulgaria.Utilities.ParseLocation;
+import com.codeground.adventurousbulgaria.Utilities.ParseUtils.ParseLocation;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
