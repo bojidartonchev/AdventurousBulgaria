@@ -35,7 +35,7 @@ public class LandmarksAdapter extends RecyclerView.Adapter<LandmarksAdapter.View
             super(itemView);
             mTitle = (TextView) itemView.findViewById(R.id.title);
             mLocation = (TextView) itemView.findViewById(R.id.location);
-            mIcon = (ImageView) itemView.findViewById(R.id.icon);
+            mIcon = (ImageView) itemView.findViewById(R.id.activity_image);
             mParent = (RelativeLayout) itemView.findViewById(R.id.row_parent);
             mCompletedHolder = (TextView) itemView.findViewById(R.id.completed_container);
 

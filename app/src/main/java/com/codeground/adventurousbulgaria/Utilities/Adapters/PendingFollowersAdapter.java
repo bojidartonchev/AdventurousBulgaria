@@ -45,7 +45,7 @@ public class PendingFollowersAdapter extends ParseQueryAdapter {
         super.getItemView(object, v, parent);
 
         // Add and download the image
-        ParseImageView profileImage = (ParseImageView) v.findViewById(R.id.icon);
+        ParseImageView profileImage = (ParseImageView) v.findViewById(R.id.activity_image);
         ParseFile imageFile = object.getParseFile("profile_picture");
         if (imageFile != null) {
             profileImage.setParseFile(imageFile);

@@ -69,7 +69,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
             Manifest.permission.CAMERA
     };
 
-    private Button mProfileBtn;
+    private Button mNewsFeedBtn;
     private Button mAllLandmarksBtn;
 
     private GoogleMap mMap;
@@ -107,8 +107,8 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         mPersonName.setText(currUserName);
         mProfileView.setNavigationItemSelectedListener(this);
 
-        mProfileBtn = (Button) findViewById(R.id.profile_btn);
-        mProfileBtn.setOnClickListener(this);
+        mNewsFeedBtn = (Button) findViewById(R.id.news_feed_btn);
+        mNewsFeedBtn.setOnClickListener(this);
 
         mAllLandmarksBtn = (Button) findViewById(R.id.landmarks_btn);
         mAllLandmarksBtn.setOnClickListener(this);
@@ -160,10 +160,10 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onClick(View v) {
-        //if (v.getId() == R.id.profile_btn) {
-        //    Intent intent = new Intent(this, UserHomeActivity.class);
-        //    startActivity(intent);
-        //}
+        if (v.getId() == R.id.news_feed_btn) {
+            Intent intent = new Intent(this, NewsFeedActivity.class);
+            startActivity(intent);
+        }
         if(v.getId() == R.id.profile_image){
             selectPictureOption();
         }

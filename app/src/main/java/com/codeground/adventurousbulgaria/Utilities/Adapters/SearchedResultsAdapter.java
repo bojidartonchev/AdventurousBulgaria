@@ -42,7 +42,7 @@ public class SearchedResultsAdapter extends ParseQueryAdapter{
         super.getItemView(object, v, parent);
 
         // Add and download the image
-        ParseImageView todoImage = (ParseImageView) v.findViewById(R.id.icon);
+        ParseImageView todoImage = (ParseImageView) v.findViewById(R.id.activity_image);
         ParseFile imageFile = object.getParseFile("profile_picture");
         if (imageFile != null) {
             todoImage.setParseFile(imageFile);
