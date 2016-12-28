@@ -64,6 +64,7 @@
     <!--ALERTS-->
     <string name="alert_no_gps">Sorry, you must allow access to GPS to use this app</string>
     <string name="alert_no_camera">Sorry, you must allow access to Camera</string>
+    <string name="alert_no_storage">Sorry, you must allow access to Gallery</string>
     <string name="alert_invalid_email">Invalid E-mail address. Please try again.</string>
     <string name="alert_password_nomatch">Passwords do not match. Please try again.</string>
     <string name="alert_password_length">Password must be between 5 and 12 characters long.</string>

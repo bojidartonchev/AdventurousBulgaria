@@ -148,6 +148,9 @@ public class ProfileManager {
 
     }
     public static Bitmap getCroppedBitmap(Bitmap bitmap) {
+        if(bitmap==null){
+            return null;
+        }
         Bitmap output;
         if (bitmap.getWidth() >= bitmap.getHeight()){
 

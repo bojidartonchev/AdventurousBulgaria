@@ -4,10 +4,12 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -48,6 +50,7 @@ import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+
 public class MainMenuActivity extends AppCompatActivity implements View.OnClickListener,
         NavigationView.OnNavigationItemSelectedListener,
         OnMapReadyCallback,
@@ -59,6 +62,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     private static final int CAMERA_TAKE_PHOTO = 1338;
     private static final int CAMERA_REQUEST = 1339;
     private static final int SELECT_FROM_GALLERY = 1340;
+    private static final int STORAGE_REQUEST = 1341;
 
     private static final String[] INITIAL_PERMS = {
             Manifest.permission.ACCESS_FINE_LOCATION,
@@ -67,6 +71,9 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
     private static final String[] CAMERA_PERMS = {
             Manifest.permission.CAMERA
+    };
+    private static final String[] STORAGE_PERMS = {
+            Manifest.permission.READ_EXTERNAL_STORAGE
     };
 
     private Button mNewsFeedBtn;
@@ -198,6 +205,13 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
                     Toast.makeText(this, getString(R.string.alert_no_camera), Toast.LENGTH_LONG).show();
                 }
                 break;
+            case  STORAGE_REQUEST:
+                if ((grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                   startGallery();
+                } else {
+                    Toast.makeText(this, getString(R.string.alert_no_storage), Toast.LENGTH_LONG).show();
+                }
+                break;
             default:
                 break;
         }
@@ -267,6 +281,16 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
             BootReceiver.scheduleAlarm(this);
         }
     }
+    private void checkGalleryPerms(){
+        if (ContextCompat.checkSelfPermission(this,STORAGE_PERMS[0])
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    STORAGE_PERMS,
+                    STORAGE_REQUEST);
+        } else {
+            startGallery();
+        }
+    }
 
     private void checkCameraPerms(){
         if (ContextCompat.checkSelfPermission(this,
@@ -282,6 +306,12 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
            startCamera();
         }
     }
+
+    private void startGallery(){
+        Intent i = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(i, SELECT_FROM_GALLERY);
+    }
+
     private void startCamera(){
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(intent, CAMERA_TAKE_PHOTO);
@@ -319,10 +349,25 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            if (requestCode == CAMERA_TAKE_PHOTO) {
+            if (requestCode == CAMERA_TAKE_PHOTO && data!=null) {
                 Bitmap bitmap = ProfileManager.getCroppedBitmap((Bitmap) data.getExtras().get("data"));
                 mProfilePicture.setImageBitmap(bitmap);
                 ParseUtilities.uploadProfilePicture(bitmap);
+            } else if(requestCode == SELECT_FROM_GALLERY && data!=null){
+                Uri selectedImage = data.getData();
+                String[] filePathColumn = { MediaStore.Images.Media.DATA };
+
+                Cursor cursor = getContentResolver().query(selectedImage,
+                        filePathColumn, null, null, null);
+                cursor.moveToFirst();
+
+                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                String picturePath = cursor.getString(columnIndex);
+                cursor.close();
+                Bitmap bmp = BitmapFactory.decodeFile(picturePath);
+                mProfilePicture.setImageBitmap(ProfileManager.getCroppedBitmap(bmp));
+                ParseUtilities.uploadProfilePicture(bmp);
+
             }
         }
     }
@@ -340,10 +385,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
                     checkCameraPerms();
 
                 } else if (items[item].equals(getString(R.string.menu_choose_library))) {
-                    Intent intent = new Intent();
-                    intent.setType("image/*");
-                    intent.setAction(Intent.ACTION_GET_CONTENT);//
-                    startActivityForResult(Intent.createChooser(intent, "Select File"),SELECT_FROM_GALLERY);
+                    checkGalleryPerms();
                 } else if (items[item].equals(getString(R.string.menu_cancel))) {
                     dialog.dismiss();
                 }
