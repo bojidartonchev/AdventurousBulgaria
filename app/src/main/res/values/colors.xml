@@ -22,4 +22,5 @@
     <color name="button_blue">#4FC1FF</color>
     <color name="hint_color">#808080</color>
 
+    <color name="radius_fill_color">#d9accf14</color>
 </resources>

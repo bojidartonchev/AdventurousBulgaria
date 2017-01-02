@@ -183,7 +183,8 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
             startActivity(intent);
         }
         if (v.getId() == R.id.near_by_button) {
-
+            Intent intent = new Intent(this, NearByActivity.class);
+            startActivity(intent);
         }
     }
 
