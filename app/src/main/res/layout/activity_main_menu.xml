@@ -60,9 +60,9 @@
             >
 
             <Button
-                android:text="Button"
+                android:text="@string/near_by_button"
                 android:background="@color/menuColor4"
-                android:id="@+id/button3"
+                android:id="@+id/near_by_button"
                 android:layout_width="0dp"
                 android:layout_weight="0.5"
                 android:layout_marginRight="6dp"
@@ -88,4 +88,5 @@
         android:layout_gravity="start" android:fitsSystemWindows="true"
         app:headerLayout="@layout/profile_navigation" app:menu="@menu/profile_drawer"/>
 </android.support.v4.widget.DrawerLayout>
+
 
