@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,12 +12,16 @@
         android:layout_height="match_parent"
         android:id="@+id/head_layout">
 
-    <ImageView
+    <com.jmedeisis.windowview.WindowView
         android:id="@+id/header_cover_image"
         android:layout_width="match_parent"
         android:layout_height="215dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/profile_background" />
+        app:wwv_translate_mode="Constant"
+        android:src="@drawable/profile_background"
+        app:wwv_max_constant_translation="20dp"
+        app:wwv_max_pitch="45"
+        app:wwv_max_roll="45"/>
 
     <ImageView
         android:id="@+id/user_profile_photo"
