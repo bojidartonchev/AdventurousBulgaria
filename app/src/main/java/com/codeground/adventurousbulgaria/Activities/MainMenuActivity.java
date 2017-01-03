@@ -33,6 +33,8 @@ import android.widget.Toast;
 import com.codeground.adventurousbulgaria.BroadcastReceivers.BootReceiver;
 import com.codeground.adventurousbulgaria.Fragments.ProfileFragment;
 import com.codeground.adventurousbulgaria.R;
+import com.codeground.adventurousbulgaria.Utilities.AllLocationsManager;
+import com.codeground.adventurousbulgaria.Utilities.ParseUtils.ParseLocation;
 import com.codeground.adventurousbulgaria.Utilities.ParseUtils.ParseUtilities;
 import com.codeground.adventurousbulgaria.Utilities.ProfileManager;
 import com.google.android.gms.common.ConnectionResult;
@@ -43,12 +45,15 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.CountCallback;
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+
+import java.util.List;
 
 
 public class MainMenuActivity extends AppCompatActivity implements View.OnClickListener,
@@ -243,6 +248,8 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
                     mGoogleApiClient);
+
+            loadMarkersOnMap();
         }
     }
 
@@ -427,5 +434,21 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
                 }
             }
         });
+    }
+
+    private void loadMarkersOnMap(){
+        if(AllLocationsManager.getInstance().isLoaded()){
+            List<ParseLocation> locations = AllLocationsManager.getInstance().getLocations();
+            if(mMap != null){
+                for (ParseLocation location : locations) {
+                    Location loc = new Location("");
+                    loc.setLatitude(location.getLocation().getLatitude());
+                    loc.setLongitude(location.getLocation().getLongitude());
+                    mMap.addMarker(new MarkerOptions()
+                            .position(new LatLng(loc.getLatitude(), loc.getLongitude()))
+                            .title(location.getName()));
+                }
+            }
+        }
     }
 }
