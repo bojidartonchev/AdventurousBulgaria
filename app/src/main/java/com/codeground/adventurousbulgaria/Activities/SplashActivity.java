@@ -10,6 +10,7 @@ import android.view.WindowManager;
 import android.widget.VideoView;
 
 import com.codeground.adventurousbulgaria.R;
+import com.codeground.adventurousbulgaria.Utilities.AllLocationsManager;
 
 public class SplashActivity extends Activity implements OnCompletionListener
 {
@@ -28,6 +29,8 @@ public class SplashActivity extends Activity implements OnCompletionListener
         video.setVideoPath("android.resource://com.codeground.adventurousbulgaria/raw/" + R.raw.splash);
         video.start();
         video.setOnCompletionListener(this);
+
+        AllLocationsManager.getInstance().loadLocations();
     }
 
     @Override
