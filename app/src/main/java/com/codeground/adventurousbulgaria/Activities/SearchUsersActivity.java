@@ -1,11 +1,13 @@
 package com.codeground.adventurousbulgaria.Activities;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -29,7 +31,7 @@ import static com.codeground.adventurousbulgaria.Enums.UnfollowActions.REMOVE_PE
 import static com.codeground.adventurousbulgaria.Enums.UnfollowActions.UNFOLLOW_USER;
 
 
-public class SearchUsersActivity extends AppCompatActivity implements View.OnClickListener, IOnParseItemClicked {
+public class SearchUsersActivity extends AppCompatActivity implements View.OnClickListener, IOnParseItemClicked, AdapterView.OnItemClickListener {
     public static final int PARSE_CLOUD_CODE_RESPONSE_CODE_FOLLOWED = 0;
     public static final int PARSE_CLOUD_CODE_RESPONSE_CODE_FOLLOW_REQUESTED = 1;
 
@@ -48,6 +50,7 @@ public class SearchUsersActivity extends AppCompatActivity implements View.OnCli
         mSearchBtn = (Button) findViewById(R.id.search_btn);
         mSearchField = (EditText) findViewById(R.id.search_query);
         mResults=(ListView) findViewById(R.id.searched_users);
+        mResults.setOnItemClickListener(this);
 
         mSearchBtn.setOnClickListener(this);
     }
@@ -149,5 +152,15 @@ public class SearchUsersActivity extends AppCompatActivity implements View.OnCli
         });
 
         unfollowDialog.show();
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position,
+                            long id) {
+        Intent intent = new Intent(getApplicationContext(), UserHomeActivity.class);
+        ParseObject entry = (ParseObject) parent.getItemAtPosition(position);
+
+        intent.putExtra("userID",        entry.getObjectId());
+        startActivity(intent);
     }
 }

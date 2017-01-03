@@ -225,6 +225,7 @@ public class SubmitLocationActivity extends AppCompatActivity implements View.On
     private void pickLocation(){
 
         PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+        
 
         try {
             startActivityForResult(builder.build(this), PLACE_PICKER_REQUEST);

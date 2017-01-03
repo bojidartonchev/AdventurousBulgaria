@@ -74,6 +74,11 @@
     <!--DIALOGS-->
     <string name="unfollow_prompt_text">You are about to unfollow %1$s</string>
 
+    <!--PROFILE-->
+    <string name="profile_followers">Followers</string>
+    <string name="profile_following">Following</string>
+    <string name="profile_follow">Follow</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
