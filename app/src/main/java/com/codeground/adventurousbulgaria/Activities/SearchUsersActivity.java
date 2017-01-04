@@ -11,10 +11,13 @@ import android.widget.ListView;
 
 import com.codeground.adventurousbulgaria.R;
 import com.codeground.adventurousbulgaria.Utilities.Adapters.SearchedResultsAdapter;
+import com.codeground.adventurousbulgaria.Utilities.DialogWindowManager;
 import com.parse.ParseObject;
 import com.parse.ParseQueryAdapter;
 
-public class SearchUsersActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
+import java.util.List;
+
+public class SearchUsersActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener, ParseQueryAdapter.OnQueryLoadListener {
 
     private Button mSearchBtn;
     private EditText mSearchField;
@@ -40,6 +43,7 @@ public class SearchUsersActivity extends AppCompatActivity implements View.OnCli
         String userToSearch = mSearchField.getText().toString().toLowerCase();
         mAdapter = new SearchedResultsAdapter(this, userToSearch);
         mAdapter.setTextKey("title");
+        mAdapter.addOnQueryLoadListener(this);
         mResults.setAdapter(mAdapter);
     }
 
@@ -58,5 +62,15 @@ public class SearchUsersActivity extends AppCompatActivity implements View.OnCli
 
         intent.putExtra("userID", entry.getObjectId());
         startActivity(intent);
+    }
+
+    @Override
+    public void onLoading() {
+        DialogWindowManager.show(this);
+    }
+
+    @Override
+    public void onLoaded(List objects, Exception e) {
+        DialogWindowManager.dismiss();
     }
 }

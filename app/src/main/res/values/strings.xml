@@ -95,4 +95,7 @@
     <string name="follow_negative_button">Cancel</string>
     <string name="pending_reject_button">Reject</string>
     <string name="pending_accept_button">Accept</string>
+
+    <!--NEWS_FEED_ACTIONS-->
+    <string name="action_content_text"> has %1$s </string>
 </resources>

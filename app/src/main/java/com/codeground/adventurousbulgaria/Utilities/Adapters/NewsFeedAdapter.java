@@ -1,13 +1,17 @@
 package com.codeground.adventurousbulgaria.Utilities.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.res.Resources;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.codeground.adventurousbulgaria.Activities.LandmarkActivity;
+import com.codeground.adventurousbulgaria.Activities.UserHomeActivity;
 import com.codeground.adventurousbulgaria.R;
 import com.codeground.adventurousbulgaria.Utilities.ParseUtils.ParseActivity;
-import com.codeground.adventurousbulgaria.Utilities.ParseUtils.ParseLocation;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseImageView;
@@ -17,8 +21,12 @@ import com.parse.ParseQueryAdapter;
 import com.parse.ParseRelation;
 import com.parse.ParseUser;
 
+import static com.facebook.FacebookSdk.getApplicationContext;
+
 
 public class NewsFeedAdapter extends ParseQueryAdapter {
+
+    private Context ctx;
 
     public NewsFeedAdapter(Context context)
     {
@@ -30,29 +38,72 @@ public class NewsFeedAdapter extends ParseQueryAdapter {
                 return query;
             }
         });
+        ctx = context;
     }
 
     @Override
-    public View getItemView(final ParseObject object, View v, ViewGroup parent) {
+    public View getItemView(final ParseObject object, View v, final ViewGroup parent) {
         if (v == null) {
             v = View.inflate(getContext(), R.layout.list_view_news_feed_activity_row, null);
         }
 
         super.getItemView(object, v, parent);
 
-        ParseUser originUser = null;
-        try {
-            originUser = object.getParseUser("origin_user").fetch();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        ParseLocation targetLocation = null;
-        try {
-            targetLocation = object.getParseObject("target_location").fetch();
-        } catch (ParseException e) {
-            e.printStackTrace();
+        // Add the title view
+        final TextView titleUsernameView = (TextView) v.findViewById(R.id.profile_name);
+
+        object.getParseUser("origin_user").fetchInBackground(new GetCallback<ParseUser>() {
+            @Override
+            public void done(final ParseUser user, ParseException e) {
+                if(e==null){
+                    titleUsernameView.setText(user.getString("first_name") + " " + user.getString("last_name"));
+
+                    titleUsernameView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(getApplicationContext(), UserHomeActivity.class);
+
+                            intent.putExtra("userID", user.getObjectId());
+                            ctx.startActivity(intent);
+                        }
+                    });
+                }
+
+            }
+        });
+
+        //Add the content
+        final TextView content = (TextView) v.findViewById(R.id.content);
+        String type = object.getString("type");
+        Resources res = getApplicationContext().getResources();
+        String contentText = String.format(res.getString(R.string.action_content_text), type);
+
+        if(content!=null){
+            content.setText(contentText);
         }
 
+
+        final TextView titleLocationView = (TextView) v.findViewById(R.id.location_name);
+        object.getParseObject("target_location").fetchInBackground(new GetCallback<ParseObject>() {
+            @Override
+            public void done(final ParseObject locObject, ParseException e) {
+                if(e==null){
+                    if(locObject!= null){
+                        titleLocationView.setText(locObject.getString("name"));
+
+                        titleLocationView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(getApplicationContext(), LandmarkActivity.class);
+                                intent.putExtra("locationId", locObject.getObjectId());
+
+                                ctx.startActivity(intent);
+                            }
+                        });
+                    }
+                }
+            }
+        });
 
         // Add and download the image
         ParseImageView activityImage = (ParseImageView) v.findViewById(R.id.activity_image);
@@ -60,28 +111,6 @@ public class NewsFeedAdapter extends ParseQueryAdapter {
         if (imageFile != null) {
             activityImage.setParseFile(imageFile);
             activityImage.loadInBackground();
-        }
-
-        // Add the title view
-        TextView titleUsernameView = (TextView) v.findViewById(R.id.profile_name);
-
-        if(originUser != null){
-            titleUsernameView.setText(originUser.getString("first_name") + " " + originUser.getString("last_name"));
-
-            titleUsernameView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //TODO redirect to user profile page
-                }
-            });
-        }
-
-        //Add the content
-        TextView content = (TextView) v.findViewById(R.id.content);
-
-        //TODO Generate the text from type of the action
-        if(object.getString("type").equals("visited") && targetLocation!= null){
-            content.setText("has visited " + targetLocation.getString("name"));
         }
 
         // Add a reminder of how long this item has been outstanding

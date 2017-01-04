@@ -6,9 +6,12 @@ import android.widget.ListView;
 
 import com.codeground.adventurousbulgaria.R;
 import com.codeground.adventurousbulgaria.Utilities.Adapters.NewsFeedAdapter;
+import com.codeground.adventurousbulgaria.Utilities.DialogWindowManager;
 import com.parse.ParseQueryAdapter;
 
-public class NewsFeedActivity extends AppCompatActivity {
+import java.util.List;
+
+public class NewsFeedActivity extends AppCompatActivity implements ParseQueryAdapter.OnQueryLoadListener {
     private ParseQueryAdapter mAdapter;
     private ListView mResults;
 
@@ -22,6 +25,17 @@ public class NewsFeedActivity extends AppCompatActivity {
 
         mAdapter = new NewsFeedAdapter(this);
         mAdapter.setTextKey("title");
+        mAdapter.addOnQueryLoadListener(this);
         mResults.setAdapter(mAdapter);
+    }
+
+    @Override
+    public void onLoading() {
+        DialogWindowManager.show(this);
+    }
+
+    @Override
+    public void onLoaded(List objects, Exception e) {
+        DialogWindowManager.dismiss();
     }
 }

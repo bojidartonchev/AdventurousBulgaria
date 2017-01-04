@@ -41,6 +41,17 @@
         android:layout_alignBottom="@+id/profile_name"
         android:layout_toRightOf="@+id/profile_name"
         android:layout_toEndOf="@+id/profile_name"
-        android:layout_alignTop="@+id/profile_name" />
+        android:layout_alignTop="@+id/profile_name"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"/>
+
+    <TextView
+        android:text="Location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/content"
+        android:layout_toRightOf="@+id/content"
+        android:layout_toEndOf="@+id/content"
+        android:id="@+id/location_name" />
 
 </RelativeLayout>
