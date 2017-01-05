@@ -6,40 +6,41 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.codeground.adventurousbulgaria.R;
 
 public class CategoriesActivity extends AppCompatActivity implements View.OnClickListener{
-    private Button mMountainBtn;
-    private Button mEcopathBtn;
-    private Button mCampingBtn;
-    private Button mCycleBtn;
-    private Button mLakesBtn;
-    private Button mFishingBtn;
-    private Button mBeachBtn;
-    private Button mWaterfallBtn;
-    private Button mCaveBtn;
-    private Button mFortressBtn;
-    private Button mFestivalBtn;
-    private Button mFoodBtn;
+    private ImageButton mMountainBtn;
+    private ImageButton mEcopathBtn;
+    private ImageButton mCampingBtn;
+    private ImageButton mCycleBtn;
+    private ImageButton mLakesBtn;
+    private ImageButton mFishingBtn;
+    private ImageButton mBeachBtn;
+    private ImageButton mWaterfallBtn;
+    private ImageButton mCaveBtn;
+    private ImageButton mFortressBtn;
+    private ImageButton mFestivalBtn;
+    private ImageButton mFoodBtn;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_categories);
 
-        mMountainBtn = (Button)findViewById(R.id.cat_mountains);
-        mEcopathBtn = (Button)findViewById(R.id.cat_ecopath);
-        mCampingBtn = (Button)findViewById(R.id.cat_camping);
-        mCycleBtn = (Button)findViewById(R.id.cat_cycling);
-        mLakesBtn = (Button)findViewById(R.id.cat_lakes);
-        mFishingBtn = (Button)findViewById(R.id.cat_fishing);
-        mBeachBtn = (Button)findViewById(R.id.cat_beach);
-        mWaterfallBtn = (Button)findViewById(R.id.cat_waterfalls);
-        mCaveBtn = (Button)findViewById(R.id.cat_caves);
-        mFortressBtn = (Button)findViewById(R.id.cat_fortress);
-        mFestivalBtn = (Button)findViewById(R.id.cat_festival);
+        mMountainBtn = (ImageButton)findViewById(R.id.cat_mountains);
+        mEcopathBtn = (ImageButton)findViewById(R.id.cat_ecopath);
+        mCampingBtn = (ImageButton)findViewById(R.id.cat_camping);
+        mCycleBtn = (ImageButton)findViewById(R.id.cat_cycling);
+        mLakesBtn = (ImageButton)findViewById(R.id.cat_lakes);
+        mFishingBtn = (ImageButton)findViewById(R.id.cat_fishing);
+        mBeachBtn = (ImageButton)findViewById(R.id.cat_beach);
+        mWaterfallBtn = (ImageButton)findViewById(R.id.cat_waterfalls);
+        mCaveBtn = (ImageButton)findViewById(R.id.cat_caves);
+        mFortressBtn = (ImageButton)findViewById(R.id.cat_fortress);
+        mFestivalBtn = (ImageButton)findViewById(R.id.cat_festival);
+        mFoodBtn = (ImageButton)findViewById(R.id.cat_food);
 
         mMountainBtn.setOnClickListener(this);
         mEcopathBtn.setOnClickListener(this);
@@ -52,6 +53,7 @@ public class CategoriesActivity extends AppCompatActivity implements View.OnClic
         mCaveBtn.setOnClickListener(this);
         mFortressBtn.setOnClickListener(this);
         mFestivalBtn.setOnClickListener(this);
+        mFoodBtn.setOnClickListener(this);
     }
 
     @Override

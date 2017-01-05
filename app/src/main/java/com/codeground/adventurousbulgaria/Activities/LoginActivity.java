@@ -10,10 +10,10 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.codeground.adventurousbulgaria.R;
-import com.codeground.adventurousbulgaria.Utilities.DialogWindowManager;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
@@ -32,9 +32,9 @@ import java.util.List;
 public class LoginActivity extends Activity implements View.OnClickListener {
     final List<String> permissions = Arrays.asList("public_profile", "email");
 
-    private Button mSignUpBtn;
+    private TextView mSignUpBtn;
     private Button mLoginUpBtn;
-    private Button mFacebookLoginUpBtn;
+    private TextView mFacebookLoginUpBtn;
     private EditText mEmailField;
     private EditText mPasswordField;
     private ProgressDialog mProgressDialog;
@@ -55,13 +55,13 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                     WindowManager.LayoutParams.FLAG_FULLSCREEN);
             setContentView(R.layout.activity_login);
 
-            mSignUpBtn = (Button) findViewById(R.id.sign_up_btn);
+            mSignUpBtn = (TextView) findViewById(R.id.sign_up_btn);
             mSignUpBtn.setOnClickListener(this);
 
             mLoginUpBtn = (Button) findViewById(R.id.login_btn);
             mLoginUpBtn.setOnClickListener(this);
 
-            mFacebookLoginUpBtn = (Button) findViewById(R.id.facebook_login_button);
+            mFacebookLoginUpBtn = (TextView) findViewById(R.id.facebook_login_button);
             mFacebookLoginUpBtn.setOnClickListener(this);
 
             mEmailField = (EditText) findViewById(R.id.email_login_field);
@@ -78,7 +78,9 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                 startActivity(intent);
             }else if(v.getId() == R.id.login_btn){
                 if(mEmailField!=null && mPasswordField!=null){
-                    DialogWindowManager.show(this);
+                    mProgressDialog.setMessage("Please Wait");
+                    mProgressDialog.setTitle("Logging in");
+                    mProgressDialog.show();
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
@@ -94,7 +96,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
                 }
             }else if(v.getId() == R.id.facebook_login_button){
-                DialogWindowManager.show(this);
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -115,10 +116,13 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             @Override
             public void done(ParseUser parseUser, ParseException e) {
                 if (parseUser != null) {
-                    switchToMainMenu();
+                    mProgressDialog.dismiss();
+                    Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
+                    startActivity(intent);
+                    finish();
 
                 } else {
-                    DialogWindowManager.dismiss();
+                    mProgressDialog.dismiss();
                     CharSequence text = "Wrong username or password.";
                     Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
                 }
@@ -170,9 +174,15 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                     e.printStackTrace();
                 }
 
+
+
+
+
                 saveNewUser(fname, lname, email);
+
             }
         });
+
 
         Bundle parameters = new Bundle();
         parameters.putString("fields","first_name,last_name,email,id");
@@ -208,7 +218,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     }
 
     private void switchToMainMenu(){
-        DialogWindowManager.dismiss();
         Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
         startActivity(intent);
         finish();

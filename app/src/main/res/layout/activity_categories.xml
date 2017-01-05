@@ -26,31 +26,31 @@
         android:orientation="horizontal"
         android:layout_weight="1"
  >
-        <Button
+        <ImageButton
             android:id="@+id/cat_mountains"
 
             android:layout_width="60dp"
             android:layout_height="150dp"
             android:layout_weight="1"
             android:layout_marginRight="6dp"
-            android:drawableTop="@drawable/mountain"
+            android:src="@drawable/mountain"
             android:background="@color/menuColor"/>
 
-        <Button
+        <ImageButton
             android:id="@+id/cat_ecopath"
             android:layout_width="60dp"
             android:layout_height="150dp"
             android:layout_weight="1"
             android:layout_marginRight="6dp"
-            android:drawableTop="@drawable/path"
+            android:src="@drawable/path"
             android:background="@color/menuColor" />
 
-        <Button
+        <ImageButton
             android:id="@+id/cat_camping"
             android:layout_width="60dp"
             android:layout_height="150dp"
             android:layout_weight="1"
-            android:drawableTop="@drawable/camp"
+            android:src="@drawable/camp"
             android:background="@color/menuColor" />
     </LinearLayout>
 
@@ -62,30 +62,30 @@
         android:layout_marginBottom="6dp"
         android:layout_weight="1"
  >
-        <Button
+        <ImageButton
             android:id="@+id/cat_cycling"
             android:layout_width="60dp"
             android:layout_height="150dp"
             android:layout_marginRight="6dp"
             android:layout_weight="1"
-            android:drawableTop="@drawable/bike"
+            android:src="@drawable/bike"
             android:background="@color/menuColor"/>
 
-        <Button
+        <ImageButton
             android:id="@+id/cat_lakes"
             android:layout_width="60dp"
             android:layout_height="150dp"
             android:layout_marginRight="6dp"
             android:layout_weight="1"
-            android:drawableTop="@drawable/lake"
+            android:src="@drawable/lake"
             android:background="@color/menuColor" />
 
-        <Button
+        <ImageButton
             android:id="@+id/cat_fishing"
             android:layout_width="60dp"
             android:layout_height="150dp"
             android:layout_weight="1"
-            android:drawableTop="@drawable/fish"
+            android:src="@drawable/fishing"
             android:background="@color/menuColor" />
     </LinearLayout>
 
@@ -98,33 +98,33 @@
         android:layout_marginBottom="6dp"
 
  >
-        <Button
+        <ImageButton
             android:id="@+id/cat_beach"
             android:layout_width="60dp"
             android:layout_height="150dp"
             android:layout_weight="1"
             android:layout_marginRight="6dp"
 
-            android:drawableTop="@drawable/beach"
+            android:src="@drawable/beach"
             android:background="@color/menuColor"/>
 
-        <Button
+        <ImageButton
             android:id="@+id/cat_waterfalls"
             android:layout_width="60dp"
             android:layout_height="150dp"
             android:layout_weight="1"
             android:layout_marginRight="6dp"
 
-            android:drawableTop="@drawable/waterfall"
+            android:src="@drawable/waterfall"
             android:background="@color/menuColor" />
 
-        <Button
+        <ImageButton
             android:id="@+id/cat_caves"
             android:layout_width="60dp"
             android:layout_height="150dp"
             android:layout_weight="1"
 
-            android:drawableTop="@drawable/cave"
+            android:src="@drawable/cave"
             android:background="@color/menuColor" />
     </LinearLayout>
 
@@ -135,33 +135,33 @@
         android:orientation="horizontal"
         android:layout_weight="1"
   >
-        <Button
+        <ImageButton
             android:id="@+id/cat_fortress"
             android:layout_width="60dp"
             android:layout_height="150dp"
             android:layout_weight="1"
             android:layout_marginRight="6dp"
 
-            android:drawableTop="@drawable/fortress"
+            android:src="@drawable/fortress"
             android:background="@color/menuColor"/>
 
-        <Button
+        <ImageButton
             android:id="@+id/cat_festival"
             android:layout_width="60dp"
             android:layout_height="150dp"
             android:layout_weight="1"
             android:layout_marginRight="6dp"
 
-            android:drawableTop="@drawable/festival"
+            android:src="@drawable/festival"
             android:background="@color/menuColor" />
 
-        <Button
+        <ImageButton
             android:id="@+id/cat_food"
             android:layout_width="60dp"
             android:layout_height="150dp"
             android:layout_weight="1"
 
-            android:drawableTop="@drawable/meal"
+            android:src="@drawable/gurme"
             android:background="@color/menuColor" />
     </LinearLayout>
 

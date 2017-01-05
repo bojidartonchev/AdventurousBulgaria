@@ -1,54 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="20dp">
+    android:background="@color/backgroundColor"
+    android:orientation="vertical"
+    android:scrollbarAlwaysDrawVerticalTrack="true">
 
 
 
-    <EditText
-        android:layout_width="match_parent"
+    <RelativeLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:inputType="textEmailAddress"
-        android:ems="10"
-        android:id="@+id/email_field"
-        android:hint="Email" />
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="30dp"
+        android:layout_below="@id/wanderlust_logo"
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:ems="10"
-        android:id="@+id/first_name_field"
-        android:hint="First name" />
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:ems="10"
-        android:id="@+id/last_name_field"
-        android:hint="Last name" />
+        android:id="@+id/form"
+        android:background="#fff"
+        android:elevation="4dp"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+
+>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/email_field"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+
+                    android:maxLines="1"
+                    android:hint="@string/register_email"
+
+                    android:inputType="textEmailAddress" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/first_name_field"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+
+                    android:maxLines="1"
+                    android:hint="@string/register_first_name"
+
+                    android:inputType="textEmailAddress" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/last_name_field"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+
+                    android:maxLines="1"
+                    android:hint="@string/register_last_name"
+
+                    android:inputType="textEmailAddress" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/password_field"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:maxLines="1"
+
+                    android:hint="@string/register_password"
+                    android:inputType="textPassword" />
+            </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/confirm_password_field"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:maxLines="1"
+
+                    android:hint="@string/register_confirm_pwd"
+                    android:inputType="textPassword" />
+            </android.support.design.widget.TextInputLayout>
+            <Button
+                android:id="@+id/register_btn"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
 
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textPassword"
-        android:ems="10"
-        android:id="@+id/password_field"
-        android:hint="Password" />
+                android:layout_gravity="center"
+                android:background="@color/menuColor5"
+                android:text="@string/register_button"
+                android:textAllCaps="false"
+                android:textColor="#fff"
+                android:textSize="18sp" />
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textPassword"
-        android:ems="10"
-        android:id="@+id/confirm_password_field"
-        android:hint="Confirm Password" />
 
-    <Button
-        android:text="Register"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/register_btn" />
-</LinearLayout>
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+    <ImageView
+        android:id="@+id/wanderlust_logo"
+        android:layout_width="260dp"
+        android:layout_height="190dp"
+
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+
+
+        android:src="@drawable/logo" />
+
+
+</RelativeLayout>

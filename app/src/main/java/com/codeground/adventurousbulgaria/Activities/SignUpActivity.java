@@ -9,7 +9,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.codeground.adventurousbulgaria.R;
-import com.codeground.adventurousbulgaria.Utilities.DialogWindowManager;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
@@ -60,14 +59,23 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             Toast.makeText(this, getString(R.string.alert_invalid_email), Toast.LENGTH_SHORT).show();
             return;
         }
-        if(password.equals(confirmPassword)==false){
-            //Passwords do not match
-            Toast.makeText(this, getString(R.string.alert_password_nomatch), Toast.LENGTH_SHORT).show();
+        if(mFirstNameField.getText().toString().length()<=3 || mFirstNameField.getText().toString().length()>=12){
+            Toast.makeText(this, getString(R.string.alert_first_name_length), Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(mLastNameField.getText().toString().length()<=3 || mLastNameField.getText().toString().length()>=12){
+            Toast.makeText(this, getString(R.string.alert_last_name_length), Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if(mPasswordField.getText().toString().length()<5 || mPasswordField.getText().toString().length()>12){
+        if(mPasswordField.getText().toString().length()<=5 || mPasswordField.getText().toString().length()>=12){
             Toast.makeText(this, getString(R.string.alert_password_length), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if(password.equals(confirmPassword)==false){
+            //Passwords do not match
+            Toast.makeText(this, getString(R.string.alert_password_nomatch), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -79,16 +87,14 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         mCurrentUser.put("first_name",firstName);
         mCurrentUser.put("last_name",lastName);
         mCurrentUser.put("search_match",firstName.toLowerCase()+" "+lastName.toLowerCase());
-        DialogWindowManager.show(this);
+
         mCurrentUser.signUpInBackground(new SignUpCallback() {
             @Override
             public void done(ParseException e) {
                 if (e == null) {
-                    DialogWindowManager.dismiss();
                     Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
                     startActivity(intent);
                 } else {
-                    DialogWindowManager.dismiss();
                     CharSequence text = getString(R.string.alert_signup_fail);
                     e.printStackTrace();
                     Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();

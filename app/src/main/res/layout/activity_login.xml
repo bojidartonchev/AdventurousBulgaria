@@ -1,22 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fb="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/login_background"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.codeground.adventurousbulgaria.Activities.LoginActivity">
-
+    android:background="@color/backgroundColor"
+    android:orientation="vertical"
+    android:scrollbarAlwaysDrawVerticalTrack="true">
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_marginTop="25dp"
-        android:layout_marginBottom="15dp"
+        android:layout_marginBottom="35dp"
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
         android:layout_centerHorizontal="true"
@@ -25,88 +18,104 @@
         android:src="@drawable/wanderlust_logo"
         android:id="@+id/wanderlust_logo" />
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:layout_below="@id/wanderlust_logo"
-        android:inputType="textEmailAddress"
-        android:ems="11"
-        android:background="@drawable/rounded_edittext"
-        android:textColor="@android:color/white"
-        android:id="@+id/email_login_field"
-        android:shadowRadius="5.0"
-        android:shadowColor="#0000ff"
-        android:shadowDx="2"
-        android:shadowDy="4"
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/wanderlust_logo"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="70dp"
+        android:id="@+id/form"
+        android:background="#fff"
+        android:elevation="4dp"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="30dp">
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/email_login_field"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+
+                    android:maxLines="1"
+                    android:hint="@string/login_email"
+
+                    android:inputType="textEmailAddress" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/pass_login_field"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:maxLines="1"
+
+                    android:hint="@string/login_password"
+                    android:inputType="textPassword" />
+            </android.support.design.widget.TextInputLayout>
+
+
+            <Button
+                android:id="@+id/login_btn"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+
+
+                android:layout_gravity="center"
+                android:background="@color/menuColor5"
+                android:text="@string/login_sign_in"
+                android:textAllCaps="false"
+                android:textColor="#fff"
+                android:textSize="18sp" />
+
+
+            <TextView
+                android:id="@+id/sign_up_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="12dp"
+                android:text="@string/login_sign_up"
+
+                android:clickable="true"
+                />
+            <TextView
+                android:id="@+id/facebook_login_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+
+                android:text="@string/login_facebook"
+                android:clickable="true"
+                />
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+
+    <ImageView
+        android:id="@+id/user_profile_photo"
+        android:layout_width="140dp"
+        android:layout_height="120dp"
+        android:layout_below="@+id/wanderlust_logo"
         android:layout_centerHorizontal="true"
-        android:textColorLink="@android:color/white"
-        android:textCursorDrawable="@android:color/white"
-        android:textColorHint="@color/hint_color"
-/>
+        android:layout_marginTop="6dp"
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:inputType="textPassword"
-        android:ems="11"
-        android:background="@drawable/rounded_edittext"
-        android:layout_marginTop="15dp"
-        android:id="@+id/pass_login_field"
-        android:layout_below="@+id/email_login_field"
-        android:layout_alignLeft="@+id/email_login_field"
-        android:layout_alignStart="@+id/email_login_field"
-        android:textColor="@android:color/white"
-        android:textColorLink="@android:color/white"
-        android:textCursorDrawable="@android:color/white"
-        android:textColorHint="@color/hint_color"/>
-
-    <Button
-        android:text="Login"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/custom_button_blue"
-        android:id="@+id/login_btn"
-        android:textColor="@android:color/white"
-        android:layout_below="@+id/pass_login_field"
-        android:layout_alignLeft="@+id/pass_login_field"
-        android:layout_alignStart="@+id/pass_login_field"
-        android:layout_marginTop="11dp"
-        android:textAllCaps="false"
-        android:layout_alignRight="@+id/pass_login_field"
-        android:layout_alignEnd="@+id/pass_login_field" />
-
-    <TextView
-        android:text="@string/sign_up_hint_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/hint_color"
-        android:id="@+id/sign_up_hint"
-        android:layout_alignTop="@+id/sign_up_btn"
-        android:layout_centerHorizontal="true" />
-
-    <Button
-        android:text="sign up"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/sign_up_btn"
-        android:elevation="0dp"
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:textColor="@android:color/white"
-        android:layout_below="@+id/login_btn"
-        android:layout_marginTop="11dp"
-        android:layout_centerHorizontal="true"
-        android:textAllCaps="false" />
-
-    <Button
-        android:id="@+id/facebook_login_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/sign_up_btn"
-        android:layout_alignLeft="@+id/sign_up_btn"
-        android:layout_alignStart="@+id/sign_up_btn"
-        android:layout_marginTop="37dp"
-        android:text="FB Login" />
-
-
-
+        android:elevation="4dp"
+        android:src="@drawable/profile_user" />
 </RelativeLayout>

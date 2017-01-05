@@ -69,6 +69,8 @@
     <string name="alert_invalid_email">Invalid E-mail address. Please try again.</string>
     <string name="alert_password_nomatch">Passwords do not match. Please try again.</string>
     <string name="alert_password_length">Password must be between 5 and 12 characters long.</string>
+    <string name="alert_first_name_length">First name must be between 3 and 12 characters long.</string>
+    <string name="alert_last_name_length">Last name must be between 3 and 12 characters long.</string>
     <string name="alert_signup_fail">Could not sign up.</string>
 
     <!--DIALOGS-->
@@ -98,12 +100,18 @@
 
     <!--NEWS_FEED_ACTIONS-->
     <string name="action_content_text"> has %1$s </string>
-    <!-- LOGIN_STRINGS-->
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password</string>
-    <string name="action_sign_in">Login</string>
-    <string name="invalid_email">This email address is invalid</string>
-    <string name="invalid_password">Password is too short</string>
-    <string name="incorrect_password">Password is incorrect</string>
-    <string name="field_required">This field is required</string>
+
+    <!-- SIGN_UP_AND_LOGIN-->
+    <string name="login_email">Email</string>
+    <string name="login_password">Password</string>
+    <string name="login_sign_in">Login</string>
+    <string name="login_facebook">Login with facebook</string>
+    <string name="login_sign_up">Sign up</string>
+    <string name="register_email">Email</string>
+    <string name="register_first_name">First name</string>
+    <string name="register_last_name">Last name</string>
+    <string name="register_password">Password</string>
+    <string name="register_confirm_pwd">Confirm password</string>
+    <string name="register_button">Register</string>
+
 </resources>
