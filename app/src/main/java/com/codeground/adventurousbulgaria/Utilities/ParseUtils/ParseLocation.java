@@ -32,6 +32,8 @@ public class ParseLocation extends ParseObject {
         return getParseFile("photo");
     }
 
+    public String getCategory() { return getString("category"); }
+
     public ParseRelation getComments() { return getRelation("comments"); }
 
 }

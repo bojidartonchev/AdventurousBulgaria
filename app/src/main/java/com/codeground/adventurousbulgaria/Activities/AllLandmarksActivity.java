@@ -22,6 +22,7 @@ public class AllLandmarksActivity extends AppCompatActivity implements IOnItemCl
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private List<ParseLocation> mData;
+    private String mCategory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,14 +35,15 @@ public class AllLandmarksActivity extends AppCompatActivity implements IOnItemCl
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
+        mCategory = getIntent().getStringExtra("Category");
         ParseQuery<ParseLocation> query = ParseQuery.getQuery(ParseLocation.class);
-
+        query.whereEqualTo("category",mCategory);
         DialogWindowManager.show(this);
         query.findInBackground(new FindCallback<ParseLocation>() {
             @Override
             public void done(List<ParseLocation> results, ParseException e) {
                 mData = results;
-                mAdapter = new LandmarksAdapter(results, AllLandmarksActivity.this);
+                mAdapter = new LandmarksAdapter(results, AllLandmarksActivity.this,getApplicationContext());
                 mRecyclerView.setAdapter(mAdapter);
                 DialogWindowManager.dismiss();
             }

@@ -1,5 +1,7 @@
 package com.codeground.adventurousbulgaria.Utilities.Adapters;
 
+import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,12 +24,15 @@ public class LandmarksAdapter extends RecyclerView.Adapter<LandmarksAdapter.View
 
     private static IOnItemClicked mCaller;
 
+    private Context mContext;
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView mTitle;
         public TextView mLocation;
         public ImageView mIcon;
         public TextView mCompletedHolder;
         public RelativeLayout mParent;
+
 
         private int position;
 
@@ -54,7 +59,8 @@ public class LandmarksAdapter extends RecyclerView.Adapter<LandmarksAdapter.View
         }
     }
 
-    public LandmarksAdapter(List<ParseLocation> data, IOnItemClicked caller) {
+    public LandmarksAdapter(List<ParseLocation> data, IOnItemClicked caller,Context ctx) {
+        this.mContext = ctx;
         this.mAdapterData = data;
         this.mCaller = caller;
     }
@@ -81,6 +87,11 @@ public class LandmarksAdapter extends RecyclerView.Adapter<LandmarksAdapter.View
             holder.setPosition(position);
             holder.mTitle.setText(mAdapterData.get(position).getName());
             holder.mLocation.setText(mAdapterData.get(position).getCity());
+            if(position%2!=0)
+
+                holder.itemView.setBackgroundColor(ContextCompat.getColor(mContext,R.color.menuColor3));
+            else if(position%2==0)
+                holder.itemView.setBackgroundColor(ContextCompat.getColor(mContext,R.color.menuColor5));
 
             //Load the icon
             try {

@@ -2,31 +2,33 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="167dp"
-    android:background="@drawable/landmark_grad">
+    android:layout_height="145dp"
+    android:background="@color/menuColor5"
+    android:layout_marginBottom="6dp">
 
     <RelativeLayout
         android:padding="20dp"
         android:id="@+id/row_parent"
         android:layout_width="match_parent"
-        android:layout_height="165dp"
+        android:layout_height="145dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        >
 
         <TextView
             android:text="TextView"
             android:textSize="26sp"
             android:layout_marginTop="13dp"
-            android:layout_width="wrap_content"
+            android:layout_width="255dp"
             android:layout_height="wrap_content"
             android:id="@+id/title"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             app:srcCompat="@drawable/com_facebook_close"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
@@ -48,6 +50,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/completed_container"
+            android:layout_marginTop="-10dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
