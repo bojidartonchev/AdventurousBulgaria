@@ -15,7 +15,7 @@
     <com.jmedeisis.windowview.WindowView
         android:id="@+id/header_cover_image"
         android:layout_width="match_parent"
-        android:layout_height="215dp"
+        android:layout_height="290dp"
         android:scaleType="centerCrop"
         app:wwv_translate_mode="Constant"
         android:src="@drawable/profile_background"
@@ -25,11 +25,11 @@
 
     <ImageView
         android:id="@+id/user_profile_photo"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
+        android:layout_width="125dp"
+        android:layout_height="125dp"
         android:layout_below="@+id/header_cover_image"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="-165dp"
+        android:layout_marginTop="-215dp"
         android:elevation="10dp"
         android:padding="2dp"
         android:scaleType="centerCrop"
@@ -93,6 +93,7 @@
                 android:layout_weight="1"
                 />
         </LinearLayout>
+
 
     </RelativeLayout>
 

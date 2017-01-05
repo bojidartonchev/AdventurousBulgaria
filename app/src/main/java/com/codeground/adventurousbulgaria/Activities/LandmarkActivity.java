@@ -31,6 +31,7 @@ public class LandmarkActivity extends AppCompatActivity{
     private EditText mCommentField;
     private Button mCommentBtn;
     private ViewPager mPager;
+    private ViewPager mPagerImages;
     private LocationPagerAdapter mPagerAdapter;
     private TabLayout mTabLayout;
     private LocationDescriptionFragment mDesc;
@@ -42,6 +43,7 @@ public class LandmarkActivity extends AppCompatActivity{
         setContentView(R.layout.activity_landmark);
 
         mTitle = (TextView) findViewById(R.id.landmark_title);
+        mPagerImages = (ViewPager) findViewById(R.id.images_pager);
 
         final String locId = getIntent().getStringExtra("locationId");
         mPagerAdapter = new LocationPagerAdapter(getSupportFragmentManager());

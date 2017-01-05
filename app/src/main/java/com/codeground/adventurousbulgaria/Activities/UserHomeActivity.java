@@ -38,8 +38,11 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
     private ParseUser mUser;
     private String mUserID;
     private ImageView mProfilePicture;
+    private TextView mFollowers;
+    private TextView mFollowing;
     private TextView mName;
     private Button mFollowBtn;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +52,8 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
 
         mProfilePicture = (ImageView) findViewById(R.id.user_profile_photo);
         mName = (TextView) findViewById(R.id.name);
+        mFollowing = (TextView) findViewById(R.id.following);
+        mFollowers = (TextView) findViewById(R.id.followers);
         mFollowBtn = (Button) findViewById(R.id.follow_btn);
         mFollowBtn.setOnClickListener(this);
 
@@ -61,7 +66,7 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
                     mUser=(ParseUser)objects.get(0);
                     mName.setText(mUser.getString("first_name") +" "+ mUser.getString("last_name") );
                     loadPicture();
-
+                    getFollowCount();
 
                 } else {
                     // error
@@ -71,6 +76,31 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
 
         loadFollowButton();
 
+    }
+
+    private void getFollowCount() {
+        ParseQuery followersQuery = ParseUser.getCurrentUser().getRelation("followers").getQuery();
+        followersQuery.countInBackground(new CountCallback() {
+            @Override
+            public void done(int count, ParseException e) {
+                if(e==null){
+                    mFollowers.setText(mFollowers.getText().toString()+" "+count);
+                } else {
+                    mFollowers.setText(mFollowers.getText().toString()+" 0");
+                }
+            }
+        });
+        ParseQuery followingQuery = ParseUser.getCurrentUser().getRelation("following").getQuery();
+        followingQuery.countInBackground(new CountCallback() {
+            @Override
+            public void done(int count, ParseException e) {
+                if(e==null){
+                    mFollowing.setText(mFollowing.getText().toString()+" "+count);
+                } else {
+                    mFollowing.setText(mFollowing.getText().toString()+" 0");
+                }
+            }
+        });
     }
 
     private void loadFollowButton() {

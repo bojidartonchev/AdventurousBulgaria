@@ -41,6 +41,7 @@ public class ParseUtilities {
         return output;
     }
 
+
     public static void uploadProfilePicture(Bitmap bmp){
         ParseFile pic = createParseFile(bmp, "profile.jpg");
         ParseUser currUser = ParseUser.getCurrentUser();

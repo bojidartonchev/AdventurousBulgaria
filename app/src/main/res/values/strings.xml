@@ -98,4 +98,12 @@
 
     <!--NEWS_FEED_ACTIONS-->
     <string name="action_content_text"> has %1$s </string>
+    <!-- LOGIN_STRINGS-->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Login</string>
+    <string name="invalid_email">This email address is invalid</string>
+    <string name="invalid_password">Password is too short</string>
+    <string name="incorrect_password">Password is incorrect</string>
+    <string name="field_required">This field is required</string>
 </resources>
