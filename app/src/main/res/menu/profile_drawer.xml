@@ -5,7 +5,7 @@
     <group android:checkableBehavior="single">
         <item android:id="@+id/submit_location" android:icon="@android:drawable/ic_menu_camera"
             android:title="Submit location" />
-        <item android:id="@+id/nav_gallery" android:icon="@android:drawable/ic_menu_gallery"
+        <item android:id="@+id/nav_last_visited_locations" android:icon="@android:drawable/ic_menu_gallery"
             android:title="Last visited locations" />
         <item android:id="@+id/nav_slideshow" android:icon="@android:drawable/ic_menu_slideshow"
             android:title="Slideshow" />

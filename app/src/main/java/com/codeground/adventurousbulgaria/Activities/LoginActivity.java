@@ -37,15 +37,15 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     private TextView mFacebookLoginUpBtn;
     private EditText mEmailField;
     private EditText mPasswordField;
+    private Intent mMaimMenuActivityIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-
+        mMaimMenuActivityIntent = new Intent(getApplicationContext(), MainMenuActivity.class);
         if(ParseUser.getCurrentUser() != null){
-            Intent intent = new Intent(this, MainMenuActivity.class);
-            startActivity(intent);
+            startActivity(mMaimMenuActivityIntent);
             finish();
         }else {
             requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -171,6 +171,20 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                 } catch(JSONException e){
                     e.printStackTrace();
                 }
+                try
+                {
+                    final JSONObject mPicture = object.getJSONObject("picture");
+                    final JSONObject mPictureData = mPicture.getJSONObject("data");
+
+                    //this is the URL to the image that you want
+                    String mImageUrl = mPictureData.getString("url");
+                    mMaimMenuActivityIntent.putExtra("facebookImageUrl",mImageUrl);
+                }
+
+                catch (JSONException e)
+                {
+                    //JSON Error, DEBUG
+                }
 
                 saveNewUser(fname, lname, email);
             }
@@ -178,7 +192,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
 
         Bundle parameters = new Bundle();
-        parameters.putString("fields","first_name,last_name,email,id");
+        parameters.putString("fields","first_name,last_name,email,id,picture.width(300).height(300)");
         request.setParameters(parameters);
         request.executeAsync();
     }
@@ -189,6 +203,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         user.put(getString(R.string.db_user_firstname),firstName);
         user.put(getString(R.string.db_user_lastname),lastName);
         user.put(getString(R.string.db_user_searchmatch),firstName.toLowerCase()+" "+lastName.toLowerCase());
+
         user.setEmail(email);
         user.saveInBackground(new SaveCallback() {
             @Override
@@ -212,8 +227,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
     private void switchToMainMenu(){
         DialogWindowManager.dismiss();
-        Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
-        startActivity(intent);
+        startActivity(mMaimMenuActivityIntent);
         finish();
     }
 }

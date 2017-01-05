@@ -32,11 +32,13 @@ import android.widget.Toast;
 
 import com.codeground.adventurousbulgaria.BroadcastReceivers.BootReceiver;
 import com.codeground.adventurousbulgaria.Fragments.ProfileFragment;
+import com.codeground.adventurousbulgaria.Interfaces.IOnFacebookProfileImageUploadCompleted;
 import com.codeground.adventurousbulgaria.R;
 import com.codeground.adventurousbulgaria.Utilities.AllLocationsManager;
 import com.codeground.adventurousbulgaria.Utilities.ParseUtils.ParseLocation;
 import com.codeground.adventurousbulgaria.Utilities.ParseUtils.ParseUtilities;
 import com.codeground.adventurousbulgaria.Utilities.ProfileManager;
+import com.codeground.adventurousbulgaria.Utilities.UploadFacebookProfileImageTask;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -61,7 +63,8 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         OnMapReadyCallback,
         GoogleMap.OnMapLoadedCallback,
         GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+        GoogleApiClient.OnConnectionFailedListener,
+        IOnFacebookProfileImageUploadCompleted  {
 
     private static final int INITIAL_REQUEST = 1337;
     private static final int CAMERA_TAKE_PHOTO = 1338;
@@ -115,6 +118,12 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         mPersonName = (TextView) mProfileView.getHeaderView(0).findViewById(R.id.profile_name);
         mProfilePicture = (ImageView) mProfileView.getHeaderView(0).findViewById(R.id.profile_image);
         mProfilePicture.setOnClickListener(this);
+
+        if(getIntent().hasExtra("facebookImageUrl")){
+            String facebookUrl = getIntent().getStringExtra("facebookImageUrl");
+            new UploadFacebookProfileImageTask(this).execute(facebookUrl);
+        }
+
         String currUserName = ParseUser.getCurrentUser().get(getString(R.string.db_user_firstname)).toString()+" "+
                 ParseUser.getCurrentUser().get(getString(R.string.db_user_lastname)).toString();
         mPersonName.setText(currUserName);
@@ -351,6 +360,12 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
             logout();
         }
 
+        if(id == R.id.nav_last_visited_locations){
+            Intent i = new Intent(getApplicationContext(), AllLandmarksActivity.class);
+            i.putExtra("allCompletedOnly", true);
+            startActivity(i);
+        }
+
         if(id == R.id.pending_followers){
             Intent intent = new Intent(getApplicationContext(), PendingFollowersActivity.class);
 
@@ -450,5 +465,10 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
                 }
             }
         }
+    }
+
+    @Override
+    public void onProfileImageUploadCompleted() {
+        this.loadProfilePicture();
     }
 }
