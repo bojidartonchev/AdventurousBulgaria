@@ -4,38 +4,36 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.codeground.adventurousbulgaria.Fragments.LocationCommentsFragment;
 import com.codeground.adventurousbulgaria.Fragments.LocationDescriptionFragment;
 import com.codeground.adventurousbulgaria.R;
+import com.codeground.adventurousbulgaria.Utilities.Adapters.ImagesAdapter;
 import com.codeground.adventurousbulgaria.Utilities.Adapters.LocationCommentsAdapter;
 import com.codeground.adventurousbulgaria.Utilities.Adapters.LocationPagerAdapter;
 import com.codeground.adventurousbulgaria.Utilities.ParseUtils.ParseLocation;
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class LandmarkActivity extends AppCompatActivity{
     private TextView mTitle;
-    private TextView mDescription;
     private TextView mLocation;
-    private ImageView mPhoto;
     private ParseLocation mCurrLocation;
-    private EditText mCommentField;
-    private Button mCommentBtn;
     private ViewPager mPager;
     private ViewPager mPagerImages;
     private LocationPagerAdapter mPagerAdapter;
     private TabLayout mTabLayout;
     private LocationDescriptionFragment mDesc;
     private LocationCommentsFragment mComments;
+
+    private ArrayList<ParseFile> mImages;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +53,7 @@ public class LandmarkActivity extends AppCompatActivity{
         mDesc =(LocationDescriptionFragment) curr.instantiateItem(mPager, 0);
         mComments =(LocationCommentsFragment) mPager.getAdapter().instantiateItem(mPager, 1);
 
-        String currentLandmarkName = getIntent().getStringExtra("locationName");
+        mImages = new ArrayList<>();
 
         final ParseQuery<ParseObject> query = ParseQuery.getQuery(getString(R.string.db_location_dbname));
         query.whereEqualTo("objectId",locId);
@@ -80,6 +78,13 @@ public class LandmarkActivity extends AppCompatActivity{
                     if (mLocation != null) {
                         mLocation.setText(mCurrLocation.getCity());
                         mPagerAdapter.notifyDataSetChanged();
+                    }
+
+                    mImages = mCurrLocation.getPhotos();
+
+                    if(mImages!=null && mImages.size() > 0){
+                        ImagesAdapter adapter = new ImagesAdapter(getApplicationContext(), mImages);
+                        mPagerImages.setAdapter(adapter);
                     }
 
                 } else {

@@ -6,6 +6,8 @@ import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseRelation;
 
+import java.util.ArrayList;
+
 @ParseClassName("Location")
 public class ParseLocation extends ParseObject {
     public String getName() {
@@ -28,8 +30,20 @@ public class ParseLocation extends ParseObject {
         return getParseFile("icon");
     }
 
-    public ParseFile getPhoto(){
-        return getParseFile("photo");
+    public ArrayList<ParseFile> getPhotos()
+    {
+        ArrayList<ParseFile> toReturn = new ArrayList<>();
+        if(has("photo1")){
+            toReturn.add(getParseFile("photo1"));
+        }
+        if(has("photo2")){
+            toReturn.add(getParseFile("photo2"));
+        }
+        if(has("photo3")){
+            toReturn.add(getParseFile("photo3"));
+        }
+
+        return toReturn;
     }
 
     public String getCategory() { return getString("category"); }
