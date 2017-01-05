@@ -1,7 +1,6 @@
 package com.codeground.adventurousbulgaria.Activities;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.codeground.adventurousbulgaria.R;
+import com.codeground.adventurousbulgaria.Utilities.DialogWindowManager;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
@@ -37,13 +37,11 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     private TextView mFacebookLoginUpBtn;
     private EditText mEmailField;
     private EditText mPasswordField;
-    private ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        mProgressDialog = new ProgressDialog(this);
 
         if(ParseUser.getCurrentUser() != null){
             Intent intent = new Intent(this, MainMenuActivity.class);
@@ -78,9 +76,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                 startActivity(intent);
             }else if(v.getId() == R.id.login_btn){
                 if(mEmailField!=null && mPasswordField!=null){
-                    mProgressDialog.setMessage("Please Wait");
-                    mProgressDialog.setTitle("Logging in");
-                    mProgressDialog.show();
+                    DialogWindowManager.show(this);
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
@@ -96,6 +92,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
                 }
             }else if(v.getId() == R.id.facebook_login_button){
+                DialogWindowManager.show(this);
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -116,13 +113,13 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             @Override
             public void done(ParseUser parseUser, ParseException e) {
                 if (parseUser != null) {
-                    mProgressDialog.dismiss();
+                    DialogWindowManager.dismiss();
                     Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
                     startActivity(intent);
                     finish();
 
                 } else {
-                    mProgressDialog.dismiss();
+                    DialogWindowManager.dismiss();
                     CharSequence text = "Wrong username or password.";
                     Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
                 }
@@ -135,6 +132,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             @Override
             public void done(ParseUser user, ParseException err) {
                 if (user == null) {
+                    DialogWindowManager.dismiss();
                     Log.d("MyApp", "Uh oh. The user cancelled the Facebook login.");
                 } else if (user.isNew()) {
                     Log.d("MyApp", "User signed up and logged in through Facebook!");
@@ -174,12 +172,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                     e.printStackTrace();
                 }
 
-
-
-
-
                 saveNewUser(fname, lname, email);
-
             }
         });
 
@@ -218,6 +211,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     }
 
     private void switchToMainMenu(){
+        DialogWindowManager.dismiss();
         Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
         startActivity(intent);
         finish();

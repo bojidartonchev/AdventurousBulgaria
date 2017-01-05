@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.codeground.adventurousbulgaria.R;
+import com.codeground.adventurousbulgaria.Utilities.DialogWindowManager;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
@@ -44,6 +45,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         if(v!=null){
             if(v.getId() == R.id.register_btn){
                 if(mEmailField!=null && mFirstNameField!=null && mLastNameField!=null && mPasswordField!=null ){
+                    DialogWindowManager.show(this);
                     registerUser(mEmailField.getText().toString(),mPasswordField.getText().toString(),mConfirmPasswordField.getText().toString());
                 }
             }
@@ -59,16 +61,16 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             Toast.makeText(this, getString(R.string.alert_invalid_email), Toast.LENGTH_SHORT).show();
             return;
         }
-        if(mFirstNameField.getText().toString().length()<=3 || mFirstNameField.getText().toString().length()>=12){
+        if(mFirstNameField.getText().toString().length()<3 || mFirstNameField.getText().toString().length()>12){
             Toast.makeText(this, getString(R.string.alert_first_name_length), Toast.LENGTH_SHORT).show();
             return;
         }
-        if(mLastNameField.getText().toString().length()<=3 || mLastNameField.getText().toString().length()>=12){
+        if(mLastNameField.getText().toString().length()<3 || mLastNameField.getText().toString().length()>12){
             Toast.makeText(this, getString(R.string.alert_last_name_length), Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if(mPasswordField.getText().toString().length()<=5 || mPasswordField.getText().toString().length()>=12){
+        if(mPasswordField.getText().toString().length()<5 || mPasswordField.getText().toString().length()>12){
             Toast.makeText(this, getString(R.string.alert_password_length), Toast.LENGTH_SHORT).show();
             return;
         }
@@ -91,6 +93,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         mCurrentUser.signUpInBackground(new SignUpCallback() {
             @Override
             public void done(ParseException e) {
+                DialogWindowManager.dismiss();
                 if (e == null) {
                     Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
                     startActivity(intent);
