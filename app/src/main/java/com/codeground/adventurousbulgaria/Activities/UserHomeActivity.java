@@ -66,7 +66,8 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
                     mUser=(ParseUser)objects.get(0);
                     mName.setText(mUser.getString("first_name") +" "+ mUser.getString("last_name") );
                     loadPicture();
-                    getFollowCount();
+                    getFollowingCount();
+                    getFollowersCount();
 
                 } else {
                     // error
@@ -78,26 +79,29 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
 
     }
 
-    private void getFollowCount() {
-        ParseQuery followersQuery = ParseUser.getCurrentUser().getRelation("followers").getQuery();
-        followersQuery.countInBackground(new CountCallback() {
-            @Override
-            public void done(int count, ParseException e) {
-                if(e==null){
-                    mFollowers.setText(mFollowers.getText().toString()+" "+count);
-                } else {
-                    mFollowers.setText(mFollowers.getText().toString()+" 0");
-                }
-            }
-        });
-        ParseQuery followingQuery = ParseUser.getCurrentUser().getRelation("following").getQuery();
+    private void getFollowingCount() {
+        ParseQuery followingQuery = mUser.getRelation("following").getQuery();
         followingQuery.countInBackground(new CountCallback() {
             @Override
             public void done(int count, ParseException e) {
                 if(e==null){
-                    mFollowing.setText(mFollowing.getText().toString()+" "+count);
+                    mFollowing.setText(String.format(getResources().getString(R.string.profile_following_format), count));
                 } else {
-                    mFollowing.setText(mFollowing.getText().toString()+" 0");
+                    mFollowing.setText(String.format(getResources().getString(R.string.profile_following_format), 0));
+                }
+            }
+        });
+    }
+
+    private void getFollowersCount() {
+        ParseQuery followersQuery = mUser.getRelation("followers").getQuery();
+        followersQuery.countInBackground(new CountCallback() {
+            @Override
+            public void done(int count, ParseException e) {
+                if(e==null){
+                    mFollowers.setText(String.format(getResources().getString(R.string.profile_followers_format), count));
+                } else {
+                    mFollowers.setText(String.format(getResources().getString(R.string.profile_followers_format), 0));
                 }
             }
         });
@@ -163,6 +167,7 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
                             if(mFollowBtn != null){
                                 if(result == PARSE_CLOUD_CODE_RESPONSE_CODE_FOLLOWED){
                                     mFollowBtn.setText(R.string.followed_btn_text);
+                                    getFollowersCount();
                                 }else if(result == PARSE_CLOUD_CODE_RESPONSE_CODE_FOLLOW_REQUESTED){
                                     mFollowBtn.setText(R.string.pending_follow_btn_text);
                                 }
@@ -199,6 +204,7 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
                             if(mFollowBtn != null){
                                 mFollowBtn.setText(R.string.follow_btn_text);
                             }
+                            getFollowersCount();
                         }else{
                             //error
                             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
