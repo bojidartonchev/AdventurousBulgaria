@@ -72,6 +72,7 @@
     <string name="alert_first_name_length">First name must be between 3 and 12 characters long.</string>
     <string name="alert_last_name_length">Last name must be between 3 and 12 characters long.</string>
     <string name="alert_signup_fail">Could not sign up.</string>
+    <string name="alert_comment_length">Comment should be at least 10 characters long.</string>
 
     <!--DIALOGS-->
     <string name="unfollow_prompt_text">You are about to unfollow %1$s</string>
@@ -114,4 +115,6 @@
     <string name="register_confirm_pwd">Confirm password</string>
     <string name="register_button">Register</string>
 
+    <!-- COMMENTS-->
+    <string name="comment_write">Write a comment</string>
 </resources>

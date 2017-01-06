@@ -25,6 +25,7 @@ import java.util.List;
 public class LandmarkActivity extends AppCompatActivity{
     private TextView mTitle;
     private TextView mLocation;
+    private TextView mCity;
     private ParseLocation mCurrLocation;
     private ViewPager mPager;
     private ViewPager mPagerImages;
@@ -41,6 +42,7 @@ public class LandmarkActivity extends AppCompatActivity{
         setContentView(R.layout.activity_landmark);
 
         mTitle = (TextView) findViewById(R.id.landmark_title);
+        mCity = (TextView) findViewById(R.id.landmark_location);
         mPagerImages = (ViewPager) findViewById(R.id.images_pager);
 
         final String locId = getIntent().getStringExtra("locationId");
@@ -52,6 +54,8 @@ public class LandmarkActivity extends AppCompatActivity{
         LocationPagerAdapter curr = (LocationPagerAdapter) mPager.getAdapter();
         mDesc =(LocationDescriptionFragment) curr.instantiateItem(mPager, 0);
         mComments =(LocationCommentsFragment) mPager.getAdapter().instantiateItem(mPager, 1);
+        TabLayout dots = (TabLayout) findViewById(R.id.tabDots);
+        dots.setupWithViewPager(mPagerImages, true);
 
         mImages = new ArrayList<>();
 
@@ -78,6 +82,9 @@ public class LandmarkActivity extends AppCompatActivity{
                     if (mLocation != null) {
                         mLocation.setText(mCurrLocation.getCity());
                         mPagerAdapter.notifyDataSetChanged();
+                    }
+                    if(mCity!=null){
+                        mCity.setText(mCurrLocation.getCity());
                     }
 
                     mImages = mCurrLocation.getPhotos();

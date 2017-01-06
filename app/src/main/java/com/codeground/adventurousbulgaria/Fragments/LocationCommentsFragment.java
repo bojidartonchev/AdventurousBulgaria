@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.codeground.adventurousbulgaria.R;
 import com.codeground.adventurousbulgaria.Utilities.Adapters.LocationCommentsAdapter;
@@ -61,7 +62,12 @@ public class LocationCommentsFragment extends Fragment implements View.OnClickLi
     }
 
     private void submitComment() {
+
         String content = mCommentField.getText().toString();
+        if(content.length()<10){
+            Toast.makeText(getContext(), getString(R.string.alert_comment_length), Toast.LENGTH_SHORT).show();
+            return;
+        }
         final ParseObject comment = new ParseObject(getString(R.string.db_commments_dbname));
 
         DialogWindowManager.show(getContext());

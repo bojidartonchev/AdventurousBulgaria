@@ -3,8 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
+
     tools:context="com.codeground.adventurousbulgaria.Fragments.ProfileFragment">
     <ListView
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:id="@+id/location_comments"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -23,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
-            android:hint="Write a comment"
+            android:hint="@string/comment_write"
             android:ems="10"
             android:id="@+id/comment_field" />
 
