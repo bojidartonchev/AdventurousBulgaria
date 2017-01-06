@@ -38,6 +38,7 @@ import com.codeground.adventurousbulgaria.Utilities.AllLocationsManager;
 import com.codeground.adventurousbulgaria.Utilities.ParseUtils.ParseLocation;
 import com.codeground.adventurousbulgaria.Utilities.ParseUtils.ParseUtilities;
 import com.codeground.adventurousbulgaria.Utilities.ProfileManager;
+import com.codeground.adventurousbulgaria.Utilities.SettingsManager;
 import com.codeground.adventurousbulgaria.Utilities.UploadFacebookProfileImageTask;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -102,6 +103,9 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main_menu);
+
+        //Fetch all profile settings
+        SettingsManager.updatePrefsProfileSettings(this);
 
         checkForPermissions();
 
@@ -363,6 +367,11 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         if(id == R.id.nav_last_visited_locations){
             Intent i = new Intent(getApplicationContext(), AllLandmarksActivity.class);
             i.putExtra("allCompletedOnly", true);
+            startActivity(i);
+        }
+
+        if(id == R.id.nav_manage){
+            Intent i = new Intent(getApplicationContext(), SettingsActivity.class);
             startActivity(i);
         }
 

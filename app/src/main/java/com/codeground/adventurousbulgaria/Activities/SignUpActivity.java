@@ -84,11 +84,13 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         String firstName = mFirstNameField.getText().toString();
         String lastName = mLastNameField.getText().toString();
         mCurrentUser = new ParseUser();
+        mCurrentUser.setEmail(username);
         mCurrentUser.setUsername(username);
         mCurrentUser.setPassword(password);
         mCurrentUser.put("first_name",firstName);
         mCurrentUser.put("last_name",lastName);
         mCurrentUser.put("search_match",firstName.toLowerCase()+" "+lastName.toLowerCase());
+        mCurrentUser.put("is_follow_allowed", true);
 
         mCurrentUser.signUpInBackground(new SignUpCallback() {
             @Override

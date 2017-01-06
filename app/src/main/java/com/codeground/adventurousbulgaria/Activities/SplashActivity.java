@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.VideoView;
@@ -24,6 +25,7 @@ public class SplashActivity extends Activity implements OnCompletionListener
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.activity_splash);
+        PreferenceManager.setDefaultValues(this, R.xml.fragment_preference_settings, false);
 
         VideoView video = (VideoView) findViewById(R.id.videoView);
         video.setVideoPath("android.resource://com.codeground.adventurousbulgaria/raw/" + R.raw.splash);

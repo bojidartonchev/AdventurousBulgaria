@@ -113,10 +113,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             @Override
             public void done(ParseUser parseUser, ParseException e) {
                 if (parseUser != null) {
-                    DialogWindowManager.dismiss();
-                    Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
-                    startActivity(intent);
-                    finish();
+                    switchToMainMenu();
 
                 } else {
                     DialogWindowManager.dismiss();
@@ -197,12 +194,12 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         request.executeAsync();
     }
     void saveNewUser(final String firstName, String lastName, String email){
-
         ParseUser user = ParseUser.getCurrentUser();
 
         user.put(getString(R.string.db_user_firstname),firstName);
         user.put(getString(R.string.db_user_lastname),lastName);
         user.put(getString(R.string.db_user_searchmatch),firstName.toLowerCase()+" "+lastName.toLowerCase());
+        user.put(getString(R.string.db_user_is_follow_allowed), true);
 
         user.setEmail(email);
         user.saveInBackground(new SaveCallback() {

@@ -9,6 +9,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" >
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
@@ -16,21 +17,28 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+
     <style name="locationTabLayout" parent="Widget.Design.TabLayout">
         <item name="tabIndicatorColor">#0000FF</item>
         <item name="tabBackground">@color/aliceBlue</item>
     </style>
+
     <style name="DialogWindow" parent="android:Theme.DeviceDefault.Dialog">
         <item name="DialogTitleAppearance">@android:style/TextAppearance.Medium</item>
         <item name="DialogTitleText">Please Wait</item>
         <item name="DialogSpotColor">@android:color/holo_orange_dark</item>
         <item name="DialogSpotCount">8</item>
     </style>
+
     <style name="FullyTranslucent" parent="android:Theme.Translucent.NoTitleBar">
         <item name="android:progressBarStyle">@style/InvisibleProgress</item>
     </style>
 
     <style name="InvisibleProgress">
         <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="SettingsTheme">
+        <item name="android:background">@color/grey</item>
     </style>
 </resources>

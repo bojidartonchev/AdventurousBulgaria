@@ -58,6 +58,7 @@
     <string name="db_user_lastname">last_name</string>
     <string name="db_user_picture">profile_picture</string>
     <string name="db_user_searchmatch">search_match</string>
+    <string name="db_user_is_follow_allowed">is_follow_allowed</string>
     <string name="db_user_lastlocation">last_location</string>
     <string name="db_user_followers">followers</string>
     <string name="db_user_following">following</string>
@@ -117,4 +118,21 @@
 
     <!-- COMMENTS-->
     <string name="comment_write">Write a comment</string>
+
+    <!-- SETTINGS-->
+    <string name="pref_profile_title">Profile</string>
+    <string name="pref_settings_title">Settings</string>
+    <string name="pref_private_profile_title">Private profile</string>
+    <string name="pref_private_profile_summary">When your profile is "private", only approved by you people can see your activities.</string>
+
+    <!-- SETTINGS_EDIT_PROFILE-->
+    <string name="pref_profile_edit_title">Edit profile</string>
+    <string name="pref_password_change_title">Change password</string>
+
+    <string name="pref_title_auto_delete">Write a comment</string>
+    <string name="pref_summary_auto_delete">Write a comment</string>
+    <string name="pref_summary_delete_limit">Write a comment</string>
+    <string name="pref_title_sms_delete">Write a comment</string>
+    <string name="pref_title_mms_delete">Write a comment</string>
+
 </resources>
