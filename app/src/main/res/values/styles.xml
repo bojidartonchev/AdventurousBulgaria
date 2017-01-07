@@ -40,5 +40,10 @@
 
     <style name="SettingsTheme">
         <item name="android:background">@color/aliceBlue</item>
+        <item name ="android:textColor">@color/black</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
     </style>
+
+
 </resources>
