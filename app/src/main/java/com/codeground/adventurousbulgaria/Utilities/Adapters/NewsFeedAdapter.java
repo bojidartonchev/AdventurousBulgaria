@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.codeground.adventurousbulgaria.Activities.LandmarkActivity;
 import com.codeground.adventurousbulgaria.Activities.UserHomeActivity;
 import com.codeground.adventurousbulgaria.R;
-import com.codeground.adventurousbulgaria.Utilities.ParseUtils.ParseActivity;
+import com.codeground.adventurousbulgaria.Utilities.ParseUtils.ParseTraveller;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -30,10 +30,10 @@ public class NewsFeedAdapter extends ParseQueryAdapter {
 
     public NewsFeedAdapter(Context context)
     {
-        super(context, new QueryFactory<ParseActivity>() {
+        super(context, new QueryFactory<ParseTraveller>() {
             public ParseQuery create() {
                 ParseRelation following = ParseUser.getCurrentUser().getRelation("following");
-                ParseQuery<ParseActivity> query = ParseQuery.getQuery("Activity");
+                ParseQuery<ParseTraveller> query = ParseQuery.getQuery("Activity");
                 query.whereMatchesQuery("origin_user", following.getQuery());
                 return query;
             }

@@ -1,0 +1,39 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/aliceBlue"
+>
+
+    <com.parse.ParseImageView
+        android:id="@+id/activity_image"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/com_facebook_profile_picture_blank_square"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="15dip"
+        android:layout_marginRight="15dip" />
+
+    <TextView
+        android:id="@+id/profile_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_alignTop="@+id/activity_image"
+        android:layout_toRightOf="@id/activity_image"
+        android:textColor="@color/grey" />
+
+    <TextView
+        android:id="@+id/from_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/profile_name"
+        android:layout_toRightOf="@id/activity_image" />
+
+    <TextView
+        android:id="@+id/to_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/from_location"
+        android:layout_toRightOf="@id/activity_image" />
+
+</RelativeLayout>

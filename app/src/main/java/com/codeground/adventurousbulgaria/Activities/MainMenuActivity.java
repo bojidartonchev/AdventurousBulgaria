@@ -91,6 +91,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     private Button mNewsFeedBtn;
     private Button mAllLandmarksBtn;
     private Button mNearByBtn;
+    private Button mCalendarByBtn;
 
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
@@ -141,6 +142,9 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
         mNearByBtn = (Button) findViewById(R.id.near_by_button);
         mNearByBtn.setOnClickListener(this);
+
+        mCalendarByBtn = (Button) findViewById(R.id.calendar_button);
+        mCalendarByBtn.setOnClickListener(this);
 
         mAllLandmarksBtn = (Button) findViewById(R.id.landmarks_btn);
         mAllLandmarksBtn.setOnClickListener(this);
@@ -194,6 +198,10 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     public void onClick(View v) {
         if (v.getId() == R.id.news_feed_btn) {
             Intent intent = new Intent(this, NewsFeedActivity.class);
+            startActivity(intent);
+        }
+        if (v.getId() == R.id.calendar_button) {
+            Intent intent = new Intent(this, CalendarActivity.class);
             startActivity(intent);
         }
         if(v.getId() == R.id.profile_image){

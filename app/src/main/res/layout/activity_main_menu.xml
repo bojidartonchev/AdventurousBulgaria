@@ -71,12 +71,12 @@
                 />
 
             <Button
-                android:text="Button"
+                android:text="@string/calendar_button"
                 android:background="@color/menuColor5"
                 android:layout_width="0dp"
                 android:layout_weight="0.5"
                 android:layout_height="180dp"
-                android:id="@+id/button4"
+                android:id="@+id/calendar_button"
                 />
         </LinearLayout>
 
