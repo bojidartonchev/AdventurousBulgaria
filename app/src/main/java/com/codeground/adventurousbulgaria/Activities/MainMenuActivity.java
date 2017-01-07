@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.location.Location;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -72,6 +73,8 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     private static final int CAMERA_REQUEST = 1339;
     private static final int SELECT_FROM_GALLERY = 1340;
     private static final int STORAGE_REQUEST = 1341;
+
+    private static final int THUMBSIZE = 128;
 
     private static final String[] INITIAL_PERMS = {
             Manifest.permission.ACCESS_FINE_LOCATION,
@@ -399,6 +402,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
                 mProfilePicture.setImageBitmap(bitmap);
                 ParseUtilities.uploadProfilePicture(bitmap);
             } else if(requestCode == SELECT_FROM_GALLERY && data!=null){
+
                 Uri selectedImage = data.getData();
                 String[] filePathColumn = { MediaStore.Images.Media.DATA };
 
@@ -409,7 +413,14 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
                 int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
                 String picturePath = cursor.getString(columnIndex);
                 cursor.close();
-                Bitmap bmp = BitmapFactory.decodeFile(picturePath);
+
+
+
+                Bitmap bmp = ThumbnailUtils.extractThumbnail(
+                        BitmapFactory.decodeFile(picturePath),
+                        THUMBSIZE,
+                        THUMBSIZE);
+
                 mProfilePicture.setImageBitmap(ProfileManager.getCroppedBitmap(bmp));
                 ParseUtilities.uploadProfilePicture(bmp);
 
