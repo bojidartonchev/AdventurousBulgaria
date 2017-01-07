@@ -39,6 +39,6 @@
     </style>
 
     <style name="SettingsTheme">
-        <item name="android:background">@color/grey</item>
+        <item name="android:background">@color/aliceBlue</item>
     </style>
 </resources>

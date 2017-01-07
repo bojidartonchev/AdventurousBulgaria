@@ -12,13 +12,11 @@ import com.codeground.adventurousbulgaria.Utilities.Adapters.LandmarksAdapter;
 import com.codeground.adventurousbulgaria.Utilities.DialogWindowManager;
 import com.codeground.adventurousbulgaria.Utilities.ParseUtils.ParseLocation;
 import com.parse.FindCallback;
-import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
-import java.util.ArrayList;
 import java.util.List;
 public class AllLandmarksActivity extends AppCompatActivity implements IOnItemClicked {
 
@@ -42,25 +40,15 @@ public class AllLandmarksActivity extends AppCompatActivity implements IOnItemCl
         boolean allCompletedOnly = getIntent().getBooleanExtra("allCompletedOnly", false);
 
         if(allCompletedOnly){
-            mData = new ArrayList<>();
-            ParseQuery<ParseObject> query = ParseQuery.getQuery("Activity");
-            query.whereEqualTo("origin_user", ParseUser.getCurrentUser());
-            query.whereEqualTo("type", "visited");
+            ParseQuery<ParseObject> query = ParseUser.getCurrentUser().getRelation("visited_locations").getQuery();
             DialogWindowManager.show(this);
             query.findInBackground(new FindCallback<ParseObject>() {
                 @Override
                 public void done(List<ParseObject> results, ParseException e) {
-                    mAdapter = new LandmarksAdapter(mData, AllLandmarksActivity.this,getApplicationContext());
+                    //Hack... refactor later!!!
+                    List<ParseLocation> tempLocationsList = (List<ParseLocation>)(List<?>) results;
+                    mAdapter = new LandmarksAdapter(tempLocationsList, AllLandmarksActivity.this,getApplicationContext());
                     mRecyclerView.setAdapter(mAdapter);
-                    for (ParseObject result : results) {
-                        result.getParseObject("target_location").fetchInBackground(new GetCallback<ParseLocation>() {
-                            @Override
-                            public void done(ParseLocation location, ParseException e) {
-                                mData.add(location);
-                                mAdapter.notifyDataSetChanged();
-                            }
-                        });
-                    }
                     DialogWindowManager.dismiss();
                 }
             });

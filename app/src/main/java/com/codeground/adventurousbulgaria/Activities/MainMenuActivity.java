@@ -370,6 +370,12 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
             startActivity(i);
         }
 
+        if(id == R.id.nav_my_profile){
+            Intent intent = new Intent(getApplicationContext(), UserHomeActivity.class);
+            intent.putExtra("userID", ParseUser.getCurrentUser().getObjectId());
+            startActivity(intent);
+        }
+
         if(id == R.id.nav_manage){
             Intent i = new Intent(getApplicationContext(), SettingsActivity.class);
             startActivity(i);
