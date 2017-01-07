@@ -92,11 +92,12 @@ public class SubmitLocationActivity extends AppCompatActivity implements View.On
 
     private void initLocation() {
         Location currLocation = getLastKnownLocation();
-
-        mLongitude =  currLocation.getLongitude();
-        mLatitude =  currLocation.getLatitude();
-        mLongitudeField.setText("Longitude: "+mLongitude);
-        mLatitudeField.setText("Latitude: "+mLatitude);
+        if(currLocation!=null) {
+            mLongitude = currLocation.getLongitude();
+            mLatitude = currLocation.getLatitude();
+            mLongitudeField.setText("Longitude: " + mLongitude);
+            mLatitudeField.setText("Latitude: " + mLatitude);
+        }
     }
 
     @Override
@@ -123,41 +124,73 @@ public class SubmitLocationActivity extends AppCompatActivity implements View.On
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
+
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), i);
     }
 
     private void submitLocation() {
-        ParseUser user = ParseUser.getCurrentUser();
-        String mail = user.getEmail();
+        if(validateData()) {
 
-        ParseGeoPoint point = new ParseGeoPoint(mLatitude,mLongitude);
-        ParseObject location = new ParseObject(getString(R.string.db_pendinglocation_dbname));
+            ParseUser user = ParseUser.getCurrentUser();
+            String mail = user.getEmail();
 
-        location.put(getString(R.string.db_pendinglocation_name), mNameField.getText().toString());
-        location.put(getString(R.string.db_pendinglocation_city), mCityField.getText().toString());
-        location.put(getString(R.string.db_pendinglocation_description), mDescField.getText().toString());
-        location.put(getString(R.string.db_pendinglocation_location),point);
-        location.put(getString(R.string.db_pendinglocation_user_email),mail);
-       if(mPhoto1!=null) {
-           location.put(getString(R.string.db_pendinglocation_photol), mPhoto1);
-       }
-       if(mPhoto2!=null) {
-           location.put(getString(R.string.db_pendinglocation_photo2), mPhoto2);
-       }
-       if(mPhoto2!=null) {
-           location.put(getString(R.string.db_pendinglocation_photo3),mPhoto3);
-       }
-        DialogWindowManager.show(this);
-        location.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if(e!=null){
-                    Log.d("Save",e.getMessage());
-                }
-                DialogWindowManager.dismiss();
-                finish();
+
+            ParseGeoPoint point = new ParseGeoPoint(mLatitude, mLongitude);
+            ParseObject location = new ParseObject(getString(R.string.db_pendinglocation_dbname));
+
+            location.put(getString(R.string.db_pendinglocation_name), mNameField.getText().toString());
+            location.put(getString(R.string.db_pendinglocation_city), mCityField.getText().toString());
+            location.put(getString(R.string.db_pendinglocation_description), mDescField.getText().toString());
+            location.put(getString(R.string.db_pendinglocation_location), point);
+            location.put(getString(R.string.db_pendinglocation_user_email), mail);
+            if (mPhoto1 != null) {
+                location.put(getString(R.string.db_pendinglocation_photol), mPhoto1);
             }
-        });
+            if (mPhoto2 != null) {
+                location.put(getString(R.string.db_pendinglocation_photo2), mPhoto2);
+            }
+            if (mPhoto2 != null) {
+                location.put(getString(R.string.db_pendinglocation_photo3), mPhoto3);
+            }
+            DialogWindowManager.show(this);
+            location.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(ParseException e) {
+                    if (e != null) {
+                        Log.d("Save", e.getMessage());
+                    }
+                    DialogWindowManager.dismiss();
+                    finish();
+                }
+            });
+        }
+    }
+
+    private boolean validateData() {
+
+        if(mNameField.getText().toString().length()<3){
+            Toast.makeText(this, getString(R.string.alert_location_name_short), Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if(mCityField.getText().toString().length()<4){
+            Toast.makeText(this, getString(R.string.alert_location_city_short), Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (mDescField.getText().toString().length()<15){
+            Toast.makeText(this, getString(R.string.alert_location_desc_short), Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if(mPhoto1==null && mPhoto2==null && mPhoto3==null){
+            Toast.makeText(this, getString(R.string.alert_location_no_photo), Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if(mLatitude==null || mLongitude==null){
+            Toast.makeText(this, getString(R.string.alert_location_no_latlng), Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
     }
 
     private Location getLastKnownLocation() {
@@ -184,6 +217,7 @@ public class SubmitLocationActivity extends AppCompatActivity implements View.On
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
+
             Uri selectedImageUri = data.getData();
 
             if (requestCode == PICTURE_ONE) {
@@ -191,6 +225,7 @@ public class SubmitLocationActivity extends AppCompatActivity implements View.On
                 if (null != selectedImageUri) {
                     mPhoto1= ParseUtilities.createParseFile(selectedImageUri,"photo.jpg");
                     mPhoto1Field.setImageURI(selectedImageUri);
+
                 }
             }
             if (requestCode == PICTURE_TWO) {
@@ -209,12 +244,11 @@ public class SubmitLocationActivity extends AppCompatActivity implements View.On
             }
             if (requestCode == PLACE_PICKER_REQUEST) {
                     Place place = PlacePicker.getPlace(getApplicationContext(),data);
-                    String toastMsg = String.format("Place: %s", place.getName());
+
                     LatLng coords = place.getLatLng();
                     mLatitudeField.setText("Latitude: "+coords.latitude);
                     mLongitudeField.setText("Longitude: "+coords.longitude);
                     DialogWindowManager.dismiss();
-                    Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show();
             }
         }
         else {

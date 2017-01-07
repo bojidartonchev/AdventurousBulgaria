@@ -78,6 +78,11 @@
     <string name="alert_last_name_length">Last name must be between 3 and 12 characters long.</string>
     <string name="alert_signup_fail">Could not sign up.</string>
     <string name="alert_comment_length">Comment should be at least 10 characters long.</string>
+    <string name="alert_location_name_short">Name should be at least 3 characters long.</string>
+    <string name="alert_location_city_short">City should be at least 4 characters long.</string>
+    <string name="alert_location_desc_short">Description should be at least 15 characters long.</string>
+    <string name="alert_location_no_photo">You should attach at least one photo.</string>
+    <string name="alert_location_no_latlng">No location specified.</string>
 
     <!--DIALOGS-->
     <string name="unfollow_prompt_text">You are about to unfollow %1$s</string>

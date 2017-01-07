@@ -1,13 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backgroundColor"
+    android:orientation="vertical"
+    android:scrollbarAlwaysDrawVerticalTrack="true">
+<LinearLayout
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="20dp">
+    android:layout_marginTop="75dp"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp"
+    android:layout_marginBottom="20dp"
+    android:background="#fff">
 
 
 
     <EditText
         android:layout_width="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
         android:layout_height="wrap_content"
         android:inputType="text"
         android:ems="10"
@@ -17,6 +30,8 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:inputType="text"
         android:ems="10"
         android:id="@+id/city_field"
@@ -25,6 +40,8 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:lines="4"
 
         android:gravity="top"
@@ -61,6 +78,8 @@
     <Button
         android:text="Open map"
         android:layout_width="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_height="wrap_content"
         android:id="@+id/location_btn" />
     <LinearLayout
@@ -72,35 +91,49 @@
         <ImageView
             android:id="@+id/photo1"
             android:layout_width="0dp"
-            android:layout_height="200dp"
+            android:layout_height="100dp"
             android:layout_weight="1"
             android:layout_marginRight="10dp"
 
-            android:src="@drawable/com_facebook_profile_picture_blank_square" />
+            android:src="@drawable/mount" />
 
         <ImageView
             android:id="@+id/photo2"
             android:layout_width="0dp"
-            android:layout_height="200dp"
+            android:layout_height="100dp"
             android:layout_weight="1"
             android:layout_marginRight="10dp"
 
-            android:src="@drawable/com_facebook_profile_picture_blank_square" />
+            android:src="@drawable/mount" />
 
         <ImageView
             android:id="@+id/photo3"
             android:layout_width="0dp"
-            android:layout_height="200dp"
+            android:layout_height="100dp"
             android:layout_weight="1"
-            android:src="@drawable/com_facebook_profile_picture_blank_square" />
+            android:src="@drawable/mount" />
 
     </LinearLayout>
 
 
     <Button
         android:text="Submit"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center"
         android:layout_height="wrap_content"
         android:id="@+id/submit_btn" />
 
 </LinearLayout>
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="190dp"
+        android:layout_height="130dp"
+
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="-20dp"
+
+
+        android:src="@drawable/logomount" />
+
+
+</RelativeLayout>
