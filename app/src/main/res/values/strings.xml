@@ -5,7 +5,7 @@
     <string name="sign_up_hint_text">You don\'t have an account?</string>
     <string name="news_feed_btn">News Feed</string>
     <string name="near_by_button">Near By</string>
-    <string name="landmarks_button">All landmarks</string>
+    <string name="landmarks_button">Categories</string>
     <string name="push_notification_title_unlock_landmark">Landmark Unlocked</string>
     <string name="push_notification_content_unlock_landmark">Congratulations! You have just visited %1$s</string>
 

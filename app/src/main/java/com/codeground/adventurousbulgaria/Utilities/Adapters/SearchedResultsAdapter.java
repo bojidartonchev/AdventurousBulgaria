@@ -14,6 +14,9 @@ import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class SearchedResultsAdapter extends ParseQueryAdapter{
 
     public SearchedResultsAdapter(Context context, final String userToSearch)
@@ -49,7 +52,10 @@ public class SearchedResultsAdapter extends ParseQueryAdapter{
 
         // Add a reminder of how long this item has been outstanding
         TextView timestampView = (TextView) v.findViewById(R.id.timestamp);
-        timestampView.setText(object.getCreatedAt().toString());
+        SimpleDateFormat fr = new SimpleDateFormat("dd/MM/yyyy");
+        Date dat = object.getCreatedAt();
+        String time = fr.format(dat);
+        timestampView.setText("Member since " +time);
 
         return v;
     }

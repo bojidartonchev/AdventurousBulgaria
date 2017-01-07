@@ -1,6 +1,6 @@
 package com.codeground.adventurousbulgaria;
 
-import android.app.Application;
+import android.support.multidex.MultiDexApplication;
 
 import com.codeground.adventurousbulgaria.Utilities.ParseUtils.ParseLocation;
 import com.facebook.FacebookSdk;
@@ -9,7 +9,7 @@ import com.parse.Parse;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseObject;
 
-public class MainApplication extends Application {
+public class MainApplication extends MultiDexApplication {
 
     @Override
     public void onCreate() {
