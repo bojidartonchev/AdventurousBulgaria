@@ -7,9 +7,7 @@ import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.parse.Parse;
 import com.parse.ParseFacebookUtils;
-import com.parse.ParseInstallation;
 import com.parse.ParseObject;
-import com.parse.ParseUser;
 
 public class MainApplication extends Application {
 
@@ -28,11 +26,5 @@ public class MainApplication extends Application {
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
         ParseFacebookUtils.initialize(this);
-
-        if(ParseUser.getCurrentUser()!=null) {
-            ParseInstallation currentInstall = ParseInstallation.getCurrentInstallation();
-            currentInstall.put("username", ParseUser.getCurrentUser().get("username"));
-            currentInstall.saveInBackground();
-        }
     }
 }

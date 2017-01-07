@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.codeground.adventurousbulgaria.R;
 import com.codeground.adventurousbulgaria.Utilities.DialogWindowManager;
+import com.codeground.adventurousbulgaria.Utilities.SettingsManager;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
@@ -224,6 +225,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
     private void switchToMainMenu(){
         DialogWindowManager.dismiss();
+        SettingsManager.updateDeviceInstallationInfo();
         startActivity(mMaimMenuActivityIntent);
         finish();
     }

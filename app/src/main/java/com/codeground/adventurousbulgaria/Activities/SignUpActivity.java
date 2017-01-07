@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.codeground.adventurousbulgaria.R;
 import com.codeground.adventurousbulgaria.Utilities.DialogWindowManager;
+import com.codeground.adventurousbulgaria.Utilities.SettingsManager;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
@@ -97,6 +98,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             public void done(ParseException e) {
                 DialogWindowManager.dismiss();
                 if (e == null) {
+                    SettingsManager.updateDeviceInstallationInfo();
                     Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
                     startActivity(intent);
                 } else {
