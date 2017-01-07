@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.codeground.adventurousbulgaria.R;
 import com.codeground.adventurousbulgaria.Utilities.AllLocationsManager;
@@ -43,6 +44,7 @@ public class NearByActivity extends AppCompatActivity implements OnMapReadyCallb
 
     private SeekBar mDistanceSeekBar;
     private Circle mCircleRadius;
+    private TextView mRadiusText;
 
     private ArrayList<Marker> mMarkers;
 
@@ -56,6 +58,7 @@ public class NearByActivity extends AppCompatActivity implements OnMapReadyCallb
 
         mDistanceSeekBar.setProgress(INITIAL_SEEK_BAR_PROGRESS);
         mMarkers = new ArrayList<>();
+        mRadiusText = (TextView) findViewById(R.id.range_radius_label);
     }
 
     @Override
@@ -92,6 +95,8 @@ public class NearByActivity extends AppCompatActivity implements OnMapReadyCallb
                         .radius(1000 * INITIAL_SEEK_BAR_PROGRESS)
                         .strokeColor(R.color.menuColor2)
                         .fillColor(R.color.radius_fill_color));
+
+                mRadiusText.setText(String.format(getString(R.string.distance_label_text), INITIAL_SEEK_BAR_PROGRESS));
 
                 loadMarkersOnMap(1000 * INITIAL_SEEK_BAR_PROGRESS);
             }
@@ -142,6 +147,7 @@ public class NearByActivity extends AppCompatActivity implements OnMapReadyCallb
             int radius = progress * 1000;
             updateMarkers(radius);
             mCircleRadius.setRadius(radius);
+            mRadiusText.setText(String.format(getString(R.string.distance_label_text), progress));
         }
     }
 

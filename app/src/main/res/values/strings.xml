@@ -78,6 +78,9 @@
     <!--DIALOGS-->
     <string name="unfollow_prompt_text">You are about to unfollow %1$s</string>
 
+    <!--NEAR_BY-->
+    <string name="distance_label_text">Distance: %1$d km</string>
+
     <!--PROFILE-->
     <string name="profile_followers_format">Followers %1$d</string>
     <string name="profile_followers">Followers</string>
