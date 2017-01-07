@@ -1,6 +1,7 @@
 package com.codeground.adventurousbulgaria.Activities;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.codeground.adventurousbulgaria.R;
+import com.codeground.adventurousbulgaria.Utilities.Adapters.MarkerInfoWindowAdapter;
 import com.codeground.adventurousbulgaria.Utilities.AllLocationsManager;
 import com.codeground.adventurousbulgaria.Utilities.ParseUtils.ParseLocation;
 import com.google.android.gms.common.ConnectionResult;
@@ -34,7 +36,8 @@ public class NearByActivity extends AppCompatActivity implements OnMapReadyCallb
         GoogleMap.OnMapLoadedCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        SeekBar.OnSeekBarChangeListener{
+        SeekBar.OnSeekBarChangeListener,
+        GoogleMap.OnInfoWindowClickListener {
 
     private final int INITIAL_SEEK_BAR_PROGRESS = 10;
 
@@ -139,6 +142,8 @@ public class NearByActivity extends AppCompatActivity implements OnMapReadyCallb
         }
         googleMap.setOnMapLoadedCallback(this);
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        googleMap.setInfoWindowAdapter(new MarkerInfoWindowAdapter(this));
+        googleMap.setOnInfoWindowClickListener(this);
     }
 
     @Override
@@ -188,12 +193,23 @@ public class NearByActivity extends AppCompatActivity implements OnMapReadyCallb
                     Marker marker = mMap.addMarker(new MarkerOptions()
                             .visible(distance <= radius)
                             .position(new LatLng(loc.getLatitude(), loc.getLongitude()))
-                            .title(location.getName()));
+                            .title(location.getName())
+                            .snippet(location.getDescription()));
+                    marker.setTag(location.getObjectId());
 
                     mMarkers.add(marker);
                 }
 
             }
         }
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        String id = (String) marker.getTag();
+
+        Intent intent = new Intent(getApplicationContext(), LandmarkActivity.class);
+        intent.putExtra("locationId", id);
+        startActivity(intent);
     }
 }
