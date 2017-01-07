@@ -8,12 +8,17 @@ import android.widget.TextView;
 import com.codeground.adventurousbulgaria.R;
 import com.codeground.adventurousbulgaria.Utilities.ParseUtils.ParseComment;
 import com.codeground.adventurousbulgaria.Utilities.ParseUtils.ParseTraveller;
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseFile;
+import com.parse.ParseImageView;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseRelation;
 import com.parse.ParseUser;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -38,24 +43,56 @@ public class CalendarTravellersAdapter extends ParseQueryAdapter{
     }
 
     @Override
-    public View getItemView(ParseObject object, View v, ViewGroup parent) {
+    public View getItemView(final ParseObject object, View v, ViewGroup parent) {
         if (v == null) {
             v = View.inflate(getContext(), R.layout.list_view_traveller_row, null);
         }
 
         super.getItemView(object, v, parent);
 
-        //Comment creator
-        TextView originUser = (TextView) v.findViewById(R.id.profile_name);
-        originUser.setText("tete");
+        //Creator
+        final TextView originUser = (TextView) v.findViewById(R.id.profile_name);
+        final ParseImageView profileImage = (ParseImageView) v.findViewById(R.id.activity_image);
+        object.getParseUser("origin_user").fetchIfNeededInBackground(new GetCallback<ParseUser>() {
+            @Override
+            public void done(ParseUser user, ParseException e) {
+                if(e==null){
+                    originUser.setText(user.getString("first_name") + " " + user.getString("last_name"));
 
-        //Comment creator
+                    // Add and download the image
+                    ParseFile imageFile = user.getParseFile("profile_picture");
+                    if (imageFile != null) {
+                        profileImage.setParseFile(imageFile);
+                        profileImage.loadInBackground();
+                    }
+                }
+
+            }
+        });
+
+
+        //From location
         TextView from = (TextView) v.findViewById(R.id.from_location);
-        from.setText("tete");
+        from.setText(object.getString("from_city"));
 
-        //Comment content
-        TextView to = (TextView) v.findViewById(R.id.to_location);
-        to.setText("tete");
+        //To location
+        final TextView to = (TextView) v.findViewById(R.id.to_location);
+        object.getParseObject("to_location").fetchIfNeededInBackground(new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject toLocation, ParseException e) {
+                if(e==null){
+                    to.setText(toLocation.getString("name"));
+                }
+
+            }
+        });
+
+        //Set departure time
+        TextView departureTime = (TextView) v.findViewById(R.id.departure_time);
+        SimpleDateFormat fr = new SimpleDateFormat("HH:mm");
+        Date departureDate = object.getDate("travel_date");
+        String timeString = fr.format(departureDate);
+        departureTime.setText(timeString);
 
         return v;
     }

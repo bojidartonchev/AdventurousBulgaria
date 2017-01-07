@@ -1,7 +1,10 @@
 package com.codeground.adventurousbulgaria.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.CalendarView;
 
 import com.codeground.adventurousbulgaria.Fragments.CalendarTravellersFragment;
@@ -10,10 +13,12 @@ import com.codeground.adventurousbulgaria.Utilities.Adapters.CalendarTravellersA
 
 import java.util.Calendar;
 
-public class CalendarActivity extends AppCompatActivity implements CalendarView.OnDateChangeListener {
+public class CalendarActivity extends AppCompatActivity implements CalendarView.OnDateChangeListener, View.OnClickListener {
 
     private CalendarView mCalendar;
     private CalendarTravellersFragment mFragment;
+    private FloatingActionButton mAddBtn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,6 +29,9 @@ public class CalendarActivity extends AppCompatActivity implements CalendarView.
 
         mCalendar = (CalendarView) findViewById(R.id.calendarView);
         mCalendar.setOnDateChangeListener(this);
+
+        mAddBtn = (FloatingActionButton) findViewById(R.id.add_new_traveller_btn);
+        mAddBtn.setOnClickListener(this);
     }
 
     @Override
@@ -38,5 +46,13 @@ public class CalendarActivity extends AppCompatActivity implements CalendarView.
         CalendarTravellersAdapter commentsAdapter = new CalendarTravellersAdapter(getApplicationContext(), cal.getTime());
 
         mFragment.setTravellersAdapter(commentsAdapter);
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(v.getId() == R.id.add_new_traveller_btn){
+            Intent i = new Intent(this, SubmitTravellerActivity.class);
+            startActivity(i);
+        }
     }
 }

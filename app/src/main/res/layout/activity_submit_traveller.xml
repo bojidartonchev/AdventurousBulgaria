@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="20dp">
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:ems="10"
+        android:id="@+id/travellers_city_field"
+        android:hint="City" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:weightSum="2" >
+        <TextView
+            android:id="@+id/travellers_latitude"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginRight="10dp" />
+
+        <TextView
+            android:id="@+id/travellers_longitude"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginRight="10dp" />
+
+
+    </LinearLayout>
+
+    <Button
+        android:text="Open map"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/travellers_location_btn" />
+
+
+    <Button
+        android:text="Submit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/travellers_submit_btn" />
+
+    <android.support.v7.widget.SearchView
+        android:id="@+id/to_location_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"/>
+
+</LinearLayout>

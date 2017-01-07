@@ -64,6 +64,9 @@
     <string name="db_user_followers">followers</string>
     <string name="db_user_following">following</string>
 
+    <string name="db_traveller_dbname">Traveller</string>
+    <string name="label_undefined_city">Undefined</string>
+
     <!--ALERTS-->
     <string name="alert_no_gps">Sorry, you must allow access to GPS to use this app</string>
     <string name="alert_no_camera">Sorry, you must allow access to Camera</string>
