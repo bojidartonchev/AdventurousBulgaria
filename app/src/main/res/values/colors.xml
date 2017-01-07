@@ -9,6 +9,7 @@
     <color name="aliceBlue">#f0f8ff </color>
     <color name="menuColor">#a6c61a</color>
     <color name="backgroundColor">#2e343f</color>
+    <color name="black">#212121</color>
 
     <color name="menuColor1">#95b118</color>
     <color name="menuColor2">#accf14</color>
