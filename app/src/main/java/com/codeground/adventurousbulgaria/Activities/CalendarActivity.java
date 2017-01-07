@@ -12,6 +12,7 @@ import com.codeground.adventurousbulgaria.R;
 import com.codeground.adventurousbulgaria.Utilities.Adapters.CalendarTravellersAdapter;
 
 import java.util.Calendar;
+import java.util.Date;
 
 public class CalendarActivity extends AppCompatActivity implements CalendarView.OnDateChangeListener, View.OnClickListener {
 
@@ -26,6 +27,9 @@ public class CalendarActivity extends AppCompatActivity implements CalendarView.
 
         mFragment = (CalendarTravellersFragment) getSupportFragmentManager().findFragmentById(R.id.travellers_fragment);
 
+        //Load travellers for today
+        CalendarTravellersAdapter commentsAdapter = new CalendarTravellersAdapter(getApplicationContext(), new Date());
+        mFragment.setTravellersAdapter(commentsAdapter);
 
         mCalendar = (CalendarView) findViewById(R.id.calendarView);
         mCalendar.setOnDateChangeListener(this);

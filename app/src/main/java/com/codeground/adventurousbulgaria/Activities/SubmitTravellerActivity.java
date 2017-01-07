@@ -10,20 +10,27 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.codeground.adventurousbulgaria.R;
 import com.codeground.adventurousbulgaria.Utilities.DialogWindowManager;
+import com.codeground.adventurousbulgaria.Utilities.ParseUtils.ParseLocation;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
+import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
@@ -46,6 +53,7 @@ public class SubmitTravellerActivity extends AppCompatActivity implements View.O
 
     private Button mSubmitBtn;
     private Button mMapBtn;
+    private AutoCompleteTextView mToLocationSearch;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,7 +72,39 @@ public class SubmitTravellerActivity extends AppCompatActivity implements View.O
         mSubmitBtn.setOnClickListener(this);
         mMapBtn.setOnClickListener(this);
 
+        mToLocationSearch = (AutoCompleteTextView) findViewById(R.id.to_location_search);
+        initAutoComplete();
+
         initLocation();
+    }
+
+    private void initAutoComplete() {
+        ParseQuery<ParseLocation> locationQuery = ParseQuery.getQuery(ParseLocation.class);
+        locationQuery.findInBackground(new FindCallback<ParseLocation>() {
+            public void done(List<ParseLocation> parseLocations, ParseException e) {
+                if (e == null) {
+                    ParseLocation[] data = parseLocations.toArray(new ParseLocation[parseLocations.size()]);
+                    String[] strings = new String[data.length];
+                    for (int i = 0; i < data.length; i++) {
+                        strings[i] = data[i].getName();
+                    }
+                    // Test to see if it was correctly printing out the array I wanted.
+                    // System.out.println(Arrays.toString(strings));
+                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.search_result_traveller_target_location_row, strings);
+
+                    if(parseLocations.size() < 40){
+                        mToLocationSearch.setThreshold(1);
+                    }
+                    else {
+                        mToLocationSearch.setThreshold(2);
+                    }
+
+                    mToLocationSearch.setAdapter(adapter);
+                } else {
+                    Log.d("users", "Error: " + e.getMessage());
+                }
+            }
+        });
     }
 
     private void initLocation() {
@@ -117,24 +157,40 @@ public class SubmitTravellerActivity extends AppCompatActivity implements View.O
         ParseUser user = ParseUser.getCurrentUser();
 
         ParseGeoPoint point = new ParseGeoPoint(mLatitude,mLongitude);
-        ParseObject traveller = new ParseObject(getString(R.string.db_traveller_dbname));
+        final ParseObject traveller = new ParseObject(getString(R.string.db_traveller_dbname));
 
         traveller.put("origin_user", user);
         traveller.put("from_location", point);
         traveller.put("from_city", mCity);
-        //traveller.put("to_location", );
 
         DialogWindowManager.show(this);
-        traveller.saveInBackground(new SaveCallback() {
+
+        String locationName = mToLocationSearch.getText().toString();
+        ParseQuery<ParseLocation> currentLocation = ParseQuery.getQuery(ParseLocation.class);
+        currentLocation.whereEqualTo("name", locationName);
+        currentLocation.getFirstInBackground(new GetCallback<ParseLocation>() {
             @Override
-            public void done(ParseException e) {
-                if(e!=null){
-                    Log.d("Save",e.getMessage());
+            public void done(ParseLocation currentLocationObj, ParseException e) {
+                if(e==null && currentLocationObj != null){
+                    traveller.put("to_location", currentLocationObj);
+
+                    traveller.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            if(e!=null){
+                                Log.d("Save",e.getMessage());
+                            }
+                            DialogWindowManager.dismiss();
+                            finish();
+                        }
+                    });
+                }else{
+                    DialogWindowManager.dismiss();
+                    Toast.makeText(getApplicationContext(), "Location "+ mToLocationSearch.getText().toString() + " was not found!", Toast.LENGTH_SHORT).show();
                 }
-                DialogWindowManager.dismiss();
-                finish();
             }
         });
+
     }
 
     private Location getLastKnownLocation() {
@@ -178,9 +234,7 @@ public class SubmitTravellerActivity extends AppCompatActivity implements View.O
     }
 
     private void pickLocation(){
-
         PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-        
 
         try {
             startActivityForResult(builder.build(this), PLACE_PICKER_REQUEST);
