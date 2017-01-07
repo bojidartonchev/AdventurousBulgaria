@@ -86,13 +86,15 @@ public class NearByActivity extends AppCompatActivity implements OnMapReadyCallb
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 
-            mCircleRadius = mMap.addCircle(new CircleOptions()
-                    .center(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()))
-                    .radius(1000 * INITIAL_SEEK_BAR_PROGRESS)
-                    .strokeColor(R.color.menuColor2)
-                    .fillColor(R.color.radius_fill_color));
+            if(mCircleRadius == null){
+                mCircleRadius = mMap.addCircle(new CircleOptions()
+                        .center(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()))
+                        .radius(1000 * INITIAL_SEEK_BAR_PROGRESS)
+                        .strokeColor(R.color.menuColor2)
+                        .fillColor(R.color.radius_fill_color));
 
-            loadMarkersOnMap(1000 * INITIAL_SEEK_BAR_PROGRESS);
+                loadMarkersOnMap(1000 * INITIAL_SEEK_BAR_PROGRESS);
+            }
         }
     }
 
