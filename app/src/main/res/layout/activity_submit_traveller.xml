@@ -1,16 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backgroundColor"
+    android:orientation="vertical"
+    android:scrollbarAlwaysDrawVerticalTrack="true">
+<LinearLayout
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="20dp">
+    android:layout_marginTop="75dp"
+    android:layout_marginLeft="20dp"
 
+    android:layout_marginRight="20dp"
+    android:layout_marginBottom="20dp"
+    android:background="@color/aliceBlue"
+    android:padding="15dp">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="From"
+        android:textColor="@color/black"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:weightSum="4" >
+        android:weightSum="4"
+        android:background="@drawable/border">
 
         <EditText
             android:layout_width="match_parent"
@@ -25,7 +42,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:orientation="horizontal"
-            android:weightSum="2" >
+            android:weightSum="2">
 
             <TextView
                 android:id="@+id/travellers_latitude"
@@ -53,16 +70,30 @@
 
     </LinearLayout>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="To"
+        android:textColor="@color/black"/>
 
     <AutoCompleteTextView
         android:id="@+id/to_location_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clickable="true"
+        android:background="@drawable/border"
         android:hint="Where are you travelling to?"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="On"
+        android:textColor="@color/black"/>
+
 
     <EditText
         android:id="@+id/travellers_departure_date"
+        android:background="@drawable/border"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="When are you going to travel?" />
@@ -74,3 +105,15 @@
         android:id="@+id/travellers_submit_btn" />
 
 </LinearLayout>
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="190dp"
+        android:layout_height="130dp"
+
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="-20dp"
+
+
+        android:src="@drawable/logomount" />
+
+</RelativeLayout>
