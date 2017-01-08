@@ -1,5 +1,6 @@
 package com.codeground.adventurousbulgaria.Activities;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,25 +37,31 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-
 
 public class SubmitTravellerActivity extends AppCompatActivity implements View.OnClickListener {
 
     private final int PLACE_PICKER_REQUEST = 1;
 
-    private TextView mLatitudeField;
-    private TextView mLongitudeField;
-    private EditText mCityField;
     private LocationManager mLocationManager;
     private Double mLongitude;
     private Double mLatitude;
     private String mCity;
+    private DatePickerDialog datePickerDialog;
+    private SimpleDateFormat dateFormatter;
+    private Date mDepartureDate;
 
     private Button mSubmitBtn;
     private Button mMapBtn;
     private AutoCompleteTextView mToLocationSearch;
+    private TextView mDateTextField;
+    private TextView mLatitudeField;
+    private TextView mLongitudeField;
+    private EditText mCityField;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -75,7 +83,12 @@ public class SubmitTravellerActivity extends AppCompatActivity implements View.O
         mToLocationSearch = (AutoCompleteTextView) findViewById(R.id.to_location_search);
         initAutoComplete();
 
+        mDateTextField = (TextView) findViewById(R.id.travellers_departure_date);
+        mDateTextField.setOnClickListener(this);
+        dateFormatter = new SimpleDateFormat("dd-MM-yyyy");
+
         initLocation();
+        setDateTimeField();
     }
 
     private void initAutoComplete() {
@@ -151,6 +164,9 @@ public class SubmitTravellerActivity extends AppCompatActivity implements View.O
         if(v.getId()==R.id.travellers_submit_btn){
             submitTraveller();
         }
+        if(v.getId()== R.id.travellers_departure_date){
+            datePickerDialog.show();
+        }
     }
 
     private void submitTraveller() {
@@ -162,6 +178,12 @@ public class SubmitTravellerActivity extends AppCompatActivity implements View.O
         traveller.put("origin_user", user);
         traveller.put("from_location", point);
         traveller.put("from_city", mCity);
+
+        if(mDepartureDate != null){
+            traveller.put("travel_date", mDepartureDate);
+        }else{
+            Toast.makeText(getApplicationContext(), "Please set date and time for your travel!", Toast.LENGTH_SHORT).show();
+        }
 
         DialogWindowManager.show(this);
 
@@ -243,6 +265,20 @@ public class SubmitTravellerActivity extends AppCompatActivity implements View.O
         } catch (GooglePlayServicesNotAvailableException e) {
             e.printStackTrace();
         }
+    }
+
+    private void setDateTimeField() {
+        Calendar newCalendar = Calendar.getInstance();
+        datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                Calendar newDate = Calendar.getInstance();
+                newDate.set(year, monthOfYear, dayOfMonth);
+                mDepartureDate = newDate.getTime();
+                mDateTextField.setText(dateFormatter.format(mDepartureDate));
+            }
+
+        },newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
     }
 
 

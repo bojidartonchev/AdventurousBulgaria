@@ -91,12 +91,14 @@
         android:textColor="@color/black"/>
 
 
-    <EditText
+    <TextView
         android:id="@+id/travellers_departure_date"
         android:background="@drawable/border"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="When are you going to travel?" />
+        android:drawableLeft="@android:drawable/ic_menu_my_calendar"
+        android:hint="When are you going to travel?"
+        android:gravity="center"/>
 
     <Button
         android:text="Submit"
