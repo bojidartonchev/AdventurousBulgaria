@@ -36,6 +36,7 @@ import com.codeground.wanderlustbulgaria.Fragments.ProfileFragment;
 import com.codeground.wanderlustbulgaria.Interfaces.IOnFacebookProfileImageUploadCompleted;
 import com.codeground.wanderlustbulgaria.R;
 import com.codeground.wanderlustbulgaria.Utilities.AllLocationsManager;
+import com.codeground.wanderlustbulgaria.Utilities.LocationMarker;
 import com.codeground.wanderlustbulgaria.Utilities.ParseUtils.ParseLocation;
 import com.codeground.wanderlustbulgaria.Utilities.ParseUtils.ParseUtilities;
 import com.codeground.wanderlustbulgaria.Utilities.ProfileManager;
@@ -49,7 +50,10 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.maps.android.clustering.Cluster;
+import com.google.maps.android.clustering.ClusterItem;
+import com.google.maps.android.clustering.ClusterManager;
 import com.parse.CountCallback;
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
@@ -66,7 +70,10 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         GoogleMap.OnMapLoadedCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        IOnFacebookProfileImageUploadCompleted  {
+        IOnFacebookProfileImageUploadCompleted,ClusterManager.OnClusterClickListener<LocationMarker>,
+        ClusterManager.OnClusterInfoWindowClickListener<LocationMarker>,
+        ClusterManager.OnClusterItemClickListener<LocationMarker>,
+        ClusterManager.OnClusterItemInfoWindowClickListener<LocationMarker>  {
 
     private static final int INITIAL_REQUEST = 1337;
     private static final int CAMERA_TAKE_PHOTO = 1338;
@@ -101,6 +108,8 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     private NavigationView mProfileView;
     private ImageView mProfilePicture;
     private TextView mPendingFollowersBadge;
+
+    private ClusterManager mClusterManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -264,6 +273,16 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         }
         googleMap.setOnMapLoadedCallback(this);
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+
+        mClusterManager = new ClusterManager<LocationMarker>(this, googleMap);
+        mClusterManager.setOnClusterClickListener(this);
+        mClusterManager.setOnClusterInfoWindowClickListener(this);
+        mClusterManager.setOnClusterItemClickListener(this);
+        mClusterManager.setOnClusterItemInfoWindowClickListener(this);
+        googleMap.setOnCameraIdleListener(mClusterManager);
+        googleMap.setOnMarkerClickListener(mClusterManager);
+        googleMap.setOnInfoWindowClickListener(mClusterManager);
+
     }
 
     @Override
@@ -493,9 +512,8 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
                     Location loc = new Location("");
                     loc.setLatitude(location.getLocation().getLatitude());
                     loc.setLongitude(location.getLocation().getLongitude());
-                    mMap.addMarker(new MarkerOptions()
-                            .position(new LatLng(loc.getLatitude(), loc.getLongitude()))
-                            .title(location.getName()));
+                    LocationMarker marker = new LocationMarker(loc.getLatitude(), loc.getLongitude(), location.getName(), location.getIcon());
+                    mClusterManager.addItem(marker);
                 }
             }
         }
@@ -504,5 +522,44 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onProfileImageUploadCompleted() {
         this.loadProfilePicture();
+    }
+
+    @Override
+    public boolean onClusterClick(Cluster<LocationMarker> cluster) {
+        // Zoom in the cluster. Need to create LatLngBounds and including all the cluster items
+        // inside of bounds, then animate to center of the bounds.
+
+        // Create the builder to collect all essential cluster items for the bounds.
+        LatLngBounds.Builder builder = LatLngBounds.builder();
+        for (ClusterItem item : cluster.getItems()) {
+            builder.include(item.getPosition());
+        }
+        // Get the LatLngBounds
+        final LatLngBounds bounds = builder.build();
+
+        // Animate camera to the bounds
+        try {
+            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return true;
+    }
+
+    @Override
+    public void onClusterInfoWindowClick(Cluster<LocationMarker> cluster) {
+        // Does nothing, but you could go to a list of the users.
+    }
+
+    @Override
+    public boolean onClusterItemClick(LocationMarker item) {
+        // Does nothing, but you could go into the user's profile page, for example.
+        return true;
+    }
+
+    @Override
+    public void onClusterItemInfoWindowClick(LocationMarker item) {
+        // Does nothing, but you could go into the user's profile page, for example.
     }
 }
