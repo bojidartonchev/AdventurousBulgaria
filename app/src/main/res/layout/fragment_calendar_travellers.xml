@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
 
-    tools:context="com.codeground.adventurousbulgaria.Fragments.ProfileFragment">
+    tools:context="com.codeground.wanderlustbulgaria.Fragments.ProfileFragment">
 
     <ListView
         android:id="@+id/travellers_list"

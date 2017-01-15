@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
 
 
-    tools:context="com.codeground.adventurousbulgaria.Fragments.ProfileFragment">
+    tools:context="com.codeground.wanderlustbulgaria.Fragments.ProfileFragment">
     <ListView
         android:layout_marginTop="10dp"
         android:layout_marginLeft="20dp"
