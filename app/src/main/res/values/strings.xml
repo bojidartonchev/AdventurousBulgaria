@@ -86,6 +86,7 @@
 
     <!--DIALOGS-->
     <string name="unfollow_prompt_text">You are about to unfollow %1$s</string>
+    <string name="activate_gps_prompt_text">Near by doesn\'t work unless it can access your location. Do you want to turn on location services?</string>
 
     <!--NEAR_BY-->
     <string name="distance_label_text">Distance: %1$d km</string>
