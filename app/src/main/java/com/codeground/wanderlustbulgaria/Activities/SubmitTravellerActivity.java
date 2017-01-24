@@ -1,12 +1,12 @@
 package com.codeground.wanderlustbulgaria.Activities;
 
-import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -14,7 +14,6 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,6 +34,8 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
+import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -43,7 +44,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class SubmitTravellerActivity extends AppCompatActivity implements View.OnClickListener {
+public class SubmitTravellerActivity extends AppCompatActivity implements View.OnClickListener,
+        TimePickerDialog.OnTimeSetListener,
+        DatePickerDialog.OnDateSetListener {
 
     private final int PLACE_PICKER_REQUEST = 1;
 
@@ -51,7 +54,6 @@ public class SubmitTravellerActivity extends AppCompatActivity implements View.O
     private Double mLongitude;
     private Double mLatitude;
     private String mCity;
-    private DatePickerDialog datePickerDialog;
     private SimpleDateFormat dateFormatter;
     private Date mDepartureDate;
 
@@ -85,10 +87,9 @@ public class SubmitTravellerActivity extends AppCompatActivity implements View.O
 
         mDateTextField = (TextView) findViewById(R.id.travellers_departure_date);
         mDateTextField.setOnClickListener(this);
-        dateFormatter = new SimpleDateFormat("dd-MM-yyyy");
+        dateFormatter = new SimpleDateFormat("dd-MM-yyyy HH-mm");
 
         initLocation();
-        setDateTimeField();
     }
 
     private void initAutoComplete() {
@@ -123,12 +124,14 @@ public class SubmitTravellerActivity extends AppCompatActivity implements View.O
     private void initLocation() {
         Location currLocation = getLastKnownLocation();
 
-        mLongitude =  currLocation.getLongitude();
-        mLatitude =  currLocation.getLatitude();
-        mLongitudeField.setText("Longitude: "+mLongitude);
-        mLatitudeField.setText("Latitude: "+mLatitude);
+        if(currLocation != null){
+            mLongitude =  currLocation.getLongitude();
+            mLatitude =  currLocation.getLatitude();
+            mLongitudeField.setText("Longitude: "+mLongitude);
+            mLatitudeField.setText("Latitude: "+mLatitude);
 
-        updateCity();
+            updateCity();
+        }
     }
 
     private void updateCity() {
@@ -165,19 +168,49 @@ public class SubmitTravellerActivity extends AppCompatActivity implements View.O
             submitTraveller();
         }
         if(v.getId()== R.id.travellers_departure_date){
-            datePickerDialog.show();
+            showDatePicker();
         }
+    }
+
+    private void showDatePicker() {
+        Calendar now = Calendar.getInstance();
+        DatePickerDialog dpd = DatePickerDialog.newInstance(
+                this,
+                now.get(Calendar.YEAR),
+                now.get(Calendar.MONTH),
+                now.get(Calendar.DAY_OF_MONTH)
+        );
+        dpd.vibrate(false);
+        dpd.show(getFragmentManager(), "Pick a date:");
+    }
+
+    private void showTimePicker() {
+        Calendar now = Calendar.getInstance();
+        TimePickerDialog tpd = TimePickerDialog.newInstance(
+                this,
+                now.get(Calendar.HOUR_OF_DAY),
+                now.get(Calendar.MINUTE), true
+        );
+        tpd.vibrate(false);
+        tpd.show(getFragmentManager(), "Pick a time:");
     }
 
     private void submitTraveller() {
         ParseUser user = ParseUser.getCurrentUser();
 
-        ParseGeoPoint point = new ParseGeoPoint(mLatitude,mLongitude);
         final ParseObject traveller = new ParseObject(getString(R.string.db_traveller_dbname));
 
         traveller.put("origin_user", user);
         traveller.put("origin_user_name", user.getString("first_name") + " " + user.getString("last_name"));
-        traveller.put("from_location", point);
+
+        if(mLatitude !=null && mLongitude != null){
+            ParseGeoPoint point = new ParseGeoPoint(mLatitude,mLongitude);
+            traveller.put("from_location", point);
+        }else if(mCity == null || mCity.isEmpty()){
+            Toast.makeText(getApplicationContext(), "Please choose a departure location or city", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         traveller.put("from_city", mCity);
 
         if(mDepartureDate != null){
@@ -268,22 +301,33 @@ public class SubmitTravellerActivity extends AppCompatActivity implements View.O
         }
     }
 
-    private void setDateTimeField() {
-        Calendar newCalendar = Calendar.getInstance();
-        datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
 
-            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                Calendar newDate = Calendar.getInstance();
-                newDate.set(year, monthOfYear, dayOfMonth);
-                mDepartureDate = newDate.getTime();
-                mDateTextField.setText(dateFormatter.format(mDepartureDate));
-            }
+    @Override
+    public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
+        Calendar cal = Calendar.getInstance();
+        if(mDepartureDate!=null) {
+            cal.setTime(mDepartureDate);
+        }
+        cal.set(Calendar.HOUR_OF_DAY,hourOfDay);
+        cal.set(Calendar.MINUTE,minute);
+        cal.set(Calendar.SECOND,second);
 
-        },newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
+        mDepartureDate.setTime(cal.getTimeInMillis());
+        mDateTextField.setText(dateFormatter.format(mDepartureDate));
     }
 
+    @Override
+    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+        Calendar newDate = Calendar.getInstance();
+        newDate.set(year, monthOfYear, dayOfMonth);
+        mDepartureDate = newDate.getTime();
+        mDateTextField.setText(dateFormatter.format(mDepartureDate));
 
-
-
-
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                showTimePicker();
+            }
+        },500);
+    }
 }

@@ -6,11 +6,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.CalendarView;
 
-import com.codeground.wanderlustbulgaria.Fragments.CalendarTravellersFragment;
 import com.codeground.wanderlustbulgaria.R;
-import com.codeground.wanderlustbulgaria.Utilities.Adapters.CalendarTravellersAdapter;
 import com.codeground.wanderlustbulgaria.Utilities.ParseUtils.ParseTraveller;
 import com.github.tibolte.agendacalendarview.AgendaCalendarView;
 import com.github.tibolte.agendacalendarview.CalendarPickerController;
@@ -30,22 +27,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class CalendarActivity extends AppCompatActivity implements CalendarView.OnDateChangeListener, View.OnClickListener, CalendarPickerController {
+public class CalendarActivity extends AppCompatActivity implements View.OnClickListener, CalendarPickerController {
 
     private AgendaCalendarView mCalendar;
-    private CalendarTravellersFragment mFragment;
     private FloatingActionButton mAddBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
-
-        mFragment = (CalendarTravellersFragment) getSupportFragmentManager().findFragmentById(R.id.travellers_fragment);
-
-        //Load travellers for today
-        CalendarTravellersAdapter commentsAdapter = new CalendarTravellersAdapter(getApplicationContext(), new Date());
-        mFragment.setTravellersAdapter(commentsAdapter);
 
         mCalendar = (AgendaCalendarView) findViewById(R.id.calendarView);
         initCalendar();
@@ -54,19 +44,6 @@ public class CalendarActivity extends AppCompatActivity implements CalendarView.
         mAddBtn.setOnClickListener(this);
     }
 
-    @Override
-    public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.YEAR, year);
-        cal.set(Calendar.MONTH, month);
-        cal.set(Calendar.DATE, dayOfMonth);
-        cal.set(Calendar.HOUR, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        CalendarTravellersAdapter commentsAdapter = new CalendarTravellersAdapter(getApplicationContext(), cal.getTime());
-
-        mFragment.setTravellersAdapter(commentsAdapter);
-    }
 
     @Override
     public void onClick(View v) {
