@@ -48,6 +48,7 @@ dependencies {
     compile 'com.github.d-max:spots-dialog:0.4@aar'
     compile 'com.jmedeisis:windowview:0.2.0'
     compile 'com.google.maps.android:android-maps-utils:0.4+'
+    compile 'com.github.tibolte:agendacalendarview:1.0.4'
     testCompile 'junit:junit:4.12'
 }
 apply plugin: 'com.google.gms.google-services'

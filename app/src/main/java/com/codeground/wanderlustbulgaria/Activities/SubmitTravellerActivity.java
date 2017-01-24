@@ -176,6 +176,7 @@ public class SubmitTravellerActivity extends AppCompatActivity implements View.O
         final ParseObject traveller = new ParseObject(getString(R.string.db_traveller_dbname));
 
         traveller.put("origin_user", user);
+        traveller.put("origin_user_name", user.getString("first_name") + " " + user.getString("last_name"));
         traveller.put("from_location", point);
         traveller.put("from_city", mCity);
 
@@ -187,7 +188,7 @@ public class SubmitTravellerActivity extends AppCompatActivity implements View.O
 
         DialogWindowManager.show(this);
 
-        String locationName = mToLocationSearch.getText().toString();
+        final String locationName = mToLocationSearch.getText().toString();
         ParseQuery<ParseLocation> currentLocation = ParseQuery.getQuery(ParseLocation.class);
         currentLocation.whereEqualTo("name", locationName);
         currentLocation.getFirstInBackground(new GetCallback<ParseLocation>() {
@@ -195,7 +196,7 @@ public class SubmitTravellerActivity extends AppCompatActivity implements View.O
             public void done(ParseLocation currentLocationObj, ParseException e) {
                 if(e==null && currentLocationObj != null){
                     traveller.put("to_location", currentLocationObj);
-
+                    traveller.put("to_location_name", locationName);
                     traveller.saveInBackground(new SaveCallback() {
                         @Override
                         public void done(ParseException e) {
