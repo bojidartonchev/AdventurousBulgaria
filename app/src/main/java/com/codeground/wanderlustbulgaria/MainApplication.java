@@ -3,6 +3,7 @@ package com.codeground.wanderlustbulgaria;
 import android.support.multidex.MultiDexApplication;
 
 import com.codeground.wanderlustbulgaria.Utilities.ParseUtils.ParseLocation;
+import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.parse.Parse;
 import com.parse.ParseFacebookUtils;
@@ -22,7 +23,7 @@ public class MainApplication extends MultiDexApplication {
                         .server(getString(R.string.parse_server)).build());
 
         //Facebook SDK Initialization
-        //FacebookSdk.sdkInitialize(getApplicationContext());
+        FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
         ParseFacebookUtils.initialize(this);
     }

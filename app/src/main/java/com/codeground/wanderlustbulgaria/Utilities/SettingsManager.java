@@ -15,14 +15,16 @@ public class SettingsManager {
         ParseUser.getCurrentUser().fetchInBackground(new GetCallback<ParseObject>() {
             @Override
             public void done(ParseObject user, ParseException e) {
-                boolean isPrivate = false;
-                if(user.has("is_follow_allowed")){
-                    isPrivate = !user.getBoolean("is_follow_allowed");
+                if(e == null && user!=null){
+                    boolean isPrivate = false;
+                    if(user.has("is_follow_allowed")){
+                        isPrivate = !user.getBoolean("is_follow_allowed");
+                    }
+                    //Update other settings which are profile specific here
+                    SharedPreferences.Editor prefs = PreferenceManager.getDefaultSharedPreferences(ctx).edit();
+                    prefs.putBoolean("toggle_private_profile", isPrivate);
+                    prefs.commit();
                 }
-                //Update other settings which are profile specific here
-                SharedPreferences.Editor prefs = PreferenceManager.getDefaultSharedPreferences(ctx).edit();
-                prefs.putBoolean("toggle_private_profile", isPrivate);
-                prefs.commit();
             }
         });
 
