@@ -95,7 +95,7 @@
             android:layout_weight="1"
             android:layout_marginRight="10dp"
 
-            android:src="@drawable/mount" />
+            android:src="@drawable/photo" />
 
         <ImageView
             android:id="@+id/photo2"
@@ -104,14 +104,14 @@
             android:layout_weight="1"
             android:layout_marginRight="10dp"
 
-            android:src="@drawable/mount" />
+            android:src="@drawable/photo" />
 
         <ImageView
             android:id="@+id/photo3"
             android:layout_width="0dp"
             android:layout_height="100dp"
             android:layout_weight="1"
-            android:src="@drawable/mount" />
+            android:src="@drawable/photo" />
 
     </LinearLayout>
 

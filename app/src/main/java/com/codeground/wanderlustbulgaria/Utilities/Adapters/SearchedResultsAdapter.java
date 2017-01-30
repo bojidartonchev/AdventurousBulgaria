@@ -39,11 +39,13 @@ public class SearchedResultsAdapter extends ParseQueryAdapter{
         super.getItemView(object, v, parent);
 
         // Add and download the image
-        ParseImageView todoImage = (ParseImageView) v.findViewById(R.id.activity_image);
+        ParseImageView todoImage = (ParseImageView) v.findViewById(android.R.id.icon);
         ParseFile imageFile = object.getParseFile("profile_picture");
         if (imageFile != null) {
             todoImage.setParseFile(imageFile);
             todoImage.loadInBackground();
+        } else {
+            todoImage.setImageResource(R.drawable.com_facebook_profile_picture_blank_square);
         }
 
         // Add the title view

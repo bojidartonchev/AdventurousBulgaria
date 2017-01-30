@@ -1,104 +1,55 @@
 package com.codeground.wanderlustbulgaria.Utilities.Adapters;
 
+
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.codeground.wanderlustbulgaria.Interfaces.IOnItemClicked;
 import com.codeground.wanderlustbulgaria.R;
 import com.codeground.wanderlustbulgaria.Utilities.ParseUtils.ParseLocation;
-import com.parse.ParseException;
-import com.squareup.picasso.Picasso;
+import com.parse.ParseFile;
+import com.parse.ParseImageView;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseQueryAdapter;
+import com.parse.ParseUser;
 
-import java.util.List;
+public class LandmarksAdapter extends ParseQueryAdapter{
 
-public class LandmarksAdapter extends RecyclerView.Adapter<LandmarksAdapter.ViewHolder> {
-
-    private List<ParseLocation> mAdapterData;
-
-    private static IOnItemClicked mCaller;
-
-    private Context mContext;
-
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView mTitle;
-        public TextView mLocation;
-        public ImageView mIcon;
-        public TextView mCompletedHolder;
-        public RelativeLayout mParent;
-
-
-        private int position;
-
-        public ViewHolder(View itemView) {
-            super(itemView);
-            mTitle = (TextView) itemView.findViewById(R.id.title);
-            mLocation = (TextView) itemView.findViewById(R.id.location);
-            mIcon = (ImageView) itemView.findViewById(R.id.activity_image);
-            mParent = (RelativeLayout) itemView.findViewById(R.id.row_parent);
-            mCompletedHolder = (TextView) itemView.findViewById(R.id.completed_container);
-
-            mParent.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mCaller != null) {
-                        mCaller.onItemClicked(position);
-                    }
-                }
-            });
-        }
-
-        public void setPosition(int position) {
-            this.position = position;
-        }
-    }
-
-    public LandmarksAdapter(List<ParseLocation> data, IOnItemClicked caller,Context ctx) {
-        this.mContext = ctx;
-        this.mAdapterData = data;
-        this.mCaller = caller;
-    }
-
-    @Override
-    public int getItemCount() {
-        return mAdapterData.size();
-    }
-
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycle_view_landmark_row, parent, false);
-
-        ViewHolder vh = new ViewHolder(view);
-
-        return vh;
-    }
-
-    @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-
-        if (holder != null) {
-            holder.setPosition(position);
-            holder.mTitle.setText(mAdapterData.get(position).getName());
-            holder.mLocation.setText(mAdapterData.get(position).getCity());
-            if(position%2!=0)
-
-                holder.itemView.setBackgroundColor(ContextCompat.getColor(mContext,R.color.menuColor3));
-            else if(position%2==0)
-                holder.itemView.setBackgroundColor(ContextCompat.getColor(mContext,R.color.menuColor5));
-
-            //Load the icon
-            try {
-                Picasso.with(holder.mIcon.getContext()).load(mAdapterData.get(position).getIcon().getFile()).into(holder.mIcon);
-            } catch (ParseException e) {
-                e.printStackTrace();
+    public LandmarksAdapter(Context context, final String category)
+    {
+        super(context, new ParseQueryAdapter.QueryFactory<ParseUser>() {
+            public ParseQuery create() {
+                ParseQuery<ParseLocation> query = ParseQuery.getQuery("Location");
+                query.whereContains("category", category);
+                return query;
             }
+        });
+    }
+
+    @Override
+    public View getItemView(final ParseObject object, View v, ViewGroup parent) {
+        if (v == null) {
+            v = View.inflate(getContext(), R.layout.list_view_landmark_row, null);
         }
+
+        super.getItemView(object, v, parent);
+
+        // Add and download the image
+        ParseImageView locImage = (ParseImageView) v.findViewById(android.R.id.icon);
+        ParseFile imageFile = object.getParseFile("icon");
+        if (imageFile != null) {
+            locImage.setParseFile(imageFile);
+            locImage.loadInBackground();
+        }
+        TextView locTitle = (TextView) v.findViewById(R.id.title);
+        TextView locPlace = (TextView) v.findViewById(R.id.location);
+        locTitle.setText(object.getString("name"));
+        locPlace.setText(object.getString("city"));
+
+
+
+        return v;
     }
 }

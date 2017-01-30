@@ -23,6 +23,7 @@ public class SearchUsersActivity extends AppCompatActivity implements View.OnCli
     private EditText mSearchField;
     private ListView mResults;
 
+
     private ParseQueryAdapter mAdapter;
 
     @Override
@@ -43,6 +44,7 @@ public class SearchUsersActivity extends AppCompatActivity implements View.OnCli
         String userToSearch = mSearchField.getText().toString().toLowerCase();
         mAdapter = new SearchedResultsAdapter(this, userToSearch);
         mAdapter.setTextKey("title");
+        mAdapter.setImageKey("photo");
         mAdapter.addOnQueryLoadListener(this);
         mResults.setAdapter(mAdapter);
     }

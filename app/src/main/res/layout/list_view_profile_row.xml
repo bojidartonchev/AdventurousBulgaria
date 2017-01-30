@@ -5,7 +5,7 @@
 >
 
     <com.parse.ParseImageView
-        android:id="@+id/activity_image"
+        android:id="@android:id/icon"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:src="@drawable/com_facebook_profile_picture_blank_square"
@@ -18,8 +18,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:layout_alignTop="@+id/activity_image"
-        android:layout_toRightOf="@id/activity_image"
+        android:layout_alignTop="@android:id/icon"
+        android:layout_toRightOf="@android:id/icon"
         android:textColor="@color/grey" />
 
     <TextView
@@ -27,7 +27,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/profile_name"
-        android:layout_toRightOf="@id/activity_image" />
+        android:layout_toRightOf="@android:id/icon" />
 
 
 </RelativeLayout>
