@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="facebook_app_id">158066377982644</string>
+    <string name="app_name">Wanderlust Bulgaria</string>
+    <string name="profile_picture_title">Adventurous_Bulgaria_Profile_Picture</string>
+    <string name="sign_up_hint_text">Нямате акаунт?</string>
+    <string name="news_feed_btn">News Feed</string>
+    <string name="near_by_button">Наблизо</string>
+    <string name="calendar_button">Календар</string>
+    <string name="landmarks_button">Категории</string>
+    <string name="push_notification_title_unlock_landmark">Landmark Unlocked</string>
+    <string name="push_notification_content_unlock_landmark">Congratulations! You have just visited %1$s</string>
+
+    <!--PARSE-->
+    <string name="parse_app_id">Aev0cw9ckqsWq9BGiGfnPXACPbLTHypE0ZpejrPQ</string>
+    <string name="parse_client_key">6pLQaBu3BcEceHbTXGkOyWZs4J4qVe8EVwEUlfkN</string>
+    <string name="parse_server">https://parseapi.back4app.com/</string>
+
+    <!--CATEGORIES DO NOT TRANSLATE-->
+    <string name="cat_mountain">Mountains</string>
+    <string name="cat_lakes">Lakes</string>
+    <string name="cat_cycling">Cycling</string>
+    <string name="cat_food">Food</string>
+    <string name="cat_ecopath">Ecopath</string>
+    <string name="cat_fishing">Fishing</string>
+    <string name="cat_beach">Beach</string>
+    <string name="cat_waterfall">Waterfalls</string>
+    <string name="cat_caves">Caves</string>
+    <string name="cat_fortress">Fortress</string>
+    <string name="cat_festival">Festival</string>
+    <string name="cat_camping">Camping</string>
+
+    <!--DB STRINGS-->
+    <string name="db_commments_dbname">Comments</string>
+    <string name="db_commments_creator">creator</string>
+    <string name="db_commments_content">content</string>
+
+    <string name="db_location_dbname">Location</string>
+    <string name="db_location_name">name</string>
+    <string name="db_location_city">city</string>
+    <string name="db_location_geopoint">location</string>
+    <string name="db_location_icon">icon</string>
+    <string name="db_location_description">description</string>
+    <string name="db_location_comments">comments</string>
+
+    <string name="db_pendinglocation_dbname">PendingLocation</string>
+    <string name="db_pendinglocation_name">name</string>
+    <string name="db_pendinglocation_city">city</string>
+    <string name="db_pendinglocation_description">description</string>
+    <string name="db_pendinglocation_location">location</string>
+    <string name="db_pendinglocation_user_email">user_email</string>
+    <string name="db_pendinglocation_photol">photo1</string>
+    <string name="db_pendinglocation_photo2">photo2</string>
+    <string name="db_pendinglocation_photo3">photo3</string>
+
+    <string name="db_user_dbname">User</string>
+    <string name="db_user_username">username</string>
+    <string name="db_user_email">email</string>
+    <string name="db_user_firstname">first_name</string>
+    <string name="db_user_lastname">last_name</string>
+    <string name="db_user_picture">profile_picture</string>
+    <string name="db_user_searchmatch">search_match</string>
+    <string name="db_user_is_follow_allowed">is_follow_allowed</string>
+    <string name="db_user_lastlocation">last_location</string>
+    <string name="db_user_followers">followers</string>
+    <string name="db_user_following">following</string>
+
+    <string name="db_traveller_dbname">Traveller</string>
+    <string name="label_undefined_city">Undefined</string>
+
+    <!--ALERTS-->
+    <string name="alert_no_gps">Sorry, you must allow access to GPS to use this app</string>
+    <string name="alert_no_camera">Sorry, you must allow access to Camera</string>
+    <string name="alert_no_storage">Sorry, you must allow access to Gallery</string>
+    <string name="alert_invalid_email">Invalid E-mail address. Please try again.</string>
+    <string name="alert_password_nomatch">Passwords do not match. Please try again.</string>
+    <string name="alert_password_length">Password must be between 5 and 12 characters long.</string>
+    <string name="alert_first_name_length">First name must be between 3 and 12 characters long.</string>
+    <string name="alert_last_name_length">Last name must be between 3 and 12 characters long.</string>
+    <string name="alert_signup_fail">Could not sign up.</string>
+    <string name="alert_comment_length">Comment should be at least 10 characters long.</string>
+    <string name="alert_location_name_short">Name should be at least 3 characters long.</string>
+    <string name="alert_location_city_short">City should be at least 4 characters long.</string>
+    <string name="alert_location_desc_short">Description should be at least 15 characters long.</string>
+    <string name="alert_location_no_photo">You should attach at least one photo.</string>
+    <string name="alert_location_no_latlng">No location specified.</string>
+
+    <!--DIALOGS-->
+    <string name="unfollow_prompt_text">You are about to unfollow %1$s</string>
+    <string name="activate_gps_prompt_text">Near by doesn\'t work unless it can access your location. Do you want to turn on location services?</string>
+
+    <!--NEAR_BY-->
+    <string name="distance_label_text">Distance: %1$d km</string>
+
+    <!--PROFILE-->
+    <string name="profile_followers_format">Followers %1$d</string>
+    <string name="profile_followers">Followers</string>
+    <string name="profile_following_format">Following %1$d</string>
+    <string name="profile_following">Following</string>
+    <string name="profile_follow">Follow</string>
+
+    <!--MENUS-->
+    <string name="menu_choose_option">Choose option</string>
+    <string name="menu_take_photo">Take photo</string>
+    <string name="menu_choose_library">Choose from Library</string>
+    <string name="menu_cancel">Cancel</string>
+
+    <!--BUTTONS-->
+    <string name="follow_btn_text">Follow</string>
+    <string name="followed_btn_text">Followed</string>
+    <string name="pending_follow_btn_text">Requested</string>
+    <string name="follow_positive_button">Continue</string>
+    <string name="follow_negative_button">Cancel</string>
+    <string name="pending_reject_button">Reject</string>
+    <string name="pending_accept_button">Accept</string>
+
+    <!--NEWS_FEED_ACTIONS-->
+    <string name="action_content_text"> has %1$s </string>
+
+    <!-- SIGN_UP_AND_LOGIN-->
+    <string name="login_email">Email</string>
+    <string name="login_password">Парока</string>
+    <string name="login_sign_in">Вход</string>
+    <string name="login_facebook">Вход с Facebook</string>
+    <string name="login_sign_up">Регистрация</string>
+    <string name="register_email">Email</string>
+    <string name="register_first_name">Име</string>
+    <string name="register_last_name">Фамилия</string>
+    <string name="register_password">Парола</string>
+    <string name="register_confirm_pwd">Потвърди парола</string>
+    <string name="register_button">Регистрация</string>
+
+    <!-- COMMENTS-->
+    <string name="comment_write">Добави коментар</string>
+
+    <!-- SETTINGS-->
+    <string name="pref_profile_title">Профил</string>
+    <string name="pref_settings_title">Настройки</string>
+    <string name="pref_private_profile_title">Личен профил</string>
+    <string name="pref_private_profile_summary">Когато профилът Ви е "личен", само одобрени от вас хора могат да виждат вашата дейсност.</string>
+
+    <!-- SETTINGS_EDIT_PROFILE-->
+    <string name="pref_profile_edit_title">Редактирай профил</string>
+    <string name="pref_password_change_title">Смяна на парола</string>
+
+    <string name="pref_title_auto_delete">Напиши коментар</string>
+    <string name="pref_summary_auto_delete">Напиши коментар</string>
+    <string name="pref_summary_delete_limit">Напиши коментар</string>
+    <string name="pref_title_sms_delete">Напиши коментар</string>
+    <string name="pref_title_mms_delete">Напиши коментар</string>
+
+</resources>

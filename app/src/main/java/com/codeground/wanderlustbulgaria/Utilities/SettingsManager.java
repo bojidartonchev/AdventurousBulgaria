@@ -19,6 +19,7 @@ public class SettingsManager {
                 if(user.has("is_follow_allowed")){
                     isPrivate = !user.getBoolean("is_follow_allowed");
                 }
+                //Update other settings which are profile specific here
                 SharedPreferences.Editor prefs = PreferenceManager.getDefaultSharedPreferences(ctx).edit();
                 prefs.putBoolean("toggle_private_profile", isPrivate);
                 prefs.commit();

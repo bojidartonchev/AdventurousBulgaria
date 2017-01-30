@@ -12,6 +12,7 @@ import android.widget.VideoView;
 
 import com.codeground.wanderlustbulgaria.R;
 import com.codeground.wanderlustbulgaria.Utilities.AllLocationsManager;
+import com.codeground.wanderlustbulgaria.Utilities.LocaleUtils;
 
 public class SplashActivity extends Activity implements OnCompletionListener
 {
@@ -26,6 +27,9 @@ public class SplashActivity extends Activity implements OnCompletionListener
 
         setContentView(R.layout.activity_splash);
         PreferenceManager.setDefaultValues(this, R.xml.fragment_preference_settings, false);
+
+        //Init locale language
+        LocaleUtils.loadLocale(getBaseContext());
 
         VideoView video = (VideoView) findViewById(R.id.videoView);
         video.setVideoPath("android.resource://com.codeground.wanderlustbulgaria/raw/" + R.raw.splash);

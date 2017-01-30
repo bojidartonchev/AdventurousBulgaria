@@ -158,9 +158,6 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         mAllLandmarksBtn = (Button) findViewById(R.id.landmarks_btn);
         mAllLandmarksBtn.setOnClickListener(this);
         loadProfilePicture();
-
-        //This method will initialize the count value
-        initializeCountDrawer();
     }
 
     private void loadProfilePicture() {
@@ -184,6 +181,9 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     @Override
     protected void onResume() {
         super.onResume();
+
+        //This method will initialize the count value
+        initializeCountDrawer();
 
         if (mGoogleApiClient == null || !mGoogleApiClient.isConnected()) {
             buildGoogleApiClient();

@@ -6,7 +6,7 @@
 
     </string-array>
     <string-array name="languageAlias">
-        <item>"en_US"</item>
-        <item>"bg_BG"</item>
+        <item>"en"</item>
+        <item>"bg"</item>
     </string-array>
 </resources>
