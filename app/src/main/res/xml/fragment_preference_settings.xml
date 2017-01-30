@@ -39,6 +39,7 @@
             android:key="pref_key_language_preference"
             android:title="Language"
             android:entries="@array/Language"
-            android:entryValues="@array/languageAlias"/>
+            android:entryValues="@array/languageAlias"
+            android:defaultValue="en"/>
     </PreferenceCategory>
 </PreferenceScreen>
