@@ -5,6 +5,7 @@ import android.support.multidex.MultiDexApplication;
 import com.codeground.wanderlustbulgaria.Utilities.ParseUtils.ParseLocation;
 import com.parse.Parse;
 import com.parse.ParseFacebookUtils;
+import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 
 public class MainApplication extends MultiDexApplication {
@@ -24,5 +25,9 @@ public class MainApplication extends MultiDexApplication {
         //FacebookSdk.sdkInitialize(getApplicationContext());
         //AppEventsLogger.activateApp(this);
         ParseFacebookUtils.initialize(this);
+
+        ParseInstallation installation = ParseInstallation.getCurrentInstallation();
+        installation.put("GCMSenderId", "838294079504");
+        installation.saveInBackground();
     }
 }
