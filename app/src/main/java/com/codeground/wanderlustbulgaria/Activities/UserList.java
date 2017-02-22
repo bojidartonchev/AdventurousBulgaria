@@ -1,8 +1,10 @@
 package com.codeground.wanderlustbulgaria.Activities;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -47,11 +49,15 @@ public class UserList extends CustomActivity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_user_list);
-
-		getActionBar().setDisplayHomeAsUpEnabled(false);
         user = ParseUser.getCurrentUser();
 
 		updateUserStatus(true);
+
+        ActionBar actionBar = getActionBar();
+        if(actionBar != null)
+        {
+            actionBar.setTitle(R.string.messenger_btn);
+        }
         handler = new Handler();
 	}
 
@@ -65,7 +71,8 @@ public class UserList extends CustomActivity
 		updateUserStatus(false);
 	}
 
-	/* (non-Javadoc)
+	/* (non-Javado
+	c)
 	 * @see android.support.v4.app.FragmentActivity#onResume()
 	 */
 	@Override
@@ -126,6 +133,7 @@ public class UserList extends CustomActivity
 						public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 							Intent intent = new Intent(UserList.this, Chat.class);
 							intent.putExtra("username", uList.get(position).getUsername());
+							intent.putExtra("full_name", uList.get(position).getString("first_name") + " " + uList.get(position).getString("last_name"));
 							startActivity(intent);
 						}
 					});
@@ -189,7 +197,7 @@ public class UserList extends CustomActivity
 
 			ParseUser c = getItem(pos);
 			TextView lbl = (TextView) v;
-			lbl.setText(c.getString("first_name"));
+			lbl.setText(c.getString("first_name") + " " + c.getString("last_name"));
 			lbl.setCompoundDrawablesWithIntrinsicBounds(
 					c.getBoolean("online") ? R.drawable.ic_online
 							: R.drawable.ic_offline, 0, R.drawable.arrow, 0);
@@ -198,4 +206,15 @@ public class UserList extends CustomActivity
 		}
 
 	}
+
+    /* (non-Javadoc)
+     * @see android.app.Activity#onOptionsItemSelected(android.view.MenuItem)
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

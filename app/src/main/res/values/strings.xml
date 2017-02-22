@@ -3,7 +3,7 @@
     <string name="app_name">Wanderlust Bulgaria</string>
     <string name="profile_picture_title">Adventurous_Bulgaria_Profile_Picture</string>
     <string name="sign_up_hint_text">You don\'t have an account?</string>
-    <string name="messenger_btn">Messenger</string>
+    <string name="messenger_btn">Messages</string>
     <string name="near_by_button">Near By</string>
     <string name="calendar_button">Calendar</string>
     <string name="landmarks_button">Categories</string>

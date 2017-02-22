@@ -20,7 +20,6 @@ import android.widget.TextView;
 import com.codeground.wanderlustbulgaria.R;
 import com.codeground.wanderlustbulgaria.Utilities.Conversation;
 import com.parse.FindCallback;
-import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -98,20 +97,21 @@ public class Chat extends CustomActivity {
 
         buddyUsername = getIntent().getStringExtra("username");
 
-        ParseQuery q = ParseUser.getQuery().whereEqualTo("username", buddyUsername);
-        q.getFirstInBackground(new GetCallback<ParseUser>() {
-            @Override
-            public void done(ParseUser user, ParseException e) {
-                if(e!=null)
-                {
-                    buddy = user;
+        ActionBar actionBar = getActionBar();
+        if(actionBar != null){
+            actionBar.setTitle(getIntent().getStringExtra("full_name"));
+        }
 
-                    ActionBar actionBar = getActionBar();
-                    if(actionBar != null)
-                        actionBar.setTitle(buddy.getString("first_name"));
-                }
-            }
-        });
+        //ParseQuery q = ParseUser.getQuery().whereEqualTo("username", buddyUsername);
+        //q.getFirstInBackground(new GetCallback<ParseUser>() {
+        //    @Override
+        //    public void done(ParseUser user, ParseException e) {
+        //        if(e==null)
+        //        {
+        //            buddy = user;
+        //        }
+        //    }
+        //});
 
         handler = new Handler();
     }
