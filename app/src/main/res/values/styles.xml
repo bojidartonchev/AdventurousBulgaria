@@ -10,7 +10,7 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="ChatTheme" parent="Theme.AppCompat.Light">
+    <style name="ChatTheme" parent="AppTheme">
         <item name="android:windowActionBar">true</item>
         <item name="android:windowNoTitle">false</item>
     </style>
