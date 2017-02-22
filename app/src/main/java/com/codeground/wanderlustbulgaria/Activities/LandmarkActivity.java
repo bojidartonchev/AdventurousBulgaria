@@ -1,9 +1,13 @@
 package com.codeground.wanderlustbulgaria.Activities;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.codeground.wanderlustbulgaria.Fragments.LocationCommentsFragment;
@@ -21,11 +25,13 @@ import com.parse.ParseQuery;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
-public class LandmarkActivity extends AppCompatActivity{
+public class LandmarkActivity extends AppCompatActivity implements View.OnClickListener{
     private TextView mTitle;
     private TextView mLocation;
     private TextView mCity;
+    private Button mGpsBtn;
     private ParseLocation mCurrLocation;
     private ViewPager mPager;
     private ViewPager mPagerImages;
@@ -33,7 +39,8 @@ public class LandmarkActivity extends AppCompatActivity{
     private TabLayout mTabLayout;
     private LocationDescriptionFragment mDesc;
     private LocationCommentsFragment mComments;
-
+    private double mLat;
+    private double mLong;
     private ArrayList<ParseFile> mImages;
 
     @Override
@@ -44,7 +51,8 @@ public class LandmarkActivity extends AppCompatActivity{
         mTitle = (TextView) findViewById(R.id.landmark_title);
         mCity = (TextView) findViewById(R.id.landmark_location);
         mPagerImages = (ViewPager) findViewById(R.id.images_pager);
-
+        mGpsBtn = (Button) findViewById(R.id.gps_button);
+        mGpsBtn.setOnClickListener(this);
         final String locId = getIntent().getStringExtra("locationId");
         mPagerAdapter = new LocationPagerAdapter(getSupportFragmentManager());
         mPager = (ViewPager) findViewById(R.id.viewpager);
@@ -86,6 +94,8 @@ public class LandmarkActivity extends AppCompatActivity{
                     if(mCity!=null){
                         mCity.setText(mCurrLocation.getCity());
                     }
+                    mLat = mCurrLocation.getLocation().getLatitude();
+                    mLong = mCurrLocation.getLocation().getLongitude();
 
                     mImages = mCurrLocation.getPhotos();
 
@@ -100,5 +110,16 @@ public class LandmarkActivity extends AppCompatActivity{
             }
         });
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(v.getId()==R.id.gps_button){
+            String address = String.format(Locale.ENGLISH, "http://maps.google.com/maps?daddr=%f,%f (%s)", mLat, mLong, mCurrLocation.getName());
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(address));
+            intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
+            startActivity(intent);
+
+        }
     }
 }
