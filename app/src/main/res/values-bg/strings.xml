@@ -4,7 +4,7 @@
     <string name="app_name">Wanderlust Bulgaria</string>
     <string name="profile_picture_title">Adventurous_Bulgaria_Profile_Picture</string>
     <string name="sign_up_hint_text">Нямате акаунт?</string>
-    <string name="news_feed_btn">News Feed</string>
+    <string name="messenger_btn">Месинжъра</string>
     <string name="near_by_button">Наблизо</string>
     <string name="calendar_button">Календар</string>
     <string name="landmarks_button">Категории</string>

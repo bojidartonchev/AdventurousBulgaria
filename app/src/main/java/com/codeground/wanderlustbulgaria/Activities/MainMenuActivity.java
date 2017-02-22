@@ -95,7 +95,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
             Manifest.permission.READ_EXTERNAL_STORAGE
     };
 
-    private Button mNewsFeedBtn;
+    private Button mMessengerBtn;
     private Button mAllLandmarksBtn;
     private Button mNearByBtn;
     private Button mCalendarByBtn;
@@ -146,8 +146,8 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         mPersonName.setText(currUserName);
         mProfileView.setNavigationItemSelectedListener(this);
 
-        mNewsFeedBtn = (Button) findViewById(R.id.news_feed_btn);
-        mNewsFeedBtn.setOnClickListener(this);
+        mMessengerBtn = (Button) findViewById(R.id.messenger_btn);
+        mMessengerBtn.setOnClickListener(this);
 
         mNearByBtn = (Button) findViewById(R.id.near_by_button);
         mNearByBtn.setOnClickListener(this);
@@ -205,8 +205,8 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.news_feed_btn) {
-            Intent intent = new Intent(this, NewsFeedActivity.class);
+        if (v.getId() == R.id.messenger_btn) {
+            Intent intent = new Intent(this, UserList.class);
             startActivity(intent);
         }
         if (v.getId() == R.id.calendar_button) {

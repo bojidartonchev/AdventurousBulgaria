@@ -3,7 +3,7 @@
     <string name="app_name">Wanderlust Bulgaria</string>
     <string name="profile_picture_title">Adventurous_Bulgaria_Profile_Picture</string>
     <string name="sign_up_hint_text">You don\'t have an account?</string>
-    <string name="news_feed_btn">News Feed</string>
+    <string name="messenger_btn">Messenger</string>
     <string name="near_by_button">Near By</string>
     <string name="calendar_button">Calendar</string>
     <string name="landmarks_button">Categories</string>
@@ -147,5 +147,10 @@
     <string name="pref_summary_delete_limit">Write a comment</string>
     <string name="pref_title_sms_delete">Write a comment</string>
     <string name="pref_title_mms_delete">Write a comment</string>
+
+    <!-- CHAT-->
+    <string name="delivered_text">Delivered</string>
+    <string name="sending_text">Sending...</string>
+    <string name="failed_text">Failed</string>
 
 </resources>
