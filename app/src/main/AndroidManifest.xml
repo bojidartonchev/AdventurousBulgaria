@@ -47,7 +47,8 @@
         <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="com.codeground.adventurousbulgaria" />
 
         <activity android:name="com.codeground.wanderlustbulgaria.Activities.SplashActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
