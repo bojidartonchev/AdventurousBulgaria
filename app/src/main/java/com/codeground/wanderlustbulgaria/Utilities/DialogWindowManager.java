@@ -21,4 +21,12 @@ public class DialogWindowManager {
         }
     }
 
+    public static boolean isShowing(){
+        if(mProgressDialog != null) {
+            return mProgressDialog.isShowing();
+        }
+
+        return false;
+    }
+
 }

@@ -2,6 +2,7 @@ package com.codeground.wanderlustbulgaria.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -32,6 +33,12 @@ public class UserList extends CustomActivity
 	/** The user. */
 	public static ParseUser user;
 
+    /** Flag to hold if the activity is running or not */
+    private boolean isRunning;
+
+    /** The handler */
+    private static Handler handler;
+
 	/* (non-Javadoc)
 	 * @see android.support.v4.app.FragmentActivity#onCreate(android.os.Bundle)
 	 */
@@ -45,6 +52,7 @@ public class UserList extends CustomActivity
         user = ParseUser.getCurrentUser();
 
 		updateUserStatus(true);
+        handler = new Handler();
 	}
 
 	/* (non-Javadoc)
@@ -64,9 +72,19 @@ public class UserList extends CustomActivity
 	protected void onResume()
 	{
 		super.onResume();
+        isRunning = true;
 		loadUserList();
 
 	}
+
+    /* (non-Javadoc)
+     * @see android.support.v4.app.FragmentActivity#onPause()
+     */
+    @Override
+    protected void onPause() {
+        super.onPause();
+        isRunning = false;
+    }
 
 	/**
 	 * Update user status.
@@ -85,7 +103,10 @@ public class UserList extends CustomActivity
 	 */
 	private void loadUserList()
 	{
-		DialogWindowManager.show(this);
+        if(uList==null){
+            //first loading... the screen is empty now
+            DialogWindowManager.show(this);
+        }
 
 		ParseUser.getQuery().whereNotEqualTo("username", user.getUsername()).findInBackground(new FindCallback<ParseUser>() {
 			@Override
@@ -111,6 +132,14 @@ public class UserList extends CustomActivity
 				}else{
                     //TODO notify error with custom dialog
                 }
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(isRunning){
+                            loadUserList();
+                        }
+                    }
+                },5000);
 			}
 		});
 	}
