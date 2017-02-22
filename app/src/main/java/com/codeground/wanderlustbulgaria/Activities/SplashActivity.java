@@ -7,7 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.codeground.wanderlustbulgaria.R;
 import com.codeground.wanderlustbulgaria.Utilities.AllLocationsManager;
-
+import com.codeground.wanderlustbulgaria.Utilities.LocaleUtils;
 
 
 public class SplashActivity extends AppCompatActivity
@@ -18,6 +18,9 @@ public class SplashActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         PreferenceManager.setDefaultValues(this, R.xml.fragment_preference_settings, false);
+
+        //Init locale language
+        LocaleUtils.loadLocale(getBaseContext());
 
         AllLocationsManager.getInstance().loadLocations();
 
