@@ -36,7 +36,7 @@ import java.util.List;
  * all the conversation messages between two users and also allows the user to
  * send and receive messages.
  */
-public class Chat extends CustomActivity {
+public class ChatActivity extends CustomActivity {
 
     /**
      * The Conversation list.
@@ -161,7 +161,7 @@ public class Chat extends CustomActivity {
 
         String s = txt.getText().toString();
 
-        final Conversation c = new Conversation(s, new Date(), UserList.user.getUsername());
+        final Conversation c = new Conversation(s, new Date(), UserListActivity.user.getUsername());
         c.setStatus(Conversation.STATUS_SENDING);
         convList.add(c);
         adp.notifyDataSetChanged();
@@ -169,7 +169,7 @@ public class Chat extends CustomActivity {
 
         //send the message
         ParseObject obj = new ParseObject("Chat");
-        obj.put("sender", UserList.user.getUsername());
+        obj.put("sender", UserListActivity.user.getUsername());
         obj.put("receiver", buddyUsername);
         obj.put("message", s);
         obj.saveEventually(new SaveCallback() {
@@ -199,7 +199,7 @@ public class Chat extends CustomActivity {
             //load all messages...
             ArrayList<String> all = new ArrayList<>();
             all.add(buddyUsername);
-            all.add(UserList.user.getUsername());
+            all.add(UserListActivity.user.getUsername());
             q.whereContainedIn("sender", all);
             q.whereContainedIn("receiver", all);
         }else{
@@ -208,7 +208,7 @@ public class Chat extends CustomActivity {
                 q.whereGreaterThan("createdAt", lastMsgDate);
             }
             q.whereEqualTo("sender", buddyUsername);
-            q.whereEqualTo("receiver", UserList.user.getUsername());
+            q.whereEqualTo("receiver", UserListActivity.user.getUsername());
         }
         q.orderByDescending("createdAt");
         q.setLimit(30);
@@ -286,7 +286,7 @@ public class Chat extends CustomActivity {
                 v = getLayoutInflater().inflate(R.layout.chat_item_rcv, null);
 
             TextView lbl = (TextView) v.findViewById(R.id.lbl1);
-            lbl.setText(DateUtils.getRelativeDateTimeString(Chat.this, c
+            lbl.setText(DateUtils.getRelativeDateTimeString(ChatActivity.this, c
                             .getDate().getTime(), DateUtils.SECOND_IN_MILLIS,
                     DateUtils.DAY_IN_MILLIS, 0));
 

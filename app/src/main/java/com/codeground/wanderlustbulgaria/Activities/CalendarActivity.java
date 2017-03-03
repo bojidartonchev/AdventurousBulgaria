@@ -63,6 +63,10 @@ public class CalendarActivity extends AppCompatActivity implements View.OnClickL
         query.findInBackground(new FindCallback<ParseTraveller>() {
             @Override
             public void done(List<ParseTraveller> objects, ParseException e) {
+                if(e!=null || objects ==null){
+                    return;
+                }
+
                 for (int i = 0; i < objects.size(); i++) {
                     final ParseObject object = objects.get(i);
 

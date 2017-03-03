@@ -27,7 +27,7 @@ import java.util.List;
  * The Class UserList is the Activity class. It shows a list of all users of
  * this app. It also shows the Offline/Online status of users.
  */
-public class UserList extends CustomActivity
+public class UserListActivity extends CustomActivity
 {
 	/** The Chat list. */
 	private ArrayList<ParseUser> uList;
@@ -131,7 +131,7 @@ public class UserList extends CustomActivity
 					list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 						@Override
 						public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-							Intent intent = new Intent(UserList.this, Chat.class);
+							Intent intent = new Intent(UserListActivity.this, ChatActivity.class);
 							intent.putExtra("username", uList.get(position).getUsername());
 							intent.putExtra("full_name", uList.get(position).getString("first_name") + " " + uList.get(position).getString("last_name"));
 							startActivity(intent);

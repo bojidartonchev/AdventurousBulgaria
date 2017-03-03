@@ -8,13 +8,11 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
-import android.location.Location;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
@@ -35,25 +33,10 @@ import com.codeground.wanderlustbulgaria.BroadcastReceivers.BootReceiver;
 import com.codeground.wanderlustbulgaria.Fragments.ProfileFragment;
 import com.codeground.wanderlustbulgaria.Interfaces.IOnFacebookProfileImageUploadCompleted;
 import com.codeground.wanderlustbulgaria.R;
-import com.codeground.wanderlustbulgaria.Utilities.AllLocationsManager;
-import com.codeground.wanderlustbulgaria.Utilities.LocationMarker;
-import com.codeground.wanderlustbulgaria.Utilities.ParseUtils.ParseLocation;
 import com.codeground.wanderlustbulgaria.Utilities.ParseUtils.ParseUtilities;
 import com.codeground.wanderlustbulgaria.Utilities.ProfileManager;
 import com.codeground.wanderlustbulgaria.Utilities.SettingsManager;
 import com.codeground.wanderlustbulgaria.Utilities.UploadFacebookProfileImageTask;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.maps.android.clustering.Cluster;
-import com.google.maps.android.clustering.ClusterItem;
-import com.google.maps.android.clustering.ClusterManager;
 import com.parse.CountCallback;
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
@@ -61,20 +44,9 @@ import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
-import java.util.List;
-
-
 public class MainMenuActivity extends AppCompatActivity implements View.OnClickListener,
         NavigationView.OnNavigationItemSelectedListener,
-        OnMapReadyCallback,
-        GoogleMap.OnMapLoadedCallback,
-        GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener,
-        IOnFacebookProfileImageUploadCompleted,ClusterManager.OnClusterClickListener<LocationMarker>,
-        ClusterManager.OnClusterInfoWindowClickListener<LocationMarker>,
-        ClusterManager.OnClusterItemClickListener<LocationMarker>,
-        ClusterManager.OnClusterItemInfoWindowClickListener<LocationMarker>  {
-
+        IOnFacebookProfileImageUploadCompleted  {
     private static final int INITIAL_REQUEST = 1337;
     private static final int CAMERA_TAKE_PHOTO = 1338;
     private static final int CAMERA_REQUEST = 1339;
@@ -95,21 +67,16 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
             Manifest.permission.READ_EXTERNAL_STORAGE
     };
 
+    //Side Navigation Drawer
     private Button mMessengerBtn;
     private Button mAllLandmarksBtn;
     private Button mNearByBtn;
     private Button mCalendarByBtn;
 
-    private GoogleMap mMap;
-    private GoogleApiClient mGoogleApiClient;
-    private Location mLastLocation;
-
     private TextView mPersonName;
     private NavigationView mProfileView;
     private ImageView mProfilePicture;
     private TextView mPendingFollowersBadge;
-
-    private ClusterManager mClusterManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,6 +124,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
         mAllLandmarksBtn = (Button) findViewById(R.id.landmarks_btn);
         mAllLandmarksBtn.setOnClickListener(this);
+
         loadProfilePicture();
     }
 
@@ -184,29 +152,17 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
         //This method will initialize the count value
         initializeCountDrawer();
-
-        if (mGoogleApiClient == null || !mGoogleApiClient.isConnected()) {
-            buildGoogleApiClient();
-            mGoogleApiClient.connect();
-        }
-
-        if (mMap == null) {
-            SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-
-            mapFragment.getMapAsync(this);
-        }
     }
 
     @Override
     protected void onStop() {
-        mGoogleApiClient.disconnect();
         super.onStop();
     }
 
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.messenger_btn) {
-            Intent intent = new Intent(this, UserList.class);
+            Intent intent = new Intent(this, UserListActivity.class);
             startActivity(intent);
         }
         if (v.getId() == R.id.calendar_button) {
@@ -232,13 +188,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
             case INITIAL_REQUEST:
                 if ((grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED) && (grantResults[1] == PackageManager.PERMISSION_GRANTED)) {
-                    onConnected(null);
-                    //startLocationService();
                     BootReceiver.scheduleAlarm(this);
-                    if(mMap !=null){
-                        //noinspection MissingPermission you kidding me?
-                        mMap.setMyLocationEnabled(true);
-                    }
                 } else {
                     Toast.makeText(this, getString(R.string.alert_no_gps), Toast.LENGTH_LONG).show();
                 }
@@ -263,82 +213,6 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            googleMap.setMyLocationEnabled(true);
-        }
-        googleMap.setOnMapLoadedCallback(this);
-        googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-
-        mClusterManager = new ClusterManager<LocationMarker>(this, googleMap);
-        mClusterManager.setOnClusterClickListener(this);
-        mClusterManager.setOnClusterInfoWindowClickListener(this);
-        mClusterManager.setOnClusterItemClickListener(this);
-        mClusterManager.setOnClusterItemInfoWindowClickListener(this);
-        googleMap.setOnCameraIdleListener(mClusterManager);
-        googleMap.setOnMarkerClickListener(mClusterManager);
-        googleMap.setOnInfoWindowClickListener(mClusterManager);
-
-    }
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
-                    mGoogleApiClient);
-
-            loadMarkersOnMap();
-        }
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }
-
-    protected synchronized void buildGoogleApiClient() {
-        //Toast.makeText(this, "buildGoogleApiClient", Toast.LENGTH_SHORT).show();
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
-    }
-
-    @Override
-    public void onMapLoaded() {
-        if (mLastLocation != null) {
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()), 8));
-        }
-    }
-
-    private void checkForPermissions() {
-        if (ContextCompat.checkSelfPermission(this,
-                INITIAL_PERMS[0])
-                != PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(this,
-                        INITIAL_PERMS[1])
-                        != PackageManager.PERMISSION_GRANTED) {
-
-            // No explanation needed, we can request the permission.
-            ActivityCompat.requestPermissions(this,
-                    INITIAL_PERMS,
-                    INITIAL_REQUEST);
-
-        }else{
-            BootReceiver.scheduleAlarm(this);
-        }
-    }
     private void checkGalleryPerms(){
         if (ContextCompat.checkSelfPermission(this,STORAGE_PERMS[0])
                 != PackageManager.PERMISSION_GRANTED) {
@@ -394,12 +268,6 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
             logout();
         }
 
-        if(id == R.id.nav_last_visited_locations){
-            Intent i = new Intent(getApplicationContext(), AllLandmarksActivity.class);
-            i.putExtra("allCompletedOnly", true);
-            startActivity(i);
-        }
-
         if(id == R.id.nav_my_profile){
             Intent intent = new Intent(getApplicationContext(), UserHomeActivity.class);
             intent.putExtra("userID", ParseUser.getCurrentUser().getObjectId());
@@ -418,6 +286,24 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         }
 
         return false;
+    }
+
+    private void checkForPermissions() {
+        if (ContextCompat.checkSelfPermission(this,
+                INITIAL_PERMS[0])
+                != PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(this,
+                        INITIAL_PERMS[1])
+                        != PackageManager.PERMISSION_GRANTED) {
+
+            // No explanation needed, we can request the permission.
+            ActivityCompat.requestPermissions(this,
+                    INITIAL_PERMS,
+                    INITIAL_REQUEST);
+
+        }else{
+            BootReceiver.scheduleAlarm(this);
+        }
     }
 
     @Override
@@ -504,62 +390,8 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         });
     }
 
-    private void loadMarkersOnMap(){
-        if(AllLocationsManager.getInstance().isLoaded()){
-            List<ParseLocation> locations = AllLocationsManager.getInstance().getLocations();
-            if(mMap != null){
-                for (ParseLocation location : locations) {
-                    Location loc = new Location("");
-                    loc.setLatitude(location.getLocation().getLatitude());
-                    loc.setLongitude(location.getLocation().getLongitude());
-                    LocationMarker marker = new LocationMarker(loc.getLatitude(), loc.getLongitude(), location.getName(), location.getIcon());
-                    mClusterManager.addItem(marker);
-                }
-            }
-        }
-    }
-
     @Override
     public void onProfileImageUploadCompleted() {
         this.loadProfilePicture();
-    }
-
-    @Override
-    public boolean onClusterClick(Cluster<LocationMarker> cluster) {
-        // Zoom in the cluster. Need to create LatLngBounds and including all the cluster items
-        // inside of bounds, then animate to center of the bounds.
-
-        // Create the builder to collect all essential cluster items for the bounds.
-        LatLngBounds.Builder builder = LatLngBounds.builder();
-        for (ClusterItem item : cluster.getItems()) {
-            builder.include(item.getPosition());
-        }
-        // Get the LatLngBounds
-        final LatLngBounds bounds = builder.build();
-
-        // Animate camera to the bounds
-        try {
-            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return true;
-    }
-
-    @Override
-    public void onClusterInfoWindowClick(Cluster<LocationMarker> cluster) {
-        // Does nothing, but you could go to a list of the users.
-    }
-
-    @Override
-    public boolean onClusterItemClick(LocationMarker item) {
-        // Does nothing, but you could go into the user's profile page, for example.
-        return true;
-    }
-
-    @Override
-    public void onClusterItemInfoWindowClick(LocationMarker item) {
-        // Does nothing, but you could go into the user's profile page, for example.
     }
 }

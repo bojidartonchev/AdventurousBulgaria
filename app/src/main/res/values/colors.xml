@@ -11,12 +11,12 @@
     <color name="backgroundColor">#2e343f</color>
     <color name="black">#212121</color>
 
-    <color name="menuColor1">#95b118</color>
-    <color name="menuColor2">#accf14</color>
-    <color name="menuColor3">#b0d50f</color>
-    <color name="menuColor4">#aacb18</color>
-    <color name="menuColor5">#99b811</color>
-    <color name="menuColor6">#9fbb22</color>
+    <color name="menuColor1">#F05656</color>
+    <color name="menuColor2">#EF8889</color>
+    <color name="menuColor3">#1EAE93</color>
+    <color name="menuColor4">#69C7B5</color>
+    <color name="menuColor5">#0E83A6</color>
+    <color name="menuColor6">#48A3B8</color>
 
     <color name="button_blue">#4FC1FF</color>
     <color name="hint_color">#808080</color>
