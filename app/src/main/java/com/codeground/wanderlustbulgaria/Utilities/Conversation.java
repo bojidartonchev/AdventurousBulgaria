@@ -1,7 +1,7 @@
 package com.codeground.wanderlustbulgaria.Utilities;
 
 
-import com.codeground.wanderlustbulgaria.Activities.UserListActivity;
+import com.parse.ParseUser;
 
 import java.util.Date;
 
@@ -77,7 +77,7 @@ public class Conversation
 	 */
 	public boolean isSent()
 	{
-		return UserListActivity.user.getUsername().equals(sender);
+		return ParseUser.getCurrentUser().getUsername().equals(sender);
 	}
 
 	/**

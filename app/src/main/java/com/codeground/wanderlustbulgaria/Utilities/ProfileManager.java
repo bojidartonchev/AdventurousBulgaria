@@ -62,5 +62,4 @@ public class ProfileManager {
             ParseCloud.callFunctionInBackground("unfollowUser", params, cb);
         }
     }
-
 }

@@ -161,7 +161,7 @@ public class ChatActivity extends CustomActivity {
 
         String s = txt.getText().toString();
 
-        final Conversation c = new Conversation(s, new Date(), UserListActivity.user.getUsername());
+        final Conversation c = new Conversation(s, new Date(), ParseUser.getCurrentUser().getUsername());
         c.setStatus(Conversation.STATUS_SENDING);
         convList.add(c);
         adp.notifyDataSetChanged();
@@ -169,7 +169,7 @@ public class ChatActivity extends CustomActivity {
 
         //send the message
         ParseObject obj = new ParseObject("Chat");
-        obj.put("sender", UserListActivity.user.getUsername());
+        obj.put("sender", ParseUser.getCurrentUser().getUsername());
         obj.put("receiver", buddyUsername);
         obj.put("message", s);
         obj.saveEventually(new SaveCallback() {
@@ -199,7 +199,7 @@ public class ChatActivity extends CustomActivity {
             //load all messages...
             ArrayList<String> all = new ArrayList<>();
             all.add(buddyUsername);
-            all.add(UserListActivity.user.getUsername());
+            all.add(ParseUser.getCurrentUser().getUsername());
             q.whereContainedIn("sender", all);
             q.whereContainedIn("receiver", all);
         }else{
@@ -208,7 +208,7 @@ public class ChatActivity extends CustomActivity {
                 q.whereGreaterThan("createdAt", lastMsgDate);
             }
             q.whereEqualTo("sender", buddyUsername);
-            q.whereEqualTo("receiver", UserListActivity.user.getUsername());
+            q.whereEqualTo("receiver", ParseUser.getCurrentUser().getUsername());
         }
         q.orderByDescending("createdAt");
         q.setLimit(30);
