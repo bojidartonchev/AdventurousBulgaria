@@ -12,6 +12,7 @@ import android.support.v4.app.NotificationCompat;
 
 import com.codeground.wanderlustbulgaria.Activities.SplashActivity;
 import com.codeground.wanderlustbulgaria.R;
+import com.codeground.wanderlustbulgaria.Utilities.LifecycleHandler;
 import com.parse.ParsePushBroadcastReceiver;
 
 import org.json.JSONException;
@@ -25,11 +26,17 @@ import static com.codeground.wanderlustbulgaria.R.string.app_name;
 public class ParsePushCustomReceiver extends ParsePushBroadcastReceiver {
 
     private Class DEFAULT_ACTIVITY = SplashActivity.class;
-    private final int NOTIFICATION_ID = 237;
-    private static int value = 0;
 
     @Override
     protected void onPushReceive(Context context, Intent intent) {
+        if(LifecycleHandler.isApplicationInForeground()){
+            //in-app notification
+        }else{
+            sendPushNotification(context, intent);
+        }
+    }
+
+    private void sendPushNotification(Context context, Intent intent){
         try {
             Bundle extras = intent.getExtras();
             if (extras != null) {
@@ -67,6 +74,9 @@ public class ParsePushCustomReceiver extends ParsePushBroadcastReceiver {
                     }
                 }
 
+                // Sets an ID for the notification
+                int mNotificationId = 001;
+
                 if(json.has("extras")){
                     JSONObject extrasJson = json.getJSONObject("extras");
 
@@ -75,6 +85,13 @@ public class ParsePushCustomReceiver extends ParsePushBroadcastReceiver {
                         while (temp.hasNext()) {
                             String key = temp.next();
                             String value = extrasJson.getString(key);
+
+                            if(key.equals("username"))
+                            {
+                                //message notification
+                                //just for testing
+                                mNotificationId = value.length();
+                            }
 
                             i.putExtra(key, value);
                         }
@@ -104,8 +121,6 @@ public class ParsePushCustomReceiver extends ParsePushBroadcastReceiver {
                 Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
                 mBuilder.setSound(alarmSound);
 
-                // Sets an ID for the notification
-                int mNotificationId = 001;
                 // Gets an instance of the NotificationManager service
                 NotificationManager mNotifyMgr =
                         (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
