@@ -10,7 +10,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.codeground.wanderlustbulgaria.R;
 import com.codeground.wanderlustbulgaria.Utilities.DialogWindowManager;
@@ -120,8 +119,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
                 } else {
                     DialogWindowManager.dismiss();
-                    CharSequence text = "Wrong username or password.";
-                    Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
+                    NotificationsManager.showToast("Wrong username or password.", TastyToast.ERROR);
                 }
             }
         });
@@ -209,7 +207,12 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         user.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
-                switchToMainMenu();
+                if(e==null){
+                    switchToMainMenu();
+                }else{
+                    NotificationsManager.showToast(e.getMessage(), TastyToast.ERROR);
+                }
+
             }
         });
     }

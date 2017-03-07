@@ -6,14 +6,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.codeground.wanderlustbulgaria.R;
 import com.codeground.wanderlustbulgaria.Utilities.DialogWindowManager;
+import com.codeground.wanderlustbulgaria.Utilities.NotificationsManager;
 import com.codeground.wanderlustbulgaria.Utilities.SettingsManager;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
+import com.sdsmdg.tastytoast.TastyToast;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -59,30 +60,30 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
         if(!validateEmail(mEmailField.getText().toString())) {
             //Invalid email
-            Toast.makeText(this, getString(R.string.alert_invalid_email), Toast.LENGTH_SHORT).show();
+            NotificationsManager.showToast(getString(R.string.alert_invalid_email), TastyToast.ERROR);
             DialogWindowManager.dismiss();
             return;
         }
         if(mFirstNameField.getText().toString().length()<3 || mFirstNameField.getText().toString().length()>12){
-            Toast.makeText(this, getString(R.string.alert_first_name_length), Toast.LENGTH_SHORT).show();
+            NotificationsManager.showToast(getString(R.string.alert_first_name_length), TastyToast.ERROR);
             DialogWindowManager.dismiss();
             return;
         }
         if(mLastNameField.getText().toString().length()<3 || mLastNameField.getText().toString().length()>12){
-            Toast.makeText(this, getString(R.string.alert_last_name_length), Toast.LENGTH_SHORT).show();
+            NotificationsManager.showToast(getString(R.string.alert_last_name_length), TastyToast.ERROR);
             DialogWindowManager.dismiss();
             return;
         }
 
         if(mPasswordField.getText().toString().length()<5 || mPasswordField.getText().toString().length()>12){
-            Toast.makeText(this, getString(R.string.alert_password_length), Toast.LENGTH_SHORT).show();
+            NotificationsManager.showToast(getString(R.string.alert_password_length), TastyToast.ERROR);
             DialogWindowManager.dismiss();
             return;
         }
 
         if(password.equals(confirmPassword)==false){
             //Passwords do not match
-            Toast.makeText(this, getString(R.string.alert_password_nomatch), Toast.LENGTH_SHORT).show();
+            NotificationsManager.showToast(getString(R.string.alert_password_nomatch), TastyToast.ERROR);
             DialogWindowManager.dismiss();
             return;
         }
@@ -107,9 +108,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                     Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
                     startActivity(intent);
                 } else {
-                    CharSequence text = getString(R.string.alert_signup_fail);
-                    e.printStackTrace();
-                    Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
+                    NotificationsManager.showToast(e.getMessage(), TastyToast.ERROR);
                 }
             }
         });
