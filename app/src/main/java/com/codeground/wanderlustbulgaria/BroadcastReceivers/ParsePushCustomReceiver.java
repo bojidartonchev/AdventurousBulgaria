@@ -1,5 +1,6 @@
 package com.codeground.wanderlustbulgaria.BroadcastReceivers;
 
+import android.app.Activity;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -13,6 +14,8 @@ import android.support.v4.app.NotificationCompat;
 import com.codeground.wanderlustbulgaria.Activities.SplashActivity;
 import com.codeground.wanderlustbulgaria.R;
 import com.codeground.wanderlustbulgaria.Utilities.LifecycleHandler;
+import com.codeground.wanderlustbulgaria.Utilities.NotificationsManager;
+import com.devspark.appmsg.AppMsg;
 import com.parse.ParsePushBroadcastReceiver;
 
 import org.json.JSONException;
@@ -29,37 +32,58 @@ public class ParsePushCustomReceiver extends ParsePushBroadcastReceiver {
 
     @Override
     protected void onPushReceive(Context context, Intent intent) {
-        if(LifecycleHandler.isApplicationInForeground()){
-            //in-app notification
-        }else{
-            sendPushNotification(context, intent);
-        }
-    }
+        Bundle extras = intent.getExtras();
 
-    private void sendPushNotification(Context context, Intent intent){
-        try {
-            Bundle extras = intent.getExtras();
-            if (extras != null) {
+        if (extras != null) {
+            try {
                 String jsonData = extras.getString("com.parse.Data");
                 JSONObject json;
                 json = new JSONObject(jsonData);
 
+                if(LifecycleHandler.isApplicationInForeground()){
+                    sendInAppNotification(LifecycleHandler.getCurrentActivity(), json);
+                }else{
+                    sendPushNotification(context, json);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void sendInAppNotification(Activity activity, JSONObject data){
+        String pushContent = activity.getString(app_name);
+
+        if (data.has("alert")) {
+            try {
+                pushContent = data.getString("alert");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        NotificationsManager.showDropDownNotification(activity, pushContent, AppMsg.STYLE_ALERT);
+    }
+
+    private void sendPushNotification(Context context, JSONObject data){
+        try {
+            if (data != null) {
                 String pushTitle = context.getString(app_name);
 
-                if(json.has("title")){
-                    pushTitle = json.getString("title");
+                if(data.has("title")){
+                    pushTitle = data.getString("title");
                 }
 
                 String pushContent = context.getString(app_name);
 
-                if(json.has("alert")){
-                    pushTitle = json.getString("alert");
+                if(data.has("alert")){
+                    pushContent = data.getString("alert");
                 }
 
                 Intent i = new Intent(context, DEFAULT_ACTIVITY);
 
-                if(json.has("target_activity")){
-                    String activityName = json.getString("target_activity");
+                if(data.has("target_activity")){
+                    String activityName = data.getString("target_activity");
 
                     Class<?> c = null;
                     if(activityName != null) {
@@ -77,8 +101,8 @@ public class ParsePushCustomReceiver extends ParsePushBroadcastReceiver {
                 // Sets an ID for the notification
                 int mNotificationId = 001;
 
-                if(json.has("extras")){
-                    JSONObject extrasJson = json.getJSONObject("extras");
+                if(data.has("extras")){
+                    JSONObject extrasJson = data.getJSONObject("extras");
 
                     try {
                         Iterator<String> temp = extrasJson.keys();

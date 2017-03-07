@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.codeground.wanderlustbulgaria.R;
 import com.codeground.wanderlustbulgaria.Utilities.DialogWindowManager;
+import com.codeground.wanderlustbulgaria.Utilities.NotificationsManager;
 import com.codeground.wanderlustbulgaria.Utilities.SettingsManager;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
@@ -23,6 +24,7 @@ import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+import com.sdsmdg.tastytoast.TastyToast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -85,7 +87,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                                 //Attempt to login with user credentials
                                 login(mEmailField.getText().toString(),mPasswordField.getText().toString());
                             } catch (Exception e) {
-                                e.printStackTrace();
+                                NotificationsManager.showToast(e.getMessage(), TastyToast.ERROR);
                             }
                         }
                     }).start();
@@ -101,7 +103,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                             //Attempt to login with user credentials
                             loginFacebookUser();
                         } catch (Exception e) {
-                            e.printStackTrace();
+                            NotificationsManager.showToast(e.getMessage(), TastyToast.ERROR);
                         }
                     }
                 }).start();
@@ -131,6 +133,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             public void done(ParseUser user, ParseException err) {
                 if (user == null) {
                     DialogWindowManager.dismiss();
+                    NotificationsManager.showToast("Uh oh. The user cancelled the Facebook login.", TastyToast.ERROR);
                     Log.d("MyApp", "Uh oh. The user cancelled the Facebook login.");
                 } else if (user.isNew()) {
                     Log.d("MyApp", "User signed up and logged in through Facebook!");

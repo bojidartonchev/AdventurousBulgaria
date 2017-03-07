@@ -6,6 +6,9 @@ import android.os.Bundle;
 
 
 public class LifecycleHandler implements Application.ActivityLifecycleCallbacks {
+
+    private static Activity mCurrentActivity;
+
     private static int mResumed;
     private static int mPaused;
     private static int mStarted;
@@ -13,7 +16,6 @@ public class LifecycleHandler implements Application.ActivityLifecycleCallbacks 
 
     @Override
     public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-
     }
 
     @Override
@@ -24,11 +26,13 @@ public class LifecycleHandler implements Application.ActivityLifecycleCallbacks 
     @Override
     public void onActivityResumed(Activity activity) {
         ++mResumed;
+        mCurrentActivity = activity;
     }
 
     @Override
     public void onActivityPaused(Activity activity) {
         ++mPaused;
+        mCurrentActivity = null;
     }
 
     @Override
@@ -38,12 +42,10 @@ public class LifecycleHandler implements Application.ActivityLifecycleCallbacks 
 
     @Override
     public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
-
     }
 
     @Override
     public void onActivityDestroyed(Activity activity) {
-
     }
 
     public static boolean isApplicationVisible() {
@@ -52,5 +54,9 @@ public class LifecycleHandler implements Application.ActivityLifecycleCallbacks 
 
     public static boolean isApplicationInForeground() {
         return mResumed > mPaused;
+    }
+
+    public static Activity getCurrentActivity(){
+        return mCurrentActivity;
     }
 }
