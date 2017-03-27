@@ -3,126 +3,30 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" android:id="@+id/drawer_layout"
     android:layout_width="match_parent" android:layout_height="match_parent"
-    android:fitsSystemWindows="true" tools:openDrawer="start">
+    tools:openDrawer="start">
 
     <include layout="@layout/fragment_profile_container" android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:background="@color/backgroundColor"
         android:layout_height="match_parent"
->
+        android:orientation="vertical">
 
-        <LinearLayout
+        <android.support.design.widget.TabLayout
+            android:id="@+id/main_menu_tabs"
+            style="@style/locationTabLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:tabMode="fixed" />
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/main_menu_viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="0px"
             android:layout_weight="1"
-            android:weightSum="1">
-
-
-            <Button
-                android:text="@string/messenger_btn"
-                android:background="@color/menuColor1"
-                android:id="@+id/empty_btn1"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.5"
-                android:textColor="@color/white_smoke"
-                android:textAllCaps="false"
-                android:drawableTop="@drawable/message_icon"
-                android:drawableTint="@color/white_smoke"
-                android:paddingTop="50dp"
-                />
-
-            <Button
-                android:text="@string/landmarks_button"
-                android:background="@color/menuColor2"
-                android:layout_width="0dp"
-                android:layout_weight="0.5"
-                android:layout_height="match_parent"
-                android:id="@+id/empty_btn2"
-                android:textColor="@color/white_smoke"
-                android:textAllCaps="false"
-                android:drawableTop="@drawable/message_icon"
-                android:drawableTint="@color/white_smoke"
-                android:paddingTop="50dp"
-                />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:weightSum="1"
-            android:layout_weight="1">
-
-            <Button
-                android:text="@string/messenger_btn"
-                android:background="@color/menuColor3"
-                android:id="@+id/messenger_btn"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.5"
-                android:textColor="@color/white_smoke"
-                android:textAllCaps="false"
-                android:drawableTop="@drawable/message_icon"
-                android:drawableTint="@color/white_smoke"
-                android:paddingTop="50dp"
-                />
-
-            <Button
-                android:text="@string/landmarks_button"
-                android:background="@color/menuColor4"
-                android:layout_width="0dp"
-                android:layout_weight="0.5"
-                android:layout_height="match_parent"
-                android:id="@+id/landmarks_btn"
-                android:textColor="@color/white_smoke"
-                android:textAllCaps="false"
-                android:drawableTop="@drawable/message_icon"
-                android:drawableTint="@color/white_smoke"
-                android:paddingTop="50dp"
-                />
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:weightSum="1"
-            android:layout_weight="1"
-            >
-
-            <Button
-                android:text="@string/near_by_button"
-                android:background="@color/menuColor5"
-                android:id="@+id/near_by_button"
-                android:layout_width="0dp"
-                android:layout_weight="0.5"
-                android:layout_height="match_parent"
-                android:textColor="@color/white_smoke"
-                android:textAllCaps="false"
-                android:drawableTop="@drawable/message_icon"
-                android:drawableTint="@color/white_smoke"
-                android:paddingTop="50dp"
-                />
-
-            <Button
-                android:text="@string/calendar_button"
-                android:background="@color/menuColor6"
-                android:layout_width="0dp"
-                android:layout_weight="0.5"
-                android:layout_height="match_parent"
-                android:id="@+id/calendar_button"
-                android:textColor="@color/white_smoke"
-                android:textAllCaps="false"
-                android:drawableTop="@drawable/message_icon"
-                android:drawableTint="@color/white_smoke"
-                android:paddingTop="50dp"
-                />
-        </LinearLayout>
+            android:background="@android:color/white" />
 
     </LinearLayout>
 

@@ -14,17 +14,18 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,6 +34,7 @@ import com.codeground.wanderlustbulgaria.BroadcastReceivers.BootReceiver;
 import com.codeground.wanderlustbulgaria.Fragments.ProfileFragment;
 import com.codeground.wanderlustbulgaria.Interfaces.IOnFacebookProfileImageUploadCompleted;
 import com.codeground.wanderlustbulgaria.R;
+import com.codeground.wanderlustbulgaria.Utilities.Adapters.MainMenuPagerAdapter;
 import com.codeground.wanderlustbulgaria.Utilities.ParseUtils.ParseUtilities;
 import com.codeground.wanderlustbulgaria.Utilities.ProfileManager;
 import com.codeground.wanderlustbulgaria.Utilities.SettingsManager;
@@ -44,9 +46,10 @@ import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
-public class MainMenuActivity extends AppCompatActivity implements View.OnClickListener,
-        NavigationView.OnNavigationItemSelectedListener,
-        IOnFacebookProfileImageUploadCompleted  {
+public class MainMenuActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
+        IOnFacebookProfileImageUploadCompleted,
+        TabLayout.OnTabSelectedListener,
+        View.OnClickListener{
     private static final int INITIAL_REQUEST = 1337;
     private static final int CAMERA_TAKE_PHOTO = 1338;
     private static final int CAMERA_REQUEST = 1339;
@@ -67,21 +70,19 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
             Manifest.permission.READ_EXTERNAL_STORAGE
     };
 
-    //Side Navigation Drawer
-    private Button mMessengerBtn;
-    private Button mAllLandmarksBtn;
-    private Button mNearByBtn;
-    private Button mCalendarByBtn;
-
     private TextView mPersonName;
     private NavigationView mProfileView;
+    private DrawerLayout mDrawerLayout;
     private ImageView mProfilePicture;
     private TextView mPendingFollowersBadge;
+
+    private MainMenuPagerAdapter mPagerAdapter;
+    private ViewPager mPager;
+    private TabLayout mTabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main_menu);
 
         //Fetch all profile settings
@@ -98,6 +99,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         //mToolbar = (Toolbar)findViewById(R.id.toolbar);
         //setSupportActionBar(mToolbar);
         mProfileView = (NavigationView) findViewById(R.id.profile_view);
+        mDrawerLayout = (DrawerLayout)  findViewById(R.id.drawer_layout);
         mPendingFollowersBadge = (TextView) MenuItemCompat.getActionView(mProfileView.getMenu().findItem(R.id.pending_followers));
         mPersonName = (TextView) mProfileView.getHeaderView(0).findViewById(R.id.profile_name);
         mProfilePicture = (ImageView) mProfileView.getHeaderView(0).findViewById(R.id.profile_image);
@@ -113,17 +115,15 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         mPersonName.setText(currUserName);
         mProfileView.setNavigationItemSelectedListener(this);
 
-        mMessengerBtn = (Button) findViewById(R.id.messenger_btn);
-        mMessengerBtn.setOnClickListener(this);
-
-        mNearByBtn = (Button) findViewById(R.id.near_by_button);
-        mNearByBtn.setOnClickListener(this);
-
-        mCalendarByBtn = (Button) findViewById(R.id.calendar_button);
-        mCalendarByBtn.setOnClickListener(this);
-
-        mAllLandmarksBtn = (Button) findViewById(R.id.landmarks_btn);
-        mAllLandmarksBtn.setOnClickListener(this);
+        mPagerAdapter = new MainMenuPagerAdapter(getSupportFragmentManager());
+        mPager = (ViewPager) findViewById(R.id.main_menu_viewpager);
+        mPager.setAdapter(mPagerAdapter);
+        mTabLayout = (TabLayout) findViewById(R.id.main_menu_tabs);
+        mTabLayout.setupWithViewPager(mPager);
+        mPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
+        mTabLayout.addOnTabSelectedListener(this);
+        mPager.setCurrentItem(1);
+        mPager.setOffscreenPageLimit(3);
 
         loadProfilePicture();
     }
@@ -161,24 +161,8 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.messenger_btn) {
-            Intent intent = new Intent(this, UserListActivity.class);
-            startActivity(intent);
-        }
-        if (v.getId() == R.id.calendar_button) {
-            Intent intent = new Intent(this, CalendarActivity.class);
-            startActivity(intent);
-        }
         if(v.getId() == R.id.profile_image){
             selectPictureOption();
-        }
-        if (v.getId() == R.id.landmarks_btn) {
-            Intent intent = new Intent(this, CategoriesActivity.class);
-            startActivity(intent);
-        }
-        if (v.getId() == R.id.near_by_button) {
-            Intent intent = new Intent(this, NearByActivity.class);
-            startActivity(intent);
         }
     }
 
@@ -327,8 +311,6 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
                 String picturePath = cursor.getString(columnIndex);
                 cursor.close();
 
-
-
                 Bitmap bmp = ThumbnailUtils.extractThumbnail(
                         BitmapFactory.decodeFile(picturePath),
                         THUMBSIZE,
@@ -336,7 +318,6 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
                 mProfilePicture.setImageBitmap(ProfileManager.getCroppedBitmap(bmp));
                 ParseUtilities.uploadProfilePicture(bmp);
-
             }
         }
     }
@@ -393,5 +374,20 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onProfileImageUploadCompleted() {
         this.loadProfilePicture();
+    }
+
+    @Override
+    public void onTabSelected(TabLayout.Tab tab) {
+
+    }
+
+    @Override
+    public void onTabUnselected(TabLayout.Tab tab) {
+
+    }
+
+    @Override
+    public void onTabReselected(TabLayout.Tab tab) {
+
     }
 }

@@ -1,4 +1,5 @@
-package com.codeground.wanderlustbulgaria.Activities;
+package com.codeground.wanderlustbulgaria.Fragments;
+
 
 import android.Manifest;
 import android.content.Context;
@@ -10,13 +11,15 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.codeground.wanderlustbulgaria.Activities.LandmarkActivity;
 import com.codeground.wanderlustbulgaria.R;
 import com.codeground.wanderlustbulgaria.Utilities.Adapters.MarkerInfoWindowAdapter;
 import com.codeground.wanderlustbulgaria.Utilities.AllLocationsManager;
@@ -39,13 +42,14 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NearByActivity extends AppCompatActivity implements OnMapReadyCallback,
+
+public class NearByFragment extends Fragment implements OnMapReadyCallback,
         GoogleMap.OnMapLoadedCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         SeekBar.OnSeekBarChangeListener,
         GoogleMap.OnInfoWindowClickListener,
-        LocationSource.OnLocationChangedListener{
+        LocationSource.OnLocationChangedListener {
 
     private final int INITIAL_SEEK_BAR_PROGRESS = 10;
 
@@ -65,28 +69,42 @@ public class NearByActivity extends AppCompatActivity implements OnMapReadyCallb
     private LocationManager mLocationManager;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_near_by);
-        mLocationManager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_near_by, container, false);
+
+        mLocationManager = (LocationManager) getActivity().getSystemService( Context.LOCATION_SERVICE );
         mLocationSource = new CustomLocationSource(mLocationManager, this);
 
-        mDistanceSeekBar = (SeekBar) findViewById(R.id.range_seek_bar);
+        mDistanceSeekBar = (SeekBar) v.findViewById(R.id.range_seek_bar);
         mDistanceSeekBar.setOnSeekBarChangeListener(this);
 
         mDistanceSeekBar.setProgress(INITIAL_SEEK_BAR_PROGRESS);
         mMarkers = new ArrayList<>();
-        mRadiusText = (TextView) findViewById(R.id.range_radius_label);
+        mRadiusText = (TextView) v.findViewById(R.id.range_radius_label);
+
+        return v;
+    }
+
+    public static NearByFragment newInstance() {
+
+        NearByFragment f = new NearByFragment();
+
+        return f;
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         checkGPSAvailability();
     }
 
     @Override
-    protected void onPause() {
+    public void onDestroyView() {
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onPause() {
         super.onPause();
         mLocationSource.deactivate();
     }
@@ -98,14 +116,14 @@ public class NearByActivity extends AppCompatActivity implements OnMapReadyCallb
         }
 
         if (mMap == null) {
-            SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+            SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
 
             mapFragment.getMapAsync(this);
         }
     }
 
     @Override
-    protected void onStop() {
+    public void onStop() {
         if(mGoogleApiClient!=null && mGoogleApiClient.isConnected()){
             mGoogleApiClient.disconnect();
         }
@@ -115,8 +133,8 @@ public class NearByActivity extends AppCompatActivity implements OnMapReadyCallb
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
             mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         }
@@ -134,7 +152,7 @@ public class NearByActivity extends AppCompatActivity implements OnMapReadyCallb
 
     protected synchronized void buildGoogleApiClient() {
         //Toast.makeText(this, "buildGoogleApiClient", Toast.LENGTH_SHORT).show();
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
+        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
@@ -145,13 +163,13 @@ public class NearByActivity extends AppCompatActivity implements OnMapReadyCallb
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             googleMap.setMyLocationEnabled(true);
         }
         googleMap.setOnMapLoadedCallback(this);
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        googleMap.setInfoWindowAdapter(new MarkerInfoWindowAdapter(this));
+        googleMap.setInfoWindowAdapter(new MarkerInfoWindowAdapter(getActivity()));
         googleMap.setOnInfoWindowClickListener(this);
         googleMap.setLocationSource(mLocationSource);
     }
@@ -218,7 +236,7 @@ public class NearByActivity extends AppCompatActivity implements OnMapReadyCallb
     public void onInfoWindowClick(Marker marker) {
         String id = (String) marker.getTag();
 
-        Intent intent = new Intent(getApplicationContext(), LandmarkActivity.class);
+        Intent intent = new Intent(getActivity(), LandmarkActivity.class);
         intent.putExtra("locationId", id);
         startActivity(intent);
     }
@@ -232,9 +250,9 @@ public class NearByActivity extends AppCompatActivity implements OnMapReadyCallb
     }
 
     private void buildAlertMessageNoGps() {
-        LayoutInflater factory = LayoutInflater.from(this);
+        LayoutInflater factory = LayoutInflater.from(getActivity());
         final View activateGPSDialogView = factory.inflate(R.layout.custom_dialog, null);
-        final AlertDialog activateGPS = new AlertDialog.Builder(this).create();
+        final AlertDialog activateGPS = new AlertDialog.Builder(getActivity()).create();
 
         activateGPS.setView(activateGPSDialogView);
         TextView textField = (TextView)activateGPSDialogView.findViewById(R.id.text_dialog);
@@ -252,7 +270,7 @@ public class NearByActivity extends AppCompatActivity implements OnMapReadyCallb
             @Override
             public void onClick(View v) {
                 activateGPS.dismiss();
-                finish();
+                //TODO Force Slide to tab 2
             }
         });
 
@@ -295,4 +313,3 @@ public class NearByActivity extends AppCompatActivity implements OnMapReadyCallb
         }
     }
 }
-

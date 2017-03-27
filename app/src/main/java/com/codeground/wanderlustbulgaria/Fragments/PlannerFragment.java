@@ -1,12 +1,15 @@
-package com.codeground.wanderlustbulgaria.Activities;
+package com.codeground.wanderlustbulgaria.Fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
+import com.codeground.wanderlustbulgaria.Activities.SubmitTravellerActivity;
 import com.codeground.wanderlustbulgaria.R;
 import com.codeground.wanderlustbulgaria.Utilities.ParseUtils.ParseTraveller;
 import com.github.tibolte.agendacalendarview.AgendaCalendarView;
@@ -27,28 +30,32 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class CalendarActivity extends AppCompatActivity implements View.OnClickListener, CalendarPickerController {
+public class PlannerFragment extends Fragment implements View.OnClickListener, CalendarPickerController {
 
     private AgendaCalendarView mCalendar;
     private FloatingActionButton mAddBtn;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_calendar);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_planner, container, false);
 
-        mCalendar = (AgendaCalendarView) findViewById(R.id.calendarView);
+        mCalendar = (AgendaCalendarView) v.findViewById(R.id.calendarView);
         initCalendar();
 
-        mAddBtn = (FloatingActionButton) findViewById(R.id.add_new_traveller_btn);
+        mAddBtn = (FloatingActionButton) v.findViewById(R.id.add_new_traveller_btn);
         mAddBtn.setOnClickListener(this);
+        return v;
     }
 
+    public static PlannerFragment newInstance() {
+        PlannerFragment f = new PlannerFragment();
+        return f;
+    }
 
     @Override
     public void onClick(View v) {
         if(v.getId() == R.id.add_new_traveller_btn){
-            Intent i = new Intent(this, SubmitTravellerActivity.class);
+            Intent i = new Intent(getActivity(), SubmitTravellerActivity.class);
             startActivity(i);
         }
     }
@@ -59,7 +66,7 @@ public class CalendarActivity extends AppCompatActivity implements View.OnClickL
         ParseRelation following = ParseUser.getCurrentUser().getRelation("following");
         ParseQuery<ParseTraveller> query = ParseQuery.getQuery("Traveller");
         query.whereMatchesQuery("origin_user", following.getQuery());
-        
+
         query.findInBackground(new FindCallback<ParseTraveller>() {
             @Override
             public void done(List<ParseTraveller> objects, ParseException e) {
@@ -80,7 +87,7 @@ public class CalendarActivity extends AppCompatActivity implements View.OnClickL
                     String title = originUserName + " travels to " + toLocationName;
 
                     BaseCalendarEvent event = new BaseCalendarEvent(title, "A wonderful journey!", object.getString("from_city"),
-                            ContextCompat.getColor(getApplicationContext(), R.color.menuColor1), startTime, startTime, false);
+                            ContextCompat.getColor(getActivity(), R.color.menuColor1), startTime, startTime, false);
                     eventList.add(event);
 
                 }
@@ -91,7 +98,7 @@ public class CalendarActivity extends AppCompatActivity implements View.OnClickL
                 minDate.add(Calendar.MONTH, -2);
                 minDate.set(Calendar.DAY_OF_MONTH, 1);
                 maxDate.add(Calendar.YEAR, 1);
-                mCalendar.init(eventList, minDate, maxDate, Locale.getDefault(), CalendarActivity.this);
+                mCalendar.init(eventList, minDate, maxDate, Locale.getDefault(), PlannerFragment.this);
             }
         });
     }
