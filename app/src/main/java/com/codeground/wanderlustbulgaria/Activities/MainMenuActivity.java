@@ -88,6 +88,8 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
 
+        updateUserStatus(true);
+
         //Fetch all profile settings
         SettingsManager.updatePrefsProfileSettings(this);
 
@@ -445,5 +447,18 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
     @Override
     public void onTabReselected(TabLayout.Tab tab) {
 
+    }
+
+    private void updateUserStatus(boolean online)
+    {
+        ParseUser user = ParseUser.getCurrentUser();
+        user.put("online", online);
+        user.saveEventually();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        updateUserStatus(false);
     }
 }

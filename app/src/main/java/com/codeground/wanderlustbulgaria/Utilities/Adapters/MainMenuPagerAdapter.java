@@ -6,13 +6,13 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.codeground.wanderlustbulgaria.Fragments.CategoriesFragment;
-import com.codeground.wanderlustbulgaria.Fragments.NearByFragment;
 import com.codeground.wanderlustbulgaria.Fragments.PlannerFragment;
+import com.codeground.wanderlustbulgaria.Fragments.WanderersFragment;
 
 
 public class MainMenuPagerAdapter extends FragmentPagerAdapter {
 
-    private String tabTitles[] = new String[] { "Near By", "Categories", "Planner"};
+    private String tabTitles[] = new String[] { "Wanderers", "Categories", "Planner"};
 
     public MainMenuPagerAdapter(FragmentManager fm) {
         super(fm);
@@ -22,7 +22,7 @@ public class MainMenuPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int pos) {
         switch(pos) {
 
-            case 0: return NearByFragment.newInstance();
+            case 0: return WanderersFragment.newInstance();
             case 1: return CategoriesFragment.newInstance();
             case 2: return PlannerFragment.newInstance();
             default: return CategoriesFragment.newInstance();

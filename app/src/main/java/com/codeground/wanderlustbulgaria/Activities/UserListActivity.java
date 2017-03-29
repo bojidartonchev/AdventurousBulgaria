@@ -48,10 +48,10 @@ public class UserListActivity extends CustomActivity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_user_list);
+		setContentView(R.layout.fragment_wanderers);
         user = ParseUser.getCurrentUser();
 
-		updateUserStatus(true);
+
 
         ActionBar actionBar = getActionBar();
         if(actionBar != null)
@@ -68,7 +68,7 @@ public class UserListActivity extends CustomActivity
 	protected void onDestroy()
 	{
 		super.onDestroy();
-		updateUserStatus(false);
+
 	}
 
 	/* (non-Javado
@@ -91,18 +91,6 @@ public class UserListActivity extends CustomActivity
     protected void onPause() {
         super.onPause();
         isRunning = false;
-    }
-
-	/**
-	 * Update user status.
-	 * 
-	 * @param online
-	 *            true if user is online
-	 */
-	private void updateUserStatus(boolean online)
-	{
-		user.put("online", online);
-		user.saveEventually();
     }
 
 	/**
