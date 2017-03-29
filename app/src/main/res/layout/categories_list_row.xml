@@ -1,36 +1,46 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/aliceBlue">
+    android:layout_height="55dp"
+    android:background="@color/lightBrown">
 
     <ImageView
         android:id="@+id/category_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:src="@drawable/path"
+        android:layout_width="55dp"
+        android:layout_height="match_parent"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:tint="@color/Brown"/>
 
     <TextView
         android:id="@+id/category_name"
+        android:text="dsdsds"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/black"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="57dp" />
+        android:layout_alignBaseline="@+id/category_count"
+        android:layout_alignBottom="@+id/category_count"
+        android:layout_toRightOf="@+id/category_icon"
+        android:layout_toEndOf="@+id/category_icon" />
 
     <TextView
         android:id="@+id/category_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
         android:layout_marginEnd="19dp"
         android:layout_marginRight="19dp"
-        android:padding="5dp"
+        android:gravity="center"
+        android:textColor="@color/lightBrown"
         android:background="@drawable/category_badge_textview_background"
-        android:layout_centerVertical="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+ />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#dcd8d8"/>
 
 
 </RelativeLayout>
