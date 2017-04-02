@@ -149,4 +149,9 @@
     <string name="pref_title_sms_delete">Напиши коментар</string>
     <string name="pref_title_mms_delete">Напиши коментар</string>
 
+    <!-- CHAT-->
+    <string name="delivered_text">Delivered</string>
+    <string name="sending_text">Sending...</string>
+    <string name="failed_text">Failed</string>
+
 </resources>
