@@ -42,11 +42,6 @@
 
         <service android:name="com.codeground.wanderlustbulgaria.Services.LocationUpdateService" android:exported="false"/>
 
-        <meta-data android:name="DATABASE" android:value="landmarks_database.db" />
-        <meta-data android:name="VERSION" android:value="1" />
-        <meta-data android:name="QUERY_LOG" android:value="true" />
-        <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="com.codeground.wanderlustbulgaria" />
-
         <activity android:name="com.codeground.wanderlustbulgaria.Activities.SplashActivity"
             android:screenOrientation="portrait"
             android:theme="@style/SplashTheme">

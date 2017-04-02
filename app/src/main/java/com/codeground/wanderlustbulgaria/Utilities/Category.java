@@ -1,17 +1,34 @@
 package com.codeground.wanderlustbulgaria.Utilities;
 
-public class Category {
+public class Category{
+
+    public enum Type {
+        NEARBY(0),
+        SPECIFIED(1),
+        FROM_USERS(2);
+
+        Type (int i)
+        {
+            this.type = i;
+        }
+
+        private int type;
+
+        public int getNumericType()
+        {
+            return type;
+        }
+    }
 
     private String mName;
     private int mCount;
     private int mIcon;
-    private String mIntentId;
+    private Type mType;
 
-    public Category(String mName, int mCount, int mIcon) {
-        this.mName = mName;
-        this.mCount = mCount;
-        this.mIcon = mIcon;
-        this.mIntentId = mName;
+    public Category(String name, int icon, Type type) {
+        this.mName = name;
+        this.mIcon = icon;
+        this.mType = type;
     }
 
     public String getName() {
@@ -38,7 +55,11 @@ public class Category {
         this.mIcon = mIcon;
     }
 
-    public String getIntentId() {
-        return mIntentId;
+    public Type getType() {
+        return mType;
+    }
+
+    private void initCount(){
+        mCount = 99;//TODO
     }
 }

@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.codeground.wanderlustbulgaria.Activities.AllLandmarksActivity;
+import com.codeground.wanderlustbulgaria.Activities.NearByActivity;
 import com.codeground.wanderlustbulgaria.Interfaces.IOnItemClicked;
 import com.codeground.wanderlustbulgaria.R;
 import com.codeground.wanderlustbulgaria.Utilities.Adapters.CategoriesAdapter;
@@ -37,7 +38,8 @@ public class CategoriesFragment extends Fragment implements IOnItemClicked {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
 
-        prepareCategoriesData();
+        loadCategories();
+
         return v;
     }
 
@@ -47,26 +49,69 @@ public class CategoriesFragment extends Fragment implements IOnItemClicked {
         return f;
     }
 
-    private void prepareCategoriesData() {
-        Category cat = new Category(getString(R.string.cat_mountain), 22, R.drawable.mountain);
-        categoryList.add(cat);
-
-        cat = new Category(getString(R.string.cat_mountain), 22, R.drawable.mountain);
-        categoryList.add(cat);
-
-        cat = new Category(getString(R.string.cat_mountain), 22, R.drawable.mountain);
-        categoryList.add(cat);
-
-        mAdapter.notifyDataSetChanged();
-    }
-
     @Override
     public void onItemClicked(int pos) {
         Category selected = categoryList.get(pos);
+        Category.Type selectedType = selected.getType();
 
         Intent i = new Intent(getActivity(), AllLandmarksActivity.class);
-        i.putExtra("Category",selected.getIntentId());
+
+        switch (selectedType){
+            case SPECIFIED:
+                i.putExtra("Category",selected.getName());
+                break;
+            case FROM_USERS:
+                break;
+            case NEARBY:
+                i = new Intent(getActivity(), NearByActivity.class);
+                break;
+        }
 
         startActivity(i);
+    }
+
+    private void loadCategories()
+    {
+        Category cat = new Category(getString(R.string.near_by_button), R.drawable.ic_location_marker, Category.Type.NEARBY);
+        categoryList.add(cat);
+
+        cat = new Category(getString(R.string.cat_mountain), R.drawable.mountain, Category.Type.SPECIFIED);
+        categoryList.add(cat);
+
+        cat = new Category(getString(R.string.cat_lakes), R.drawable.lake, Category.Type.SPECIFIED);
+        categoryList.add(cat);
+
+        cat = new Category(getString(R.string.cat_cycling), R.drawable.bike, Category.Type.SPECIFIED);
+        categoryList.add(cat);
+
+        cat = new Category(getString(R.string.cat_ecopath), R.drawable.path, Category.Type.SPECIFIED);
+        categoryList.add(cat);
+
+        cat = new Category(getString(R.string.cat_food), R.drawable.gurme, Category.Type.SPECIFIED);
+        categoryList.add(cat);
+
+        cat = new Category(getString(R.string.cat_fishing), R.drawable.fishing, Category.Type.SPECIFIED);
+        categoryList.add(cat);
+
+        cat = new Category(getString(R.string.cat_beach), R.drawable.beach, Category.Type.SPECIFIED);
+        categoryList.add(cat);
+
+        cat = new Category(getString(R.string.cat_waterfall), R.drawable.waterfall, Category.Type.SPECIFIED);
+        categoryList.add(cat);
+
+        cat = new Category(getString(R.string.cat_caves), R.drawable.cave, Category.Type.SPECIFIED);
+        categoryList.add(cat);
+
+        cat = new Category(getString(R.string.cat_fortress), R.drawable.fortress, Category.Type.SPECIFIED);
+        categoryList.add(cat);
+
+        cat = new Category(getString(R.string.cat_festival), R.drawable.festival, Category.Type.SPECIFIED);
+        categoryList.add(cat);
+
+        cat = new Category(getString(R.string.cat_camping), R.drawable.camp, Category.Type.SPECIFIED);
+        categoryList.add(cat);
+
+
+        mAdapter.notifyDataSetChanged();
     }
 }

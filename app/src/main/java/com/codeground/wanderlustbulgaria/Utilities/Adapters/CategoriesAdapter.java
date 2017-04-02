@@ -13,21 +13,45 @@ import com.codeground.wanderlustbulgaria.Utilities.Category;
 
 import java.util.List;
 
-public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.MyViewHolder> {
+public class CategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<Category> categoryList;
     private IOnItemClicked mCb;
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    public class SpecifiedViewHolder extends RecyclerView.ViewHolder {
         public TextView mName;
         public TextView mCount;
         public ImageView mIcon;
 
         private int mPosition;
 
-        public MyViewHolder(View view) {
+        public SpecifiedViewHolder(View view) {
             super(view);
             mName = (TextView) view.findViewById(R.id.category_name);
             mCount = (TextView) view.findViewById(R.id.category_count);
+            mIcon = (ImageView) view.findViewById(R.id.category_icon);
+
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mCb.onItemClicked(mPosition);
+                }
+            });
+        }
+
+        public void setPosition(int position) {
+            this.mPosition = position;
+        }
+    }
+
+    public class NearByViewHolder extends RecyclerView.ViewHolder {
+        public TextView mName;
+        public ImageView mIcon;
+
+        private int mPosition;
+
+        public NearByViewHolder(View view) {
+            super(view);
+            mName = (TextView) view.findViewById(R.id.category_name);
             mIcon = (ImageView) view.findViewById(R.id.category_icon);
 
             view.setOnClickListener(new View.OnClickListener() {
@@ -49,24 +73,60 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
     }
 
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.categories_list_row, parent, false);
 
-        return new MyViewHolder(itemView);
+        switch (viewType){
+            case 0:
+                itemView = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.categories_near_by_list_row, parent, false);
+                return new NearByViewHolder(itemView);
+            case 1:
+                itemView = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.categories_list_row, parent, false);
+
+                return new SpecifiedViewHolder(itemView);
+            case 2:
+                break;
+        }
+
+        return new SpecifiedViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
-        Category cat = categoryList.get(position);
-        holder.mName.setText(cat.getName());
-        holder.mCount.setText(Integer.toString(21));
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
+        switch (holder.getItemViewType()) {
+            case 0:
+                NearByViewHolder viewHolder0 = (NearByViewHolder)holder;
+                Category nearByCat = categoryList.get(position);
+                viewHolder0.mName.setText(nearByCat.getName());
+                viewHolder0.mIcon.setImageResource(nearByCat.getIcon());
+                break;
 
-        holder.setPosition(position);
+            case 1:
+                SpecifiedViewHolder viewHolder2 = (SpecifiedViewHolder)holder;
+
+                Category cat = categoryList.get(position);
+                viewHolder2.mName.setText(cat.getName());
+                viewHolder2.mCount.setText(Integer.toString(cat.getCount()));
+                viewHolder2.mIcon.setImageResource(cat.getIcon());
+
+                viewHolder2.setPosition(position);
+                break;
+        }
     }
 
     @Override
     public int getItemCount() {
         return categoryList.size();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        // Just as an example, return 0 or 2 depending on position
+        // Note that unlike in ListView adapters, types don't have to be contiguous
+        return categoryList.get(position).getType().getNumericType();
     }
 }

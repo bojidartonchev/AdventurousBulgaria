@@ -1,6 +1,6 @@
 package com.codeground.wanderlustbulgaria;
 
-import android.support.multidex.MultiDexApplication;
+import android.app.Application;
 
 import com.codeground.wanderlustbulgaria.Utilities.LifecycleHandler;
 import com.codeground.wanderlustbulgaria.Utilities.ParseUtils.ParseLocation;
@@ -9,7 +9,7 @@ import com.parse.ParseFacebookUtils;
 import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 
-public class MainApplication extends MultiDexApplication {
+public class MainApplication extends Application {
 
     @Override
     public void onCreate() {
@@ -33,4 +33,6 @@ public class MainApplication extends MultiDexApplication {
 
         registerActivityLifecycleCallbacks(new LifecycleHandler());
     }
+
+
 }
