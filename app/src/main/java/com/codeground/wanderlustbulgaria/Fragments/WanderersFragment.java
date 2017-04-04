@@ -16,7 +16,6 @@ import android.widget.Toast;
 
 import com.codeground.wanderlustbulgaria.Activities.ChatActivity;
 import com.codeground.wanderlustbulgaria.R;
-import com.codeground.wanderlustbulgaria.Utilities.DialogWindowManager;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
@@ -39,9 +38,15 @@ public class WanderersFragment extends Fragment{
     /** The handler */
     private static Handler handler;
 
+    private View mContainer;
+    private View mProgress;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_wanderers, container, false);
+
+        mContainer = v.findViewById(R.id.list_container);
+        mProgress = v.findViewById(R.id.list_progress);
 
         user = ParseUser.getCurrentUser();
 
@@ -80,15 +85,18 @@ public class WanderersFragment extends Fragment{
      */
     private void loadUserList()
     {
-        if(uList==null){
-            //first loading... the screen is empty now
-            DialogWindowManager.show(getActivity());
-        }
-
         ParseUser.getQuery().whereNotEqualTo("username", user.getUsername()).findInBackground(new FindCallback<ParseUser>() {
             @Override
             public void done(List<ParseUser> users, ParseException e) {
-                DialogWindowManager.dismiss();
+                if(mContainer != null && mContainer.getVisibility() == View.GONE){
+                    //show the chat list
+                    mContainer.setVisibility(View.VISIBLE);
+
+                    if(mProgress!=null)
+                    {
+                        mProgress.setVisibility(View.GONE);
+                    }
+                }
 
                 if(users != null){
                     if(users.size() == 0){
@@ -169,6 +177,7 @@ public class WanderersFragment extends Fragment{
 
             ParseUser c = getItem(pos);
             TextView lbl = (TextView) v;
+
             lbl.setText(c.getString("first_name") + " " + c.getString("last_name"));
             lbl.setCompoundDrawablesWithIntrinsicBounds(
                     c.getBoolean("online") ? R.drawable.ic_online
