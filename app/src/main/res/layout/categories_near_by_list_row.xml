@@ -11,23 +11,18 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:tint="@color/Brown"/>
+        android:tint="@color/colorPrimary"/>
 
     <TextView
         android:id="@+id/category_name"
-        android:text="dsdsds"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/black"
-        android:layout_alignBaseline="@+id/category_count"
-        android:layout_alignBottom="@+id/category_count"
+        android:textColor="@color/mainMenuListTextColor"
+        android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/category_icon"
-        android:layout_toEndOf="@+id/category_icon" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="#dcd8d8"/>
-
+        android:layout_toEndOf="@+id/category_icon"
+        android:paddingLeft="10dp"
+        android:textStyle="bold"
+        />
 
 </RelativeLayout>

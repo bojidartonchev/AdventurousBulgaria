@@ -3,7 +3,7 @@
     android:id="@android:id/text1"
     style="?android:attr/dropDownItemStyle"
     android:textAppearance="?android:attr/textAppearanceLargePopupMenu"
-    android:textColor="@color/grey"
+    android:textColor="@color/black"
     android:layout_width="match_parent"
     android:layout_height="?android:attr/listPreferredItemHeight"
     android:ellipsize="marquee" />

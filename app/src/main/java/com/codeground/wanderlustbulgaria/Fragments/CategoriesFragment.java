@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -37,6 +38,10 @@ public class CategoriesFragment extends Fragment implements IOnItemClicked {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
+
+        DividerItemDecoration decoration = new DividerItemDecoration(recyclerView.getContext(),
+                LinearLayoutManager.VERTICAL);
+        recyclerView.addItemDecoration(decoration);
 
         loadCategories();
 
@@ -72,43 +77,43 @@ public class CategoriesFragment extends Fragment implements IOnItemClicked {
 
     private void loadCategories()
     {
-        Category cat = new Category(getString(R.string.near_by_button), R.drawable.ic_location_marker, Category.Type.NEARBY);
+        Category cat = new Category(getString(R.string.near_by_button), R.drawable.ic_location_marker, Category.Type.NEARBY, mAdapter);
         categoryList.add(cat);
 
-        cat = new Category(getString(R.string.cat_mountain), R.drawable.mountain, Category.Type.SPECIFIED);
+        cat = new Category(getString(R.string.cat_mountain), R.drawable.mountain, Category.Type.SPECIFIED, mAdapter);
         categoryList.add(cat);
 
-        cat = new Category(getString(R.string.cat_lakes), R.drawable.lake, Category.Type.SPECIFIED);
+        cat = new Category(getString(R.string.cat_lakes), R.drawable.lake, Category.Type.SPECIFIED, mAdapter);
         categoryList.add(cat);
 
-        cat = new Category(getString(R.string.cat_cycling), R.drawable.bike, Category.Type.SPECIFIED);
+        cat = new Category(getString(R.string.cat_cycling), R.drawable.bike, Category.Type.SPECIFIED, mAdapter);
         categoryList.add(cat);
 
-        cat = new Category(getString(R.string.cat_ecopath), R.drawable.path, Category.Type.SPECIFIED);
+        cat = new Category(getString(R.string.cat_ecopath), R.drawable.path, Category.Type.SPECIFIED, mAdapter);
         categoryList.add(cat);
 
-        cat = new Category(getString(R.string.cat_food), R.drawable.gurme, Category.Type.SPECIFIED);
+        cat = new Category(getString(R.string.cat_food), R.drawable.gurme, Category.Type.SPECIFIED, mAdapter);
         categoryList.add(cat);
 
-        cat = new Category(getString(R.string.cat_fishing), R.drawable.fishing, Category.Type.SPECIFIED);
+        cat = new Category(getString(R.string.cat_fishing), R.drawable.fishing, Category.Type.SPECIFIED, mAdapter);
         categoryList.add(cat);
 
-        cat = new Category(getString(R.string.cat_beach), R.drawable.beach, Category.Type.SPECIFIED);
+        cat = new Category(getString(R.string.cat_beach), R.drawable.beach, Category.Type.SPECIFIED, mAdapter);
         categoryList.add(cat);
 
-        cat = new Category(getString(R.string.cat_waterfall), R.drawable.waterfall, Category.Type.SPECIFIED);
+        cat = new Category(getString(R.string.cat_waterfall), R.drawable.waterfall, Category.Type.SPECIFIED, mAdapter);
         categoryList.add(cat);
 
-        cat = new Category(getString(R.string.cat_caves), R.drawable.cave, Category.Type.SPECIFIED);
+        cat = new Category(getString(R.string.cat_caves), R.drawable.cave, Category.Type.SPECIFIED, mAdapter);
         categoryList.add(cat);
 
-        cat = new Category(getString(R.string.cat_fortress), R.drawable.fortress, Category.Type.SPECIFIED);
+        cat = new Category(getString(R.string.cat_fortress), R.drawable.fortress, Category.Type.SPECIFIED, mAdapter);
         categoryList.add(cat);
 
-        cat = new Category(getString(R.string.cat_festival), R.drawable.festival, Category.Type.SPECIFIED);
+        cat = new Category(getString(R.string.cat_festival), R.drawable.festival, Category.Type.SPECIFIED, mAdapter);
         categoryList.add(cat);
 
-        cat = new Category(getString(R.string.cat_camping), R.drawable.camp, Category.Type.SPECIFIED);
+        cat = new Category(getString(R.string.cat_camping), R.drawable.camp, Category.Type.SPECIFIED, mAdapter);
         categoryList.add(cat);
 
 

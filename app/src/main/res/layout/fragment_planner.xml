@@ -11,13 +11,13 @@
         android:id="@+id/calendarView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        agendaCalendar:agendaCurrentDayTextColor="@color/menuColor1"
+        agendaCalendar:agendaCurrentDayTextColor="@color/menuColor"
         agendaCalendar:calendarColor="@color/menuColor"
         agendaCalendar:calendarCurrentDayTextColor="@color/calendar_text_current_day"
         agendaCalendar:calendarDayTextColor="@color/theme_text_icons"
         agendaCalendar:calendarHeaderColor="@color/colorPrimaryDark"
         agendaCalendar:calendarPastDayTextColor="@color/theme_light_primary"
-        agendaCalendar:fabColor="@color/menuColor1" />
+        agendaCalendar:fabColor="@color/menuColor" />
 
     <android.support.design.widget.FloatingActionButton
         android:layout_width="wrap_content"

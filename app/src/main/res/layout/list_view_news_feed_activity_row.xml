@@ -27,7 +27,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="13dp"
-        android:textColor="@color/grey"
+        android:textColor="@color/black"
         android:text="fsafasfasfsa"
         android:layout_alignParentTop="true"
         android:layout_alignLeft="@+id/activity_image"

@@ -30,11 +30,11 @@
     
     <EditText
         android:id="@+id/txt"
-        style="@style/edittext_msg"
+        style="@style/edit_text_msg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:hint="_move_to strings" >
+        android:hint="@string/input_hint" >
 
         
     </EditText>

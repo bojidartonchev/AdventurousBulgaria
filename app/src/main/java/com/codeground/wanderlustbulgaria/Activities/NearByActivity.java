@@ -274,7 +274,7 @@ public class NearByActivity extends AppCompatActivity implements OnMapReadyCallb
                 mCircleRadius = mMap.addCircle(new CircleOptions()
                         .center(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()))
                         .radius(1000 * INITIAL_SEEK_BAR_PROGRESS)
-                        .strokeColor(R.color.menuColor2)
+                        .strokeColor(R.color.menuColor)
                         .fillColor(R.color.radius_fill_color));
 
                 mRadiusText.setText(String.format(getString(R.string.distance_label_text), INITIAL_SEEK_BAR_PROGRESS));

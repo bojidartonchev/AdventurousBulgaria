@@ -76,7 +76,7 @@
 
 
                 android:layout_gravity="center"
-                android:background="@color/menuColor5"
+                android:background="@color/menuColor"
                 android:text="@string/login_sign_in"
                 android:textAllCaps="false"
                 android:textColor="#fff"

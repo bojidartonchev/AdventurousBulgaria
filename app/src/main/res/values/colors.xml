@@ -1,24 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#95b118</color>
-    <color name="colorPrimaryDark">#107c22</color>
-    <color name="colorAccent">#95b118</color>
+    <color name="colorPrimary">#d4a270</color>
+    <color name="colorPrimaryDark">#2e343f</color>
+    <color name="colorAccent">#d4a272</color>
     <color name="white">#FFFFFF</color>
-    <color name="grey">#262626</color>
     <color name="lightGray">#bdbdbd </color>
     <color name="aliceBlue">#f0f8ff </color>
     <color name="lightBrown">#f7f7f7 </color>
-    <color name="Brown">#c78358 </color>
     <color name="menuColor">#a6c61a</color>
     <color name="backgroundColor">#2e343f</color>
     <color name="black">#212121</color>
-
-    <color name="menuColor1">#F05656</color>
-    <color name="menuColor2">#EF8889</color>
-    <color name="menuColor3">#1EAE93</color>
-    <color name="menuColor4">#69C7B5</color>
-    <color name="menuColor5">#0E83A6</color>
-    <color name="menuColor6">#48A3B8</color>
+    <color name="mainMenuTabColor">#5b5252</color>
+    <color name="mainMenuTabTextColor">#a1a1a1</color>
+    <color name="mainMenuListTextColor">#8a7b7b</color>
+    <color name="chatItemBackgroundColor">@color/white</color>
 
     <color name="button_blue">#4FC1FF</color>
     <color name="hint_color">#808080</color>

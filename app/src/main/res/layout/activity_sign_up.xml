@@ -110,7 +110,7 @@
 
 
                 android:layout_gravity="center"
-                android:background="@color/menuColor5"
+                android:background="@color/menuColor"
                 android:text="@string/register_button"
                 android:textAllCaps="false"
                 android:textColor="#fff"

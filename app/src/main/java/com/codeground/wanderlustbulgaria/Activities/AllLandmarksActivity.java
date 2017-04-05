@@ -3,6 +3,7 @@ package com.codeground.wanderlustbulgaria.Activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -36,6 +37,8 @@ public class AllLandmarksActivity extends AppCompatActivity implements AdapterVi
         mLocations.setOnItemClickListener(this);
         mLocations.setAdapter(mAdapter);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(mCategory);
     }
 
 
@@ -60,5 +63,16 @@ public class AllLandmarksActivity extends AppCompatActivity implements AdapterVi
     @Override
     public void onLoaded(List objects, Exception e) {
         DialogWindowManager.dismiss();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

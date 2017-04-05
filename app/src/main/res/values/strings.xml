@@ -152,5 +152,6 @@
     <string name="delivered_text">Delivered</string>
     <string name="sending_text">Sending...</string>
     <string name="failed_text">Failed</string>
+    <string name="input_hint">Write a message...</string>
 
 </resources>

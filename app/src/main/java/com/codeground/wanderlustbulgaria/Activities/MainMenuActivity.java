@@ -403,6 +403,7 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
     }
 
     private void logout() {
+        updateUserStatus(false);
         ParseUser.getCurrentUser().logOut();
         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
         finish();
@@ -441,7 +442,6 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
 
     @Override
     public void onTabUnselected(TabLayout.Tab tab) {
-
     }
 
     @Override
@@ -452,8 +452,10 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
     private void updateUserStatus(boolean online)
     {
         ParseUser user = ParseUser.getCurrentUser();
-        user.put("online", online);
-        user.saveEventually();
+        if(user!=null){
+            user.put("online", online);
+            user.saveEventually();
+        }
     }
 
     @Override

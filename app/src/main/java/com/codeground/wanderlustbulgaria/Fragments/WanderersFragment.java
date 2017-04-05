@@ -2,6 +2,7 @@ package com.codeground.wanderlustbulgaria.Fragments;
 
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -16,8 +17,10 @@ import android.widget.Toast;
 
 import com.codeground.wanderlustbulgaria.Activities.ChatActivity;
 import com.codeground.wanderlustbulgaria.R;
+import com.codeground.wanderlustbulgaria.Utilities.RoundedParseImageView;
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
@@ -176,12 +179,25 @@ public class WanderersFragment extends Fragment{
                 v = getActivity().getLayoutInflater().inflate(R.layout.chat_item, null);
 
             ParseUser c = getItem(pos);
-            TextView lbl = (TextView) v;
+            RoundedParseImageView imgView = (RoundedParseImageView) v.findViewById(R.id.profile_image);
+            ParseFile imageFile = c.getParseFile("profile_picture");
+
+            if (imageFile != null) {
+                imgView.setParseFile(imageFile);
+                imgView.loadInBackground();
+            } else {
+                imgView.setImageResource(R.drawable.com_facebook_profile_picture_blank_square);
+            }
+
+            TextView lbl = (TextView) v.findViewById(R.id.profile_name);
 
             lbl.setText(c.getString("first_name") + " " + c.getString("last_name"));
-            lbl.setCompoundDrawablesWithIntrinsicBounds(
-                    c.getBoolean("online") ? R.drawable.ic_online
-                            : R.drawable.ic_offline, 0, R.drawable.arrow, 0);
+
+            if (c.getBoolean("online")) {
+                imgView.setBorderColor(Color.GREEN);
+            } else {
+                imgView.setBorderColor(Color.GRAY);
+            }
 
             return v;
         }

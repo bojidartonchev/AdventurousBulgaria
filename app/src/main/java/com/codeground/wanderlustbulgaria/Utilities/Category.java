@@ -1,5 +1,11 @@
 package com.codeground.wanderlustbulgaria.Utilities;
 
+import com.codeground.wanderlustbulgaria.Utilities.Adapters.CategoriesAdapter;
+import com.codeground.wanderlustbulgaria.Utilities.ParseUtils.ParseLocation;
+import com.parse.CountCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
+
 public class Category{
 
     public enum Type {
@@ -24,11 +30,15 @@ public class Category{
     private int mCount;
     private int mIcon;
     private Type mType;
+    private CategoriesAdapter mAdapter;
 
-    public Category(String name, int icon, Type type) {
+    public Category(String name, int icon, Type type, CategoriesAdapter adapter) {
         this.mName = name;
         this.mIcon = icon;
         this.mType = type;
+        this.mAdapter = adapter;
+
+        initCount();
     }
 
     public String getName() {
@@ -60,6 +70,16 @@ public class Category{
     }
 
     private void initCount(){
-        mCount = 99;//TODO
+        ParseQuery<ParseLocation> query = ParseQuery.getQuery("Location");
+        query.whereEqualTo("category", mName);
+        query.countInBackground(new CountCallback() {
+            public void done(int count, ParseException e) {
+                if (e == null) {
+                    // all good
+                    mCount = count;
+                    mAdapter.notifyDataSetChanged();
+                }
+            }
+        });
     }
 }

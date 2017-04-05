@@ -19,7 +19,7 @@
         android:layout_marginTop="10dp"
         android:layout_alignTop="@+id/activity_image"
         android:layout_toRightOf="@id/activity_image"
-        android:textColor="@color/grey" />
+        android:textColor="@color/black" />
 
     <TextView
         android:id="@+id/timestamp"

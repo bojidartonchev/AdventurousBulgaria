@@ -87,7 +87,7 @@ public class PlannerFragment extends Fragment implements View.OnClickListener, C
                     String title = originUserName + " travels to " + toLocationName;
 
                     BaseCalendarEvent event = new BaseCalendarEvent(title, "A wonderful journey!", object.getString("from_city"),
-                            ContextCompat.getColor(getActivity(), R.color.menuColor1), startTime, startTime, false);
+                            ContextCompat.getColor(getActivity(), R.color.menuColor), startTime, startTime, false);
                     eventList.add(event);
 
                 }
