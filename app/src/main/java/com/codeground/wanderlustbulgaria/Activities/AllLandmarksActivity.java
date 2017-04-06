@@ -31,8 +31,6 @@ public class AllLandmarksActivity extends AppCompatActivity implements AdapterVi
 
         mCategory = getIntent().getStringExtra("Category");
         mAdapter = new LandmarksAdapter(this, mCategory);
-        mAdapter.setTextKey("title");
-        mAdapter.setImageKey("photo");
         mAdapter.addOnQueryLoadListener(this);
         mLocations.setOnItemClickListener(this);
         mLocations.setAdapter(mAdapter);

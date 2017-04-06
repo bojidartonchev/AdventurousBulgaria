@@ -36,8 +36,10 @@ public class LandmarksAdapter extends ParseQueryAdapter{
             v = View.inflate(getContext(), R.layout.list_view_landmark_row, null);
         }
 
+        super.getItemView(object, v, parent);
+
         // Add and download the image
-        ParseImageView locImage = (ParseImageView) v.findViewById(R.id.location_list_row_image);
+        ParseImageView locImage = (ParseImageView) v.findViewById(R.id.photo);
         ParseFile imageFile = object.getParseFile("photo1");
         locImage.setScaleType(ImageView.ScaleType.FIT_XY);
         if (imageFile != null) {

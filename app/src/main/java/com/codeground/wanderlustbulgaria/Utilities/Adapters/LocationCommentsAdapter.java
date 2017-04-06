@@ -7,10 +7,14 @@ import android.widget.TextView;
 
 import com.codeground.wanderlustbulgaria.R;
 import com.codeground.wanderlustbulgaria.Utilities.ParseUtils.ParseComment;
+import com.codeground.wanderlustbulgaria.Utilities.RoundedParseImageView;
+import com.parse.GetCallback;
+import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseRelation;
+import com.parse.ParseUser;
 
 public class LocationCommentsAdapter extends ParseQueryAdapter{
 
@@ -29,14 +33,30 @@ public class LocationCommentsAdapter extends ParseQueryAdapter{
     @Override
     public View getItemView(ParseObject object, View v, ViewGroup parent) {
         if (v == null) {
-            v = View.inflate(getContext(), R.layout.list_view_comment_row, null);
+            v = View.inflate(getContext(), R.layout.comment_item, null);
         }
 
         super.getItemView(object, v, parent);
 
+        ParseUser creator = object.getParseUser("creator");
+
         //Comment creator
-        TextView commentCreator = (TextView) v.findViewById(R.id.comment_creator);
-        commentCreator.setText(object.getString("creator"));
+        final TextView commentCreator = (TextView) v.findViewById(R.id.comment_creator);
+
+        //Comment creator
+        final RoundedParseImageView commentCreatorImage = (RoundedParseImageView) v.findViewById(R.id.creator_pic);
+
+        creator.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject object, ParseException e) {
+                if(e==null){
+                    commentCreator.setText(object.getString("first_name") + object.getString("last_name"));
+
+                    commentCreatorImage.setParseFile(object.getParseFile("profile_picture"));
+                    commentCreatorImage.loadInBackground();
+                }
+            }
+        });
 
         //Comment content
         TextView commentContent = (TextView) v.findViewById(R.id.comment_content);

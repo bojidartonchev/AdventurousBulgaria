@@ -7,35 +7,36 @@
         android:layout_marginTop="10dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-
         android:id="@+id/location_comments"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/submit_area"
+        tools:listitem="@layout/comment_item"
 />
-
 
     <LinearLayout
         android:id="@+id/submit_area"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:orientation="vertical" >
+        android:orientation="horizontal" >
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
+            style="@style/edit_text_msg"
             android:hint="@string/comment_write"
             android:ems="10"
-            android:id="@+id/comment_field" />
-
+            android:layout_weight="1"
+            android:id="@+id/comment_field"
+            android:layout_marginBottom="5dp"/>
         <Button
             android:id="@+id/submit_btn"
-            android:layout_width="match_parent"
+            style="@style/btn"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="SUBMIT" />
+            android:background="@drawable/ic_send" />
 
     </LinearLayout>
 

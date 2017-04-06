@@ -84,6 +84,8 @@
     <string name="alert_location_desc_short">Description should be at least 15 characters long.</string>
     <string name="alert_location_no_photo">You should attach at least one photo.</string>
     <string name="alert_location_no_latlng">No location specified.</string>
+    <string name="comment_added_success">Your comment was added!</string>
+    <string name="open_in_gps_hint">Get directions to %1$s</string>
 
     <!--DIALOGS-->
     <string name="unfollow_prompt_text">You are about to unfollow %1$s</string>
@@ -131,7 +133,7 @@
     <string name="register_button">Регистрация</string>
 
     <!-- COMMENTS-->
-    <string name="comment_write">Добави коментар</string>
+    <string name="comment_write">Добави коментар...</string>
 
     <!-- SETTINGS-->
     <string name="pref_profile_title">Профил</string>
