@@ -2,8 +2,10 @@ package com.codeground.wanderlustbulgaria.Utilities.Adapters;
 
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.codeground.wanderlustbulgaria.R;
@@ -34,11 +36,10 @@ public class LandmarksAdapter extends ParseQueryAdapter{
             v = View.inflate(getContext(), R.layout.list_view_landmark_row, null);
         }
 
-        super.getItemView(object, v, parent);
-
         // Add and download the image
-        ParseImageView locImage = (ParseImageView) v.findViewById(android.R.id.icon);
-        ParseFile imageFile = object.getParseFile("icon");
+        ParseImageView locImage = (ParseImageView) v.findViewById(R.id.location_list_row_image);
+        ParseFile imageFile = object.getParseFile("photo1");
+        locImage.setScaleType(ImageView.ScaleType.FIT_XY);
         if (imageFile != null) {
             locImage.setParseFile(imageFile);
             locImage.loadInBackground();
@@ -47,8 +48,8 @@ public class LandmarksAdapter extends ParseQueryAdapter{
         TextView locPlace = (TextView) v.findViewById(R.id.location);
         locTitle.setText(object.getString("name"));
         locPlace.setText(object.getString("city"));
-
-
+        locTitle.setBackgroundColor(Color.argb(200,91,82,82));
+        locPlace.setBackgroundColor(Color.argb(200,91,82,82));
 
         return v;
     }

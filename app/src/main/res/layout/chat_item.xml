@@ -8,7 +8,6 @@
     android:id="@+id/profile_image"
     android:layout_width="50dp"
     android:layout_height="50dp"
-    android:src="@drawable/com_facebook_profile_picture_blank_square"
     android:layout_alignParentLeft="true"
     android:layout_margin="15dp"
     android:layout_marginLeft="5dip"

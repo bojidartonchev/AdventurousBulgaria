@@ -181,7 +181,6 @@ public class WanderersFragment extends Fragment{
             ParseUser c = getItem(pos);
             RoundedParseImageView imgView = (RoundedParseImageView) v.findViewById(R.id.profile_image);
             ParseFile imageFile = c.getParseFile("profile_picture");
-
             if (imageFile != null) {
                 imgView.setParseFile(imageFile);
                 imgView.loadInBackground();
@@ -194,7 +193,7 @@ public class WanderersFragment extends Fragment{
             lbl.setText(c.getString("first_name") + " " + c.getString("last_name"));
 
             if (c.getBoolean("online")) {
-                imgView.setBorderColor(Color.GREEN);
+                imgView.setBorderColor(Color.parseColor("#32CD32"));
             } else {
                 imgView.setBorderColor(Color.GRAY);
             }

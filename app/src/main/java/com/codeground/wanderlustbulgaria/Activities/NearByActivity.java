@@ -13,6 +13,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -77,6 +78,9 @@ public class NearByActivity extends AppCompatActivity implements OnMapReadyCallb
         mDistanceSeekBar.setProgress(INITIAL_SEEK_BAR_PROGRESS);
         mMarkers = new ArrayList<>();
         mRadiusText = (TextView) findViewById(R.id.range_radius_label);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(R.string.near_by_button);
     }
 
     @Override
@@ -293,6 +297,17 @@ public class NearByActivity extends AppCompatActivity implements OnMapReadyCallb
         if(mLastLocation!=null){
             this.mLocationSource.onLocationChanged(mLastLocation);
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
 

@@ -6,8 +6,8 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.Button;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.codeground.wanderlustbulgaria.Fragments.LocationCommentsFragment;
@@ -27,11 +27,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class LandmarkActivity extends AppCompatActivity implements View.OnClickListener{
+public class LandmarkActivity extends AppCompatActivity{
     private TextView mTitle;
     private TextView mLocation;
     private TextView mCity;
-    private Button mGpsBtn;
     private ParseLocation mCurrLocation;
     private ViewPager mPager;
     private ViewPager mPagerImages;
@@ -51,8 +50,6 @@ public class LandmarkActivity extends AppCompatActivity implements View.OnClickL
         mTitle = (TextView) findViewById(R.id.landmark_title);
         mCity = (TextView) findViewById(R.id.landmark_location);
         mPagerImages = (ViewPager) findViewById(R.id.images_pager);
-        mGpsBtn = (Button) findViewById(R.id.gps_button);
-        mGpsBtn.setOnClickListener(this);
         final String locId = getIntent().getStringExtra("locationId");
         mPagerAdapter = new LocationPagerAdapter(getSupportFragmentManager());
         mPager = (ViewPager) findViewById(R.id.viewpager);
@@ -64,6 +61,9 @@ public class LandmarkActivity extends AppCompatActivity implements View.OnClickL
         mComments =(LocationCommentsFragment) mPager.getAdapter().instantiateItem(mPager, 1);
         TabLayout dots = (TabLayout) findViewById(R.id.tabDots);
         dots.setupWithViewPager(mPagerImages, true);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("");
 
         mImages = new ArrayList<>();
 
@@ -113,13 +113,29 @@ public class LandmarkActivity extends AppCompatActivity implements View.OnClickL
     }
 
     @Override
-    public void onClick(View v) {
-        if(v.getId()==R.id.gps_button){
-            String address = String.format(Locale.ENGLISH, "http://maps.google.com/maps?daddr=%f,%f (%s)", mLat, mLong, mCurrLocation.getName());
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(address));
-            intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
-            startActivity(intent);
-
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+            {
+                onBackPressed();
+                return true;
+            }
+            case R.id.gmap_btn:
+            {
+                String address = String.format(Locale.ENGLISH, "http://maps.google.com/maps?daddr=%f,%f (%s)", mLat, mLong, mCurrLocation.getName());
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(address));
+                intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
+                startActivity(intent);
+                return true;
+            }
         }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.landmark_menu, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 }

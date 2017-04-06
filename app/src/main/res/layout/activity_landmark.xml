@@ -38,11 +38,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="40dp">
-        <Button
-            android:id="@+id/gps_button"
-            android:layout_width="35dp"
-            android:text="gps"
-            android:layout_height="match_parent" />
         <TextView
             android:layout_marginBottom="3dp"
             android:textAlignment="center"
