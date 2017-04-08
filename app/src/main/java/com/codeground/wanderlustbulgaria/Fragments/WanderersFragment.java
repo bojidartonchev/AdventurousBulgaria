@@ -107,17 +107,21 @@ public class WanderersFragment extends Fragment{
                     }
 
                     uList = new ArrayList<ParseUser>(users);
-                    ListView list = (ListView) getView().findViewById(R.id.list);
-                    list.setAdapter(new WanderersFragment.UserAdapter());
-                    list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            Intent intent = new Intent(getActivity(), ChatActivity.class);
-                            intent.putExtra("username", uList.get(position).getUsername());
-                            intent.putExtra("full_name", uList.get(position).getString("first_name") + " " + uList.get(position).getString("last_name"));
-                            startActivity(intent);
-                        }
-                    });
+
+                    if(getView()!=null){
+                        ListView list = (ListView) getView().findViewById(R.id.list);
+                        list.setAdapter(new WanderersFragment.UserAdapter());
+                        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                Intent intent = new Intent(getActivity(), ChatActivity.class);
+                                intent.putExtra("username", uList.get(position).getUsername());
+                                intent.putExtra("full_name", uList.get(position).getString("first_name") + " " + uList.get(position).getString("last_name"));
+                                startActivity(intent);
+                            }
+                        });
+                    }
+
                 }else{
                     //TODO notify error with custom dialog
                 }

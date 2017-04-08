@@ -1,7 +1,6 @@
 package com.codeground.wanderlustbulgaria.Activities;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -10,7 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
-import android.widget.TextView;
 
 import com.codeground.wanderlustbulgaria.Fragments.LocationCommentsFragment;
 import com.codeground.wanderlustbulgaria.Fragments.LocationDescriptionFragment;
@@ -30,9 +28,6 @@ import java.util.List;
 import java.util.Locale;
 
 public class LandmarkActivity extends AppCompatActivity{
-    private TextView mTitle;
-    private TextView mLocation;
-    private TextView mCity;
     private ParseLocation mCurrLocation;
     private ViewPager mPager;
     private ViewPager mPagerImages;
@@ -51,9 +46,6 @@ public class LandmarkActivity extends AppCompatActivity{
 
         getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-
-        mTitle = (TextView) findViewById(R.id.landmark_title);
-        mCity = (TextView) findViewById(R.id.landmark_location);
         mPagerImages = (ViewPager) findViewById(R.id.images_pager);
         final String locId = getIntent().getStringExtra("locationId");
         mPagerAdapter = new LocationPagerAdapter(getSupportFragmentManager());
@@ -68,7 +60,6 @@ public class LandmarkActivity extends AppCompatActivity{
         dots.setupWithViewPager(mPagerImages, true);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("");
 
         mImages = new ArrayList<>();
 
@@ -79,27 +70,20 @@ public class LandmarkActivity extends AppCompatActivity{
                 if (e == null) {
                     mCurrLocation=(ParseLocation)objects.get(0);
 
-                    if (mTitle != null) {
-                        mTitle.setText(mCurrLocation.getName());
-                        mTitle.setBackgroundColor(Color.argb(200,91,82,82));
-                    }
-                    if (mDesc != null) {
-                       mDesc.setDescription(mCurrLocation.getDescription());
+                    getSupportActionBar().setTitle(mCurrLocation.getName());
 
+                    if (mDesc != null) {
+                        mDesc.setDescription(mCurrLocation.getDescription());
+                        mDesc.setCity(mCurrLocation.getCity());
                     }
+
                     if (mComments != null) {
                         LocationCommentsAdapter commentsAdapter = new LocationCommentsAdapter(getApplicationContext(),mCurrLocation.getComments());
                         mComments.setCurrLocation(mCurrLocation);
                         mComments.setCommentsAdapter(commentsAdapter);
                         mPagerAdapter.notifyDataSetChanged();
                     }
-                    if (mLocation != null) {
-                        mLocation.setText(mCurrLocation.getCity());
-                        mPagerAdapter.notifyDataSetChanged();
-                    }
-                    if(mCity!=null){
-                        mCity.setText(mCurrLocation.getCity());
-                    }
+
                     mLat = mCurrLocation.getLocation().getLatitude();
                     mLong = mCurrLocation.getLocation().getLongitude();
 
