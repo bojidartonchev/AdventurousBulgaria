@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -57,6 +58,11 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
         mFollowBtn = (Button) findViewById(R.id.follow_btn);
         mFollowBtn.setOnClickListener(this);
 
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(getString(R.string.actionbar_profile));
+
+
         mUserID=getIntent().getStringExtra("userID");
         ParseQuery<ParseObject> query = ParseQuery.getQuery("_User");
         query.whereEqualTo("objectId",mUserID);
@@ -85,9 +91,9 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public void done(int count, ParseException e) {
                 if(e==null){
-                    mFollowing.setText(String.format(getResources().getString(R.string.profile_following_format), count));
+                    mFollowing.setText(String.valueOf(count));
                 } else {
-                    mFollowing.setText(String.format(getResources().getString(R.string.profile_following_format), 0));
+                    mFollowing.setText(0);
                 }
             }
         });
@@ -99,9 +105,9 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public void done(int count, ParseException e) {
                 if(e==null){
-                    mFollowers.setText(String.format(getResources().getString(R.string.profile_followers_format), count));
+                    mFollowers.setText(String.valueOf(count));
                 } else {
-                    mFollowers.setText(String.format(getResources().getString(R.string.profile_followers_format), 0));
+                    mFollowers.setText(0);
                 }
             }
         });
@@ -184,6 +190,19 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
                 promptUnfollow(REMOVE_PENDING_FROM_USER);
             }
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+            {
+                onBackPressed();
+                return true;
+            }
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private void promptUnfollow(final UnfollowActions action){

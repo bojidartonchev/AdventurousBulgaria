@@ -106,12 +106,15 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
 
             /** Called when a drawer has settled in a completely closed state. */
             public void onDrawerClosed(View view) {
+                mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                 super.onDrawerClosed(view);
                 getSupportActionBar().setTitle(mPagerAdapter.getPageTitle(mPager.getCurrentItem()));
             }
 
             /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
+                mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+
                 super.onDrawerOpened(drawerView);
                 getSupportActionBar().setTitle("Menu");
             }
@@ -119,6 +122,7 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
 
         // Set the drawer toggle as the DrawerListener
         mDrawerLayout.addDrawerListener(mDrawerToggle);
+        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -178,6 +182,8 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
     public boolean onOptionsItemSelected(MenuItem item) {
         // Pass the event to ActionBarDrawerToggle, if it returns
         // true, then it has handled the app icon touch event
+
+        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }

@@ -156,4 +156,7 @@
     <string name="failed_text">Failed</string>
     <string name="input_hint">Write a message...</string>
 
+    <!-- ACTION_BAR_TITLES-->
+    <string name="actionbar_profile">Profile</string>
+
 </resources>

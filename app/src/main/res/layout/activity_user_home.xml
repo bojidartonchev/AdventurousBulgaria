@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:weightSum="1"
-    android:background="@color/backgroundColor">
+    android:background="@drawable/radial_grad">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -15,26 +15,23 @@
     <com.jmedeisis.windowview.WindowView
         android:id="@+id/header_cover_image"
         android:layout_width="match_parent"
-        android:layout_height="290dp"
+        android:layout_height="170dp"
         android:scaleType="centerCrop"
         app:wwv_translate_mode="Constant"
-        android:src="@drawable/profile_background"
         app:wwv_max_constant_translation="20dp"
         app:wwv_max_pitch="45"
         app:wwv_max_roll="45"/>
 
-    <ImageView
+    <com.codeground.wanderlustbulgaria.Utilities.RoundedParseImageView
         android:id="@+id/user_profile_photo"
         android:layout_width="125dp"
         android:layout_height="125dp"
         android:layout_below="@+id/header_cover_image"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="-215dp"
-        android:elevation="10dp"
+        android:layout_marginTop="-140dp"
         android:padding="2dp"
         android:scaleType="centerCrop"
         android:src="@drawable/com_facebook_profile_picture_blank_square"
-        android:background="#000000"
     />
         <TextView
             android:textAlignment="center"
@@ -48,25 +45,40 @@
             android:textSize="24sp"
             android:id="@+id/name"
             android:layout_width="match_parent"
-
             />
 
-        <LinearLayout
+        <View
             android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:id="@+id/divider"
+            android:layout_below="@id/name"
+            android:background="@color/mainMenuTabColor"/>
+
+
+
+
+        <LinearLayout
+            android:layout_width="340dp"
+            android:layout_centerHorizontal="true"
             android:layout_height="wrap_content"
             android:weightSum="3"
-            android:layout_below="@id/name"
-            android:background="@color/menuColor">
+            android:id="@+id/numbers"
+            android:layout_below="@id/divider"
+            android:background="@color/colorPrimarySuperDarkTrans">
 
 
             <TextView
                 android:textAlignment="center"
-                android:text="@string/profile_followers"
-                android:layout_height="50dp"
+                android:text=""
+                android:drawableTop="@drawable/id"
+                android:layout_marginTop="5dp"
+                android:layout_height="100dp"
                 android:gravity="center"
                 android:textColor="@android:color/white"
                 android:textSize="18sp"
-                android:background="@color/menuColor"
                 android:id="@+id/followers"
                 android:layout_width="0dp"
 
@@ -75,25 +87,72 @@
 
             <TextView
                 android:textAlignment="center"
-                android:text="@string/profile_following"
-                android:background="@color/menuColor"
+                android:text=""
                 android:textSize="18sp"
                 android:textColor="@android:color/white"
-                android:layout_height="50dp"
+                android:drawableTop="@drawable/id"
+                android:layout_marginTop="5dp"
+                android:layout_height="100dp"
                 android:gravity="center"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:id="@+id/following"
                 />
-            <Button
+            <TextView
+                android:textAlignment="center"
+                android:text=""
+                android:textSize="18sp"
+                android:textColor="@android:color/white"
+                android:drawableTop="@drawable/id"
+                android:layout_marginTop="5dp"
+                android:layout_height="100dp"
+                android:gravity="center"
                 android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:textColor="@android:color/black"
-                android:id="@+id/follow_btn"
                 android:layout_weight="1"
+                android:id="@+id/test"
                 />
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_below="@id/numbers"
+            android:id="@+id/escription">
+
+
+            <TextView
+                android:layout_width="230dp"
+                android:layout_height="90dp"
+                android:text="tlissd est laborum et dolorum fuga. Et harum quidem rerum facilis est et luta nobis est eligendi optio cumque nihil impedit qudfafadgaahdhdahdadhahafd"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:id="@+id/profile_desc"/>
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_below="@id/name"
+                android:background="@color/mainMenuTabColor"/>
+
+            <Button
+                android:layout_marginTop="15dp"
+                android:layout_gravity="center"
+                android:layout_width="140dp"
+                android:layout_height="50dp"
+                android:background="@color/colorPrimary"
+                android:textColor="@android:color/black"
+                android:id="@+id/follow_btn"
+                android:layout_weight="1"
+            />
+
+        </LinearLayout>
+>
 
     </RelativeLayout>
 
