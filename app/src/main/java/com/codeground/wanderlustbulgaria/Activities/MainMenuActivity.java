@@ -141,8 +141,9 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         mPager.setCurrentItem(1);
         mPager.setOffscreenPageLimit(3);
 
-        loadProfilePicture();
+
     }
+
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -216,7 +217,7 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
     @Override
     protected void onResume() {
         super.onResume();
-
+        loadProfilePicture();
         //This method will initialize the count value
         initializeCountDrawer();
     }
