@@ -1,6 +1,5 @@
 package com.codeground.wanderlustbulgaria.Activities;
 
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,17 +17,11 @@ import com.codeground.wanderlustbulgaria.Utilities.Adapters.ImagesAdapter;
 import com.codeground.wanderlustbulgaria.Utilities.Adapters.LocationCommentsAdapter;
 import com.codeground.wanderlustbulgaria.Utilities.Adapters.LocationPagerAdapter;
 import com.codeground.wanderlustbulgaria.Utilities.ParseUtils.ParseLocation;
-import com.facebook.messenger.MessengerThreadParams;
-import com.facebook.messenger.MessengerUtils;
-import com.facebook.messenger.ShareToMessengerParams;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,19 +52,9 @@ public class LandmarkActivity extends AppCompatActivity{
         Intent intent = getIntent();
         String locId = null;
 
-        if (Intent.ACTION_PICK.equals(intent.getAction())) {
-            mPicking = true;
-            MessengerThreadParams mThreadParams = MessengerUtils.getMessengerThreadParamsForIntent(intent);
-
-            String metadata = mThreadParams.metadata;
-            JSONObject mainObject = null;
-            try {
-                mainObject = new JSONObject(metadata);
-                locId = mainObject.getString("locationId");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
+        if (Intent.ACTION_VIEW.equals(intent.getAction())) {
+            Uri uri = intent.getData();
+            locId = uri.getQueryParameter("locationId");
         }else{
             locId = getIntent().getStringExtra("locationId");
         }
@@ -149,9 +132,9 @@ public class LandmarkActivity extends AppCompatActivity{
                 startActivity(intent);
                 return true;
             }
-            case R.id.menu_item_share_messenger:
+            case R.id.menu_item_share:
             {
-                onShareMessengerClick();
+                onShareClick();
             }
         }
 
@@ -167,28 +150,17 @@ public class LandmarkActivity extends AppCompatActivity{
         return true;
     }
 
-    public void onShareMessengerClick() {
-        String mimeType = "image/png";
-
-        String metadata = String.format("{ \"locationId\" : \"%s\" }", mCurrLocation.getObjectId());
-
-        Uri imageUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE +
-                "://" + getApplicationContext().getResources().getResourcePackageName(R.mipmap.ic_launcher)
-                + '/' + getApplicationContext().getResources().getResourceTypeName(R.mipmap.ic_launcher)
-                + '/' + getApplicationContext().getResources().getResourceEntryName(R.mipmap.ic_launcher) );
-        // contentUri points to the content being shared to Messenger
-        ShareToMessengerParams shareToMessengerParams =
-                ShareToMessengerParams.newBuilder(imageUri, mimeType)
-                        .setMetaData(metadata)
-                        .build();
-
-        if (mPicking) {
-            MessengerUtils.finishShareToMessenger(this, shareToMessengerParams);
-        } else {
-            MessengerUtils.shareToMessenger(
-                    this,
-                    1,
-                    shareToMessengerParams);
-        }
+    public void onShareClick() {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        //Uri imageUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE +
+        //        "://" + getApplicationContext().getResources().getResourcePackageName(R.mipmap.ic_launcher)
+        //        + '/' + getApplicationContext().getResources().getResourceTypeName(R.mipmap.ic_launcher)
+        //        + '/' + getApplicationContext().getResources().getResourceEntryName(R.mipmap.ic_launcher) );
+        intent.putExtra(Intent.EXTRA_TITLE, "Wanderlust Bulgaria");
+        intent.putExtra(Intent.EXTRA_TEXT, "https://fb.me/282963612159586?locationId=" + mCurrLocation.getObjectId());
+        //intent.putExtra(Intent.EXTRA_STREAM, imageUri);
+        startActivity(Intent.createChooser(intent, "Share via"));
     }
 }
