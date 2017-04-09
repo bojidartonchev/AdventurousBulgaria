@@ -98,6 +98,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         mCurrentUser.put("last_name",lastName);
         mCurrentUser.put("search_match",firstName.toLowerCase()+" "+lastName.toLowerCase());
         mCurrentUser.put("is_follow_allowed", true);
+        mCurrentUser.put("profile_description", getString(R.string.register_profile_description));
 
         mCurrentUser.signUpInBackground(new SignUpCallback() {
             @Override

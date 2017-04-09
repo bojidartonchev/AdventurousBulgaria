@@ -1,18 +1,13 @@
 package com.codeground.wanderlustbulgaria.Activities;
 
 import android.Manifest;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
-import android.media.ThumbnailUtils;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -23,7 +18,6 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -37,8 +31,6 @@ import com.codeground.wanderlustbulgaria.Fragments.ProfileFragment;
 import com.codeground.wanderlustbulgaria.Interfaces.IOnFacebookProfileImageUploadCompleted;
 import com.codeground.wanderlustbulgaria.R;
 import com.codeground.wanderlustbulgaria.Utilities.Adapters.MainMenuPagerAdapter;
-import com.codeground.wanderlustbulgaria.Utilities.ParseUtils.ParseUtilities;
-import com.codeground.wanderlustbulgaria.Utilities.ProfileManager;
 import com.codeground.wanderlustbulgaria.Utilities.SettingsManager;
 import com.codeground.wanderlustbulgaria.Utilities.UploadFacebookProfileImageTask;
 import com.parse.CountCallback;
@@ -53,23 +45,10 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         TabLayout.OnTabSelectedListener,
         View.OnClickListener{
     private static final int INITIAL_REQUEST = 1337;
-    private static final int CAMERA_TAKE_PHOTO = 1338;
-    private static final int CAMERA_REQUEST = 1339;
-    private static final int SELECT_FROM_GALLERY = 1340;
-    private static final int STORAGE_REQUEST = 1341;
-
-    private static final int THUMBSIZE = 128;
 
     private static final String[] INITIAL_PERMS = {
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION
-    };
-
-    private static final String[] CAMERA_PERMS = {
-            Manifest.permission.CAMERA
-    };
-    private static final String[] STORAGE_PERMS = {
-            Manifest.permission.READ_EXTERNAL_STORAGE
     };
 
     private TextView mPersonName;
@@ -192,6 +171,30 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onProfileImageUploadCompleted() {
+        this.loadProfilePicture();
+    }
+
+
+    private void checkForPermissions() {
+        if (ContextCompat.checkSelfPermission(this,
+                INITIAL_PERMS[0])
+                != PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(this,
+                        INITIAL_PERMS[1])
+                        != PackageManager.PERMISSION_GRANTED) {
+
+            // No explanation needed, we can request the permission.
+            ActivityCompat.requestPermissions(this,
+                    INITIAL_PERMS,
+                    INITIAL_REQUEST);
+
+        }else{
+            BootReceiver.scheduleAlarm(this);
+        }
+    }
+
     private void loadProfilePicture() {
         ParseUser currUser = ParseUser.getCurrentUser();
         ParseFile pic = (ParseFile) currUser.get("profile_picture");
@@ -224,13 +227,6 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
     }
 
     @Override
-    public void onClick(View v) {
-        if(v.getId() == R.id.profile_image){
-            selectPictureOption();
-        }
-    }
-
-    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
 
@@ -241,61 +237,11 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
                     Toast.makeText(this, getString(R.string.alert_no_gps), Toast.LENGTH_LONG).show();
                 }
                 break;
-            case CAMERA_REQUEST:
-                if ((grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-
-                    startCamera();
-                } else {
-                    Toast.makeText(this, getString(R.string.alert_no_camera), Toast.LENGTH_LONG).show();
-                }
-                break;
-            case  STORAGE_REQUEST:
-                if ((grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                   startGallery();
-                } else {
-                    Toast.makeText(this, getString(R.string.alert_no_storage), Toast.LENGTH_LONG).show();
-                }
-                break;
             default:
                 break;
         }
     }
 
-    private void checkGalleryPerms(){
-        if (ContextCompat.checkSelfPermission(this,STORAGE_PERMS[0])
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    STORAGE_PERMS,
-                    STORAGE_REQUEST);
-        } else {
-            startGallery();
-        }
-    }
-
-    private void checkCameraPerms(){
-        if (ContextCompat.checkSelfPermission(this,
-                CAMERA_PERMS[0])
-                != PackageManager.PERMISSION_GRANTED){
-
-            // No explanation needed, we can request the permission.
-            ActivityCompat.requestPermissions(this,
-                    CAMERA_PERMS,
-                    CAMERA_REQUEST);
-
-        }else{
-           startCamera();
-        }
-    }
-
-    private void startGallery(){
-        Intent i = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(i, SELECT_FROM_GALLERY);
-    }
-
-    private void startCamera(){
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent, CAMERA_TAKE_PHOTO);
-    }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -336,77 +282,6 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         return false;
     }
 
-    private void checkForPermissions() {
-        if (ContextCompat.checkSelfPermission(this,
-                INITIAL_PERMS[0])
-                != PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(this,
-                        INITIAL_PERMS[1])
-                        != PackageManager.PERMISSION_GRANTED) {
-
-            // No explanation needed, we can request the permission.
-            ActivityCompat.requestPermissions(this,
-                    INITIAL_PERMS,
-                    INITIAL_REQUEST);
-
-        }else{
-            BootReceiver.scheduleAlarm(this);
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            if (requestCode == CAMERA_TAKE_PHOTO && data!=null) {
-                Bitmap bitmap = ProfileManager.getCroppedBitmap((Bitmap) data.getExtras().get("data"));
-                mProfilePicture.setImageBitmap(bitmap);
-                ParseUtilities.uploadProfilePicture(bitmap);
-            } else if(requestCode == SELECT_FROM_GALLERY && data!=null){
-
-                Uri selectedImage = data.getData();
-                String[] filePathColumn = { MediaStore.Images.Media.DATA };
-
-                Cursor cursor = getContentResolver().query(selectedImage,
-                        filePathColumn, null, null, null);
-                cursor.moveToFirst();
-
-                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                String picturePath = cursor.getString(columnIndex);
-                cursor.close();
-
-                Bitmap bmp = ThumbnailUtils.extractThumbnail(
-                        BitmapFactory.decodeFile(picturePath),
-                        THUMBSIZE,
-                        THUMBSIZE);
-
-                mProfilePicture.setImageBitmap(ProfileManager.getCroppedBitmap(bmp));
-                ParseUtilities.uploadProfilePicture(bmp);
-            }
-        }
-    }
-
-    private void selectPictureOption(){
-        final CharSequence[] items = { getString(R.string.menu_take_photo), getString(R.string.menu_choose_library),
-                getString(R.string.menu_cancel)};
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(getString(R.string.menu_choose_option));
-        builder.setItems(items, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int item) {
-
-                if (items[item].equals(getString(R.string.menu_take_photo))) {
-                    checkCameraPerms();
-
-                } else if (items[item].equals(getString(R.string.menu_choose_library))) {
-                    checkGalleryPerms();
-                } else if (items[item].equals(getString(R.string.menu_cancel))) {
-                    dialog.dismiss();
-                }
-            }
-        });
-        builder.show();
-    }
 
     private void logout() {
         updateUserStatus(false);
@@ -436,10 +311,6 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
         });
     }
 
-    @Override
-    public void onProfileImageUploadCompleted() {
-        this.loadProfilePicture();
-    }
 
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
@@ -468,5 +339,14 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
     protected void onDestroy() {
         super.onDestroy();
         updateUserStatus(false);
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(v.getId() == R.id.profile_image){
+            Intent intent = new Intent(getApplicationContext(), UserHomeActivity.class);
+            intent.putExtra("userID", ParseUser.getCurrentUser().getObjectId());
+            startActivity(intent);
+        }
     }
 }

@@ -130,6 +130,7 @@
     <string name="register_password">Password</string>
     <string name="register_confirm_pwd">Confirm password</string>
     <string name="register_button">Register</string>
+    <string name="register_profile_description">Wanderer. Traveller. Explorer</string>
 
     <!-- COMMENTS-->
     <string name="comment_write">Write a comment...</string>
