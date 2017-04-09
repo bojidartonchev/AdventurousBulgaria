@@ -3,7 +3,27 @@
     <item
         android:id="@+id/gmap_btn"
         android:title="@string/open_in_gps_hint"
-        app:showAsAction="always"
+        app:showAsAction="ifRoom"
         android:icon="@drawable/gmapicon"
         />
+
+    <item android:id="@+id/file"
+        android:title="Share"
+        app:showAsAction="always"
+        android:icon="@drawable/share_icon">
+
+        <menu>
+            <item
+                android:id="@+id/menu_item_share_messenger"
+                app:showAsAction="ifRoom"
+                android:title="Share on Messenger"
+                android:icon="@drawable/shareicon"/>
+            <item
+                android:id="@+id/menu_item_share_facebook"
+                app:showAsAction="ifRoom"
+                android:title="Share on Facebook"
+                android:icon="@drawable/shareicon"/>
+        </menu>
+    </item>
+
 </menu>

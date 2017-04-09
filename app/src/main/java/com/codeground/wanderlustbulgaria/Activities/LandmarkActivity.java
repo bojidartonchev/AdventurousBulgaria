@@ -1,5 +1,6 @@
 package com.codeground.wanderlustbulgaria.Activities;
 
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,11 +18,17 @@ import com.codeground.wanderlustbulgaria.Utilities.Adapters.ImagesAdapter;
 import com.codeground.wanderlustbulgaria.Utilities.Adapters.LocationCommentsAdapter;
 import com.codeground.wanderlustbulgaria.Utilities.Adapters.LocationPagerAdapter;
 import com.codeground.wanderlustbulgaria.Utilities.ParseUtils.ParseLocation;
+import com.facebook.messenger.MessengerThreadParams;
+import com.facebook.messenger.MessengerUtils;
+import com.facebook.messenger.ShareToMessengerParams;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +45,7 @@ public class LandmarkActivity extends AppCompatActivity{
     private double mLat;
     private double mLong;
     private ArrayList<ParseFile> mImages;
+    private boolean mPicking;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,15 +55,39 @@ public class LandmarkActivity extends AppCompatActivity{
         getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         mPagerImages = (ViewPager) findViewById(R.id.images_pager);
-        final String locId = getIntent().getStringExtra("locationId");
+
+        Intent intent = getIntent();
+        String locId = null;
+
+        if (Intent.ACTION_PICK.equals(intent.getAction())) {
+            mPicking = true;
+            MessengerThreadParams mThreadParams = MessengerUtils.getMessengerThreadParamsForIntent(intent);
+
+            String metadata = mThreadParams.metadata;
+            JSONObject mainObject = null;
+            try {
+                mainObject = new JSONObject(metadata);
+                locId = mainObject.getString("locationId");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }else{
+            locId = getIntent().getStringExtra("locationId");
+        }
+
+        if(locId == null){
+            finish();
+        }
+
         mPagerAdapter = new LocationPagerAdapter(getSupportFragmentManager());
         mPager = (ViewPager) findViewById(R.id.viewpager);
         mPager.setAdapter(mPagerAdapter);
         mTabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         mTabLayout.setupWithViewPager(mPager);
         LocationPagerAdapter curr = (LocationPagerAdapter) mPager.getAdapter();
-        mDesc =(LocationDescriptionFragment) curr.instantiateItem(mPager, 0);
-        mComments =(LocationCommentsFragment) mPager.getAdapter().instantiateItem(mPager, 1);
+        mDesc = (LocationDescriptionFragment) curr.instantiateItem(mPager, 0);
+        mComments = (LocationCommentsFragment) mPager.getAdapter().instantiateItem(mPager, 1);
         TabLayout dots = (TabLayout) findViewById(R.id.tabDots);
         dots.setupWithViewPager(mPagerImages, true);
 
@@ -64,11 +96,11 @@ public class LandmarkActivity extends AppCompatActivity{
         mImages = new ArrayList<>();
 
         final ParseQuery<ParseObject> query = ParseQuery.getQuery(getString(R.string.db_location_dbname));
-        query.whereEqualTo("objectId",locId);
+        query.whereEqualTo("objectId", locId);
         query.findInBackground(new FindCallback<ParseObject>() {
             public void done(List<ParseObject> objects, ParseException e) {
                 if (e == null) {
-                    mCurrLocation=(ParseLocation)objects.get(0);
+                    mCurrLocation = (ParseLocation) objects.get(0);
 
                     getSupportActionBar().setTitle(mCurrLocation.getName());
 
@@ -78,7 +110,7 @@ public class LandmarkActivity extends AppCompatActivity{
                     }
 
                     if (mComments != null) {
-                        LocationCommentsAdapter commentsAdapter = new LocationCommentsAdapter(getApplicationContext(),mCurrLocation.getComments());
+                        LocationCommentsAdapter commentsAdapter = new LocationCommentsAdapter(getApplicationContext(), mCurrLocation.getComments());
                         mComments.setCurrLocation(mCurrLocation);
                         mComments.setCommentsAdapter(commentsAdapter);
                         mPagerAdapter.notifyDataSetChanged();
@@ -89,7 +121,7 @@ public class LandmarkActivity extends AppCompatActivity{
 
                     mImages = mCurrLocation.getPhotos();
 
-                    if(mImages!=null && mImages.size() > 0){
+                    if (mImages != null && mImages.size() > 0) {
                         ImagesAdapter adapter = new ImagesAdapter(getApplicationContext(), mImages);
                         mPagerImages.setAdapter(adapter);
                     }
@@ -99,7 +131,6 @@ public class LandmarkActivity extends AppCompatActivity{
                 }
             }
         });
-
     }
 
     @Override
@@ -118,6 +149,10 @@ public class LandmarkActivity extends AppCompatActivity{
                 startActivity(intent);
                 return true;
             }
+            case R.id.menu_item_share_messenger:
+            {
+                onShareMessengerClick();
+            }
         }
 
         return super.onOptionsItemSelected(item);
@@ -125,7 +160,35 @@ public class LandmarkActivity extends AppCompatActivity{
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate menu resource file.
         getMenuInflater().inflate(R.menu.landmark_menu, menu);
-        return super.onCreateOptionsMenu(menu);
+
+        // Return true to display menu
+        return true;
+    }
+
+    public void onShareMessengerClick() {
+        String mimeType = "image/png";
+
+        String metadata = String.format("{ \"locationId\" : \"%s\" }", mCurrLocation.getObjectId());
+
+        Uri imageUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE +
+                "://" + getApplicationContext().getResources().getResourcePackageName(R.mipmap.ic_launcher)
+                + '/' + getApplicationContext().getResources().getResourceTypeName(R.mipmap.ic_launcher)
+                + '/' + getApplicationContext().getResources().getResourceEntryName(R.mipmap.ic_launcher) );
+        // contentUri points to the content being shared to Messenger
+        ShareToMessengerParams shareToMessengerParams =
+                ShareToMessengerParams.newBuilder(imageUri, mimeType)
+                        .setMetaData(metadata)
+                        .build();
+
+        if (mPicking) {
+            MessengerUtils.finishShareToMessenger(this, shareToMessengerParams);
+        } else {
+            MessengerUtils.shareToMessenger(
+                    this,
+                    1,
+                    shareToMessengerParams);
+        }
     }
 }
