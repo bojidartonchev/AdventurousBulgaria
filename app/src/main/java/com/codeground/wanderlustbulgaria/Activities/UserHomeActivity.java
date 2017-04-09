@@ -20,7 +20,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,6 +55,7 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
     private ImageView mProfilePicture;
     private TextView mFollowers;
     private TextView mFollowing;
+    private TextView mVisitedLocations;
     private TextView mProfileDesc;
     private TextView mName;
     private Button mFollowBtn;
@@ -83,6 +86,7 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
         mName = (TextView) findViewById(R.id.name);
         mFollowing = (TextView) findViewById(R.id.following);
         mFollowers = (TextView) findViewById(R.id.followers);
+        mVisitedLocations = (TextView) findViewById(R.id.visited_locations);
         mProfileDesc = (TextView) findViewById(R.id.profile_desc);
         mFollowBtn = (Button) findViewById(R.id.follow_btn);
         mFollowBtn.setOnClickListener(this);
@@ -91,8 +95,11 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(getString(R.string.actionbar_profile));
 
-
         mUserID=getIntent().getStringExtra("userID");
+
+        if(ParseUser.getCurrentUser().getObjectId().equals(mUserID)) {
+            mProfileDesc.setOnClickListener(this);
+        }
         ParseQuery<ParseObject> query = ParseQuery.getQuery("_User");
         query.whereEqualTo("objectId",mUserID);
         query.findInBackground(new FindCallback<ParseObject>() {
@@ -104,6 +111,7 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
                     loadPicture();
                     getFollowingCount();
                     getFollowersCount();
+                    getVisitedCount();
 
                 } else {
                     // error
@@ -114,6 +122,22 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
         loadFollowButton();
 
     }
+
+
+    private void getVisitedCount() {
+        ParseQuery followingQuery = mUser.getRelation("visited_locations").getQuery();
+        followingQuery.countInBackground(new CountCallback() {
+            @Override
+            public void done(int count, ParseException e) {
+                if(e==null){
+                    mVisitedLocations.setText(String.valueOf(count));
+                } else {
+                    mVisitedLocations.setText(0);
+                }
+            }
+        });
+    }
+
 
     private void getFollowingCount() {
         ParseQuery followingQuery = mUser.getRelation("following").getQuery();
@@ -222,6 +246,34 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
         }
         if(v.getId() == R.id.user_profile_photo){
             selectPictureOption();
+        }
+        if(v.getId() == R.id.profile_desc){
+            AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+            builder.setTitle(getString(R.string.profile_description));
+            View viewInflated = LayoutInflater.from(v.getContext()).inflate(R.layout.dialog_input_description, (ViewGroup) v.getParent(),false);
+            final EditText input = (EditText) viewInflated.findViewById(R.id.input);
+            input.setText(mProfileDesc.getText());
+
+            builder.setView(viewInflated);
+
+            builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    ParseUser currUser = ParseUser.getCurrentUser();
+                    currUser.put("profile_description", input.getText().toString());
+                    currUser.saveInBackground();
+                    mProfileDesc.setText(input.getText());
+                    dialog.dismiss();
+                }
+            });
+            builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+
+            builder.show();
         }
     }
 
@@ -409,8 +461,5 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
                 break;
         }
     }
-
-
-
 
 }
