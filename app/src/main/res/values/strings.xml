@@ -99,6 +99,7 @@
     <string name="profile_following_format">Following %1$d</string>
     <string name="profile_following">Following</string>
     <string name="profile_follow">Follow</string>
+    <string name="profile_description">Profile description</string>
 
     <!--MENUS-->
     <string name="menu_choose_option">Choose option</string>

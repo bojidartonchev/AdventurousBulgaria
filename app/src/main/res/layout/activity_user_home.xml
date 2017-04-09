@@ -109,7 +109,7 @@
                 android:gravity="center"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:id="@+id/test"
+                android:id="@+id/visited_locations"
                 />
         </LinearLayout>
 
@@ -118,7 +118,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_below="@id/numbers"
-            android:id="@+id/escription">
+            android:id="@+id/description">
 
 
             <TextView
