@@ -154,12 +154,8 @@ public class LandmarkActivity extends AppCompatActivity{
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_SEND);
         intent.setType("text/plain");
-        //Uri imageUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE +
-        //        "://" + getApplicationContext().getResources().getResourcePackageName(R.mipmap.ic_launcher)
-        //        + '/' + getApplicationContext().getResources().getResourceTypeName(R.mipmap.ic_launcher)
-        //        + '/' + getApplicationContext().getResources().getResourceEntryName(R.mipmap.ic_launcher) );
         intent.putExtra(Intent.EXTRA_TITLE, "Wanderlust Bulgaria");
-        intent.putExtra(Intent.EXTRA_TEXT, "https://fb.me/282963612159586?locationId=" + mCurrLocation.getObjectId());
+        intent.putExtra(Intent.EXTRA_TEXT, String.format("You should visit %s: https://fb.me/282963612159586?locationId=%s", mCurrLocation.getName(), mCurrLocation.getObjectId()));
         //intent.putExtra(Intent.EXTRA_STREAM, imageUri);
         startActivity(Intent.createChooser(intent, "Share via"));
     }
