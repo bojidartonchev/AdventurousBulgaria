@@ -4,7 +4,6 @@ package com.codeground.wanderlustbulgaria.Fragments;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,12 +34,6 @@ public class WanderersFragment extends Fragment{
     /** The user. */
     public static ParseUser user;
 
-    /** Flag to hold if the activity is running or not */
-    private boolean isRunning;
-
-    /** The handler */
-    private static Handler handler;
-
     private View mContainer;
     private View mProgress;
 
@@ -52,8 +45,6 @@ public class WanderersFragment extends Fragment{
         mProgress = v.findViewById(R.id.list_progress);
 
         user = ParseUser.getCurrentUser();
-
-        handler = new Handler();
 
         return v;
     }
@@ -69,18 +60,11 @@ public class WanderersFragment extends Fragment{
     public void onResume() {
         super.onResume();
         loadUserList();
-        isRunning = true;
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        isRunning = false;
     }
 
     /**
@@ -125,15 +109,6 @@ public class WanderersFragment extends Fragment{
                 }else{
                     //TODO notify error with custom dialog
                 }
-
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if(isRunning){
-                            loadUserList();
-                        }
-                    }
-                },5000);
             }
         });
     }

@@ -9,7 +9,7 @@
     android:layout_width="50dp"
     android:layout_height="50dp"
     android:layout_alignParentLeft="true"
-    android:layout_margin="15dp"
+    android:layout_margin="10dp"
     android:layout_marginLeft="5dip"
     android:layout_marginRight="5dip"
     />
