@@ -307,6 +307,8 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
                     mPendingFollowersBadge.setText(Integer.toString(count));
                 }else if(count > 99){
                     mPendingFollowersBadge.setText("99+");
+                }else if(count == 0){
+                    mPendingFollowersBadge.setText("");
                 }
             }
         });
