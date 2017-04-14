@@ -88,6 +88,7 @@
     <string name="comment_added_success">Your comment was added!</string>
     <string name="open_in_gps_hint">Get directions.</string>
     <string name="no_items_found_label">No items found.</string>
+    <string name="no_chat_items_found_label">You have no friends at this moment. Do you want to find a new friend?</string>
 
     <!--DIALOGS-->
     <string name="unfollow_prompt_text">You are about to unfollow %1$s</string>
