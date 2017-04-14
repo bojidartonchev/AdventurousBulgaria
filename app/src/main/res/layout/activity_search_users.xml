@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    android:background="@color/aliceBlue">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white">
 
 
     <EditText
@@ -9,17 +11,16 @@
         android:layout_height="wrap_content"
         android:inputType="textNoSuggestions"
         android:ems="15"
-
         android:id="@+id/search_query"
         android:hint="Who are you searching for ?"
         android:textColor="@android:color/black"
-
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="13dp" />
 
     <Button
         android:text="Search"
+        android:textAllCaps="false"
         android:drawableLeft="@drawable/places_ic_search"
         android:layout_width="wrap_content"
         android:layout_centerHorizontal="true"
@@ -35,6 +36,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="15dp"
-        android:layout_below="@id/search_btn"/>
+        android:layout_below="@id/search_btn"
+        tools:listitem="@layout/list_view_profile_row"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/search_no_items_label"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/no_items_found_label"
+        android:visibility="gone" />
 
 </RelativeLayout>

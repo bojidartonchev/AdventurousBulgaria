@@ -1,16 +1,17 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:background="@color/aliceBlue">
+    android:background="@color/chatItemBackgroundColor">
 
     <com.parse.ParseImageView
         android:id="@+id/activity_image"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:src="@drawable/com_facebook_profile_picture_blank_square"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="15dip"
-        android:layout_marginRight="15dip" />
+        android:layout_margin="10dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_centerVertical="true" />
 
     <TextView
         android:id="@+id/profile_name"
@@ -31,20 +32,26 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/black"
+        android:textColor="@android:color/white"
         android:id="@+id/accept_btn"
         android:layout_below="@+id/timestamp"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
+        android:background="@color/menuColor"
+        android:layout_margin="10dp"
+        android:textAllCaps="false"
         android:text="@string/pending_accept_button" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/black"
+        android:textColor="@android:color/white"
         android:id="@+id/reject_btn"
+        android:layout_margin="5dp"
         android:text="@string/pending_reject_button"
+        android:textAllCaps="false"
         android:layout_alignBaseline="@+id/accept_btn"
+        android:background="@android:color/holo_red_light"
         android:layout_alignBottom="@+id/accept_btn"
         android:layout_toLeftOf="@+id/accept_btn"
         android:layout_toStartOf="@+id/accept_btn" />

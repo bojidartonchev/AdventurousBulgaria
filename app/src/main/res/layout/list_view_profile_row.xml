@@ -1,17 +1,18 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:background="@color/aliceBlue"
+    android:background="@color/chatItemBackgroundColor"
 >
 
-    <com.parse.ParseImageView
+    <com.codeground.wanderlustbulgaria.Utilities.RoundedParseImageView
         android:id="@android:id/icon"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:src="@drawable/com_facebook_profile_picture_blank_square"
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="15dip"
-        android:layout_marginRight="15dip" />
+        android:layout_marginRight="15dip"
+        android:layout_margin="10dp"/>
 
     <TextView
         android:id="@+id/profile_name"
