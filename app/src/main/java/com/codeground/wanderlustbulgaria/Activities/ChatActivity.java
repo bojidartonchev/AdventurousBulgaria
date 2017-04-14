@@ -167,9 +167,12 @@ public class ChatActivity extends CustomActivity {
         adp.notifyDataSetChanged();
         txt.setText(null);
 
+        ParseUser currentUser = ParseUser.getCurrentUser();
+
         //send the message
         ParseObject obj = new ParseObject("Chat");
-        obj.put("sender", ParseUser.getCurrentUser().getUsername());
+        obj.put("sender", currentUser.getUsername());
+        obj.put("sender_full_name", currentUser.getString("first_name") + " " + currentUser.getString("last_name"));
         obj.put("receiver", buddyUsername);
         obj.put("message", s);
         obj.saveEventually(new SaveCallback() {

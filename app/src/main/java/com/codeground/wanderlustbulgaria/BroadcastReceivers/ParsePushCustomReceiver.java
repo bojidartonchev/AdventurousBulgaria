@@ -1,6 +1,7 @@
 package com.codeground.wanderlustbulgaria.BroadcastReceivers;
 
 import android.app.Activity;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -8,14 +9,15 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 
-import com.codeground.wanderlustbulgaria.Activities.SplashActivity;
+import com.codeground.wanderlustbulgaria.Activities.ChatActivity;
+import com.codeground.wanderlustbulgaria.Activities.MainMenuActivity;
 import com.codeground.wanderlustbulgaria.R;
 import com.codeground.wanderlustbulgaria.Utilities.LifecycleHandler;
-import com.codeground.wanderlustbulgaria.Utilities.NotificationsManager;
-import com.devspark.appmsg.AppMsg;
 import com.parse.ParsePushBroadcastReceiver;
 
 import org.json.JSONException;
@@ -28,7 +30,7 @@ import static com.codeground.wanderlustbulgaria.R.string.app_name;
 
 public class ParsePushCustomReceiver extends ParsePushBroadcastReceiver {
 
-    private Class DEFAULT_ACTIVITY = SplashActivity.class;
+    private Class DEFAULT_ACTIVITY = MainMenuActivity.class;
 
     @Override
     protected void onPushReceive(Context context, Intent intent) {
@@ -40,29 +42,12 @@ public class ParsePushCustomReceiver extends ParsePushBroadcastReceiver {
                 JSONObject json;
                 json = new JSONObject(jsonData);
 
-                if(LifecycleHandler.isApplicationInForeground()){
-                    sendInAppNotification(LifecycleHandler.getCurrentActivity(), json);
-                }else{
-                    sendPushNotification(context, json);
-                }
+                sendPushNotification(context, json);
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
-    }
-
-    private void sendInAppNotification(Activity activity, JSONObject data){
-        String pushContent = activity.getString(app_name);
-
-        if (data.has("alert")) {
-            try {
-                pushContent = data.getString("alert");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-
-        NotificationsManager.showDropDownNotification(activity, pushContent, AppMsg.STYLE_ALERT);
     }
 
     private void sendPushNotification(Context context, JSONObject data){
@@ -82,10 +67,10 @@ public class ParsePushCustomReceiver extends ParsePushBroadcastReceiver {
 
                 Intent i = new Intent(context, DEFAULT_ACTIVITY);
 
+                Class<?> c = null;
                 if(data.has("target_activity")){
                     String activityName = data.getString("target_activity");
 
-                    Class<?> c = null;
                     if(activityName != null) {
                         try {
                             c = Class.forName(activityName);
@@ -112,8 +97,12 @@ public class ParsePushCustomReceiver extends ParsePushBroadcastReceiver {
 
                             if(key.equals("username"))
                             {
-                                //message notification
-                                //just for testing
+                                //chat push received
+                                if(areAlreadyChatting(c, value)){
+                                    //user chat with that user already open
+                                    return;
+                                }
+
                                 mNotificationId = value.length();
                             }
 
@@ -124,11 +113,19 @@ public class ParsePushCustomReceiver extends ParsePushBroadcastReceiver {
                     }
                 }
 
+                // The stack builder object will contain an artificial back stack for the
+                // started Activity.
+                // This ensures that navigating backward from the Activity leads out of
+                // your application to the Home screen.
+                TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+                // Adds the back stack for the Intent (but not the Intent itself)
+                stackBuilder.addParentStack(DEFAULT_ACTIVITY);
+                // Adds the Intent that starts the Activity to the top of the stack
+                stackBuilder.addNextIntent(i);
+
                 PendingIntent resultPendingIntent =
-                        PendingIntent.getActivity(
-                                context,
+                        stackBuilder.getPendingIntent(
                                 0,
-                                i,
                                 PendingIntent.FLAG_UPDATE_CURRENT
                         );
 
@@ -139,6 +136,9 @@ public class ParsePushCustomReceiver extends ParsePushBroadcastReceiver {
                                 .setContentText(pushContent)
                                 .setContentIntent(resultPendingIntent)
                                 .setAutoCancel(true);
+
+                mBuilder.setPriority(Notification.PRIORITY_HIGH);
+                if (Build.VERSION.SDK_INT >= 21) mBuilder.setVibrate(new long[0]);
 
                 mBuilder.setLights(Color.CYAN, 500, 500);
 
@@ -156,5 +156,20 @@ public class ParsePushCustomReceiver extends ParsePushBroadcastReceiver {
 
             e.printStackTrace();
         }
+    }
+
+    private boolean areAlreadyChatting(Class<?> c, String user){
+        if(c != null && c == ChatActivity.class){
+            Activity currentActivity = LifecycleHandler.getCurrentActivity();
+            if(currentActivity != null && currentActivity.getClass() == ChatActivity.class){
+                String currentChatUsername = currentActivity.getIntent().getStringExtra("username");
+
+                if(currentChatUsername.equals(user)){
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }
