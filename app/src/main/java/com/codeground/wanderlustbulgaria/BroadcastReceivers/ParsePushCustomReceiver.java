@@ -6,6 +6,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -18,7 +20,13 @@ import com.codeground.wanderlustbulgaria.Activities.ChatActivity;
 import com.codeground.wanderlustbulgaria.Activities.MainMenuActivity;
 import com.codeground.wanderlustbulgaria.R;
 import com.codeground.wanderlustbulgaria.Utilities.LifecycleHandler;
+import com.parse.GetCallback;
+import com.parse.GetDataCallback;
+import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParsePushBroadcastReceiver;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,6 +39,11 @@ import static com.codeground.wanderlustbulgaria.R.string.app_name;
 public class ParsePushCustomReceiver extends ParsePushBroadcastReceiver {
 
     private Class DEFAULT_ACTIVITY = MainMenuActivity.class;
+
+    private int mNotificationId = 001;
+    private Intent mIntent;
+    private String pushTitle;
+    private String pushContent;
 
     @Override
     protected void onPushReceive(Context context, Intent intent) {
@@ -50,22 +63,25 @@ public class ParsePushCustomReceiver extends ParsePushBroadcastReceiver {
         }
     }
 
-    private void sendPushNotification(Context context, JSONObject data){
+    private void sendPushNotification(final Context context, JSONObject data){
+        boolean isChatNotification = false;
+        String targetUsername = "";
+
         try {
             if (data != null) {
-                String pushTitle = context.getString(app_name);
+                pushTitle = context.getString(app_name);
 
                 if(data.has("title")){
                     pushTitle = data.getString("title");
                 }
 
-                String pushContent = context.getString(app_name);
+                pushContent = context.getString(app_name);
 
                 if(data.has("alert")){
                     pushContent = data.getString("alert");
                 }
 
-                Intent i = new Intent(context, DEFAULT_ACTIVITY);
+                mIntent = new Intent(context, DEFAULT_ACTIVITY);
 
                 Class<?> c = null;
                 if(data.has("target_activity")){
@@ -75,16 +91,17 @@ public class ParsePushCustomReceiver extends ParsePushBroadcastReceiver {
                         try {
                             c = Class.forName(activityName);
 
-                            i = new Intent(context, c);
+                            if(c == ChatActivity.class){
+                                isChatNotification = true;
+                            }
+
+                            mIntent = new Intent(context, c);
                         } catch (ClassNotFoundException e) {
                             // TODO Auto-generated catch block
                             e.printStackTrace();
                         }
                     }
                 }
-
-                // Sets an ID for the notification
-                int mNotificationId = 001;
 
                 if(data.has("extras")){
                     JSONObject extrasJson = data.getJSONObject("extras");
@@ -95,8 +112,9 @@ public class ParsePushCustomReceiver extends ParsePushBroadcastReceiver {
                             String key = temp.next();
                             String value = extrasJson.getString(key);
 
-                            if(key.equals("username"))
+                            if(key.equals("username") && isChatNotification)
                             {
+                                targetUsername = value;
                                 //chat push received
                                 if(areAlreadyChatting(c, value)){
                                     //user chat with that user already open
@@ -106,51 +124,38 @@ public class ParsePushCustomReceiver extends ParsePushBroadcastReceiver {
                                 mNotificationId = value.length();
                             }
 
-                            i.putExtra(key, value);
+                            mIntent.putExtra(key, value);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
 
-                // The stack builder object will contain an artificial back stack for the
-                // started Activity.
-                // This ensures that navigating backward from the Activity leads out of
-                // your application to the Home screen.
-                TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
-                // Adds the back stack for the Intent (but not the Intent itself)
-                stackBuilder.addParentStack(DEFAULT_ACTIVITY);
-                // Adds the Intent that starts the Activity to the top of the stack
-                stackBuilder.addNextIntent(i);
+                if(isChatNotification){
+                    ParseQuery<ParseUser> userQuery = ParseUser.getQuery();
+                    userQuery.whereEqualTo("username", targetUsername);
+                    userQuery.getFirstInBackground(new GetCallback<ParseUser>() {
+                        @Override
+                        public void done(ParseUser object, ParseException e) {
+                            ParseFile img = object.getParseFile("profile_picture");
 
-                PendingIntent resultPendingIntent =
-                        stackBuilder.getPendingIntent(
-                                0,
-                                PendingIntent.FLAG_UPDATE_CURRENT
-                        );
+                            if(object!=null && e==null){
+                                img.getDataInBackground(new GetDataCallback() {
+                                    @Override
+                                    public void done(byte[] data, ParseException e) {
+                                        if (e == null) {
+                                            Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
 
-                NotificationCompat.Builder mBuilder =
-                        new NotificationCompat.Builder(context)
-                                .setSmallIcon(R.drawable.notification_icon)
-                                .setContentTitle(pushTitle)
-                                .setContentText(pushContent)
-                                .setContentIntent(resultPendingIntent)
-                                .setAutoCancel(true);
-
-                mBuilder.setPriority(Notification.PRIORITY_HIGH);
-                if (Build.VERSION.SDK_INT >= 21) mBuilder.setVibrate(new long[0]);
-
-                mBuilder.setLights(Color.CYAN, 500, 500);
-
-                Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                mBuilder.setSound(alarmSound);
-
-                // Gets an instance of the NotificationManager service
-                NotificationManager mNotifyMgr =
-                        (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
-                // Builds the notification and issues it.
-                mNotifyMgr.notify(mNotificationId, mBuilder.build());
-
+                                            buildNotification(context, mIntent, mNotificationId, pushTitle, pushContent, bitmap);
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }else{
+                    buildNotification(context, mIntent, mNotificationId, pushTitle, pushContent, null);
+                }
             }
         } catch (JSONException e) {
 
@@ -171,5 +176,49 @@ public class ParsePushCustomReceiver extends ParsePushBroadcastReceiver {
         }
 
         return false;
+    }
+
+    private void buildNotification(Context ctx, Intent i, int id, String title, String content, Bitmap image){
+        // The stack builder object will contain an artificial back stack for the
+        // started Activity.
+        // This ensures that navigating backward from the Activity leads out of
+        // your application to the Home screen.
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(ctx);
+        // Adds the back stack for the Intent (but not the Intent itself)
+        stackBuilder.addParentStack(DEFAULT_ACTIVITY);
+        // Adds the Intent that starts the Activity to the top of the stack
+        stackBuilder.addNextIntent(i);
+
+        PendingIntent resultPendingIntent =
+                stackBuilder.getPendingIntent(
+                        0,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(ctx)
+                        .setSmallIcon(R.drawable.notification_icon)
+                        .setContentTitle(title)
+                        .setContentText(content)
+                        .setContentIntent(resultPendingIntent)
+                        .setAutoCancel(true);
+
+        if(image!=null){
+            mBuilder.setLargeIcon(image);
+        }
+
+        mBuilder.setPriority(Notification.PRIORITY_HIGH);
+        if (Build.VERSION.SDK_INT >= 21) mBuilder.setVibrate(new long[0]);
+
+        mBuilder.setLights(Color.CYAN, 500, 500);
+
+        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        mBuilder.setSound(alarmSound);
+
+        // Gets an instance of the NotificationManager service
+        NotificationManager mNotifyMgr =
+                (NotificationManager) ctx.getSystemService(NOTIFICATION_SERVICE);
+        // Builds the notification and issues it.
+        mNotifyMgr.notify(id, mBuilder.build());
     }
 }
