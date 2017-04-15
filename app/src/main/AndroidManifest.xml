@@ -176,8 +176,7 @@
         </activity>
         <activity
             android:name="com.codeground.wanderlustbulgaria.Activities.ChatActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/ChatTheme">
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
