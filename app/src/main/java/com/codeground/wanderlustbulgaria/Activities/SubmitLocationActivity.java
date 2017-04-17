@@ -22,7 +22,6 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
-import com.google.android.gms.maps.model.LatLng;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
@@ -40,8 +39,7 @@ public class SubmitLocationActivity extends AppCompatActivity implements View.On
     private final int PICTURE_THREE = 3;
     private final int PLACE_PICKER_REQUEST = 4;
 
-    private TextView mLatitudeField;
-    private TextView mLongitudeField;
+
     private EditText mNameField;
     private EditText mDescField;
     private EditText mCityField;
@@ -51,6 +49,7 @@ public class SubmitLocationActivity extends AppCompatActivity implements View.On
     private ParseFile mPhoto1;
     private ParseFile mPhoto2;
     private ParseFile mPhoto3;
+    private TextView mAlertField;
 
     private LocationManager mLocationManager;
     private Double mLongitude;
@@ -72,10 +71,11 @@ public class SubmitLocationActivity extends AppCompatActivity implements View.On
         mPhoto2Field = (ImageView) findViewById(R.id.photo2);
         mPhoto3Field = (ImageView) findViewById(R.id.photo3);
         mPhoto3Field = (ImageView) findViewById(R.id.photo3);
-        mLatitudeField = (TextView) findViewById(R.id.latitude);
-        mLongitudeField = (TextView) findViewById(R.id.longitude);
+        mAlertField= (TextView) findViewById(R.id.alert);
         mSubmitBtn = (Button) findViewById(R.id.submit_btn);
         mMapBtn = (Button) findViewById(R.id.location_btn);
+
+        mAlertField.setText(getString(R.string.alert_location_current_location));
 
         mSubmitBtn.setOnClickListener(this);
         mMapBtn.setOnClickListener(this);
@@ -95,8 +95,6 @@ public class SubmitLocationActivity extends AppCompatActivity implements View.On
         if(currLocation!=null) {
             mLongitude = currLocation.getLongitude();
             mLatitude = currLocation.getLatitude();
-            mLongitudeField.setText("Longitude: " + mLongitude);
-            mLatitudeField.setText("Latitude: " + mLatitude);
         }
     }
 
@@ -245,9 +243,6 @@ public class SubmitLocationActivity extends AppCompatActivity implements View.On
             if (requestCode == PLACE_PICKER_REQUEST) {
                     Place place = PlacePicker.getPlace(getApplicationContext(),data);
 
-                    LatLng coords = place.getLatLng();
-                    mLatitudeField.setText("Latitude: "+coords.latitude);
-                    mLongitudeField.setText("Longitude: "+coords.longitude);
                     DialogWindowManager.dismiss();
             }
         }

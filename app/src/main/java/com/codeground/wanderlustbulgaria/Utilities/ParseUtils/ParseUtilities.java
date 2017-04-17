@@ -5,8 +5,10 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
 
+import com.codeground.wanderlustbulgaria.Utilities.NotificationsManager;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
+import com.sdsmdg.tastytoast.TastyToast;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -31,6 +33,10 @@ public class ParseUtilities {
         return output;
     }
     public static ParseFile createParseFile(Bitmap bmp, String name){
+        if(bmp==null){
+
+            NotificationsManager.showToast("Failed to get photo.", TastyToast.CONFUSING);
+        }
         ParseFile output=null;
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         // Compress image to lower quality scale 1 - 100

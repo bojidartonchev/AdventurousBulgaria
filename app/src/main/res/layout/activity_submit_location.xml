@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/backgroundColor"
+    android:background="@color/colorPrimaryDark"
     android:orientation="vertical"
     android:scrollbarAlwaysDrawVerticalTrack="true">
 <LinearLayout
@@ -12,7 +12,7 @@
     android:layout_marginLeft="20dp"
     android:layout_marginRight="20dp"
     android:layout_marginBottom="20dp"
-    android:background="#fff">
+    android:background="@color/colorPrimary">
 
 
 
@@ -50,43 +50,45 @@
         android:ems="10"
         android:id="@+id/desc_field"
         android:hint="Description" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="horizontal"
-        android:weightSum="2" >
-        <TextView
-            android:id="@+id/latitude"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginRight="10dp"
-            android:src="@drawable/com_facebook_profile_picture_blank_square" />
+        android:weightSum="2">
 
         <TextView
-            android:id="@+id/longitude"
+            android:id="@+id/alert"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginRight="10dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="@dimen/pad_15dp"
+            android:layout_marginRight="@dimen/pad_15dp"
+            android:layout_marginTop="-10dp"
+            android:layout_weight="1.9"
+            android:src="@drawable/com_facebook_profile_picture_blank_square"
+            android:gravity="center" />
 
-            android:src="@drawable/com_facebook_profile_picture_blank_square" />
+        <Button
+            android:id="@+id/location_btn"
+            android:layout_width="40dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="0.1"
+            android:background="@drawable/ic_location_marker"
+            android:backgroundTint="@color/colorPrimarySuperDark"
+            android:textColor="@android:color/black" />
 
 
     </LinearLayout>
-    <Button
-        android:text="Open map"
-        android:layout_width="match_parent"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/location_btn" />
+    />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="horizontal"
+        android:layout_marginTop="@dimen/pad_15dp"
         android:weightSum="3" >
         <ImageView
             android:id="@+id/photo1"
@@ -95,7 +97,7 @@
             android:layout_weight="1"
             android:layout_marginRight="10dp"
 
-            android:src="@drawable/photo" />
+            android:src="@android:drawable/ic_menu_gallery" />
 
         <ImageView
             android:id="@+id/photo2"
@@ -104,23 +106,27 @@
             android:layout_weight="1"
             android:layout_marginRight="10dp"
 
-            android:src="@drawable/photo" />
+            android:src="@android:drawable/ic_menu_gallery" />
 
         <ImageView
             android:id="@+id/photo3"
             android:layout_width="0dp"
             android:layout_height="100dp"
             android:layout_weight="1"
-            android:src="@drawable/photo" />
+            android:src="@android:drawable/ic_menu_gallery" />
 
     </LinearLayout>
 
 
     <Button
         android:text="Submit"
-        android:layout_width="wrap_content"
+    android:layout_marginTop="@dimen/pad_15dp"
+        android:gravity="center"
+        android:layout_width="140dp"
+        android:layout_height="40dp"
+        android:background="@color/colorPrimaryDark"
+        android:textColor="@android:color/black"
         android:layout_gravity="center"
-        android:layout_height="wrap_content"
         android:id="@+id/submit_btn" />
 
 </LinearLayout>

@@ -1,17 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="55dp"
+    android:layout_height="60dp"
     android:background="@color/lightBrown">
 
-    <ImageView
-        android:id="@+id/category_icon"
-        android:src="@drawable/path"
-        android:layout_width="55dp"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:tint="@color/colorPrimary"/>
 
     <TextView
         android:id="@+id/category_name"
@@ -19,10 +10,20 @@
         android:layout_height="wrap_content"
         android:textColor="@color/mainMenuListTextColor"
         android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/category_icon"
-        android:layout_toEndOf="@+id/category_icon"
-        android:paddingLeft="10dp"
+        android:layout_centerHorizontal="true"
+        android:text="ds"
+        android:textSize="18sp"
         android:textStyle="bold"
         />
+    <ImageView
+        android:id="@+id/category_icon"
+        android:src="@drawable/path"
+        android:layout_width="55dp"
+        android:layout_height="match_parent"
+
+        android:layout_toLeftOf="@id/category_name"
+        android:tint="@color/colorPrimary"
+        android:layout_alignParentTop="true" />
+
 
 </RelativeLayout>

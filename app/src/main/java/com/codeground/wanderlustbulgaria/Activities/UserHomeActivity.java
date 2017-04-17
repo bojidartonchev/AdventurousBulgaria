@@ -99,6 +99,11 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
 
         if(ParseUser.getCurrentUser().getObjectId().equals(mUserID)) {
             mProfileDesc.setOnClickListener(this);
+
+            ViewGroup parent = (ViewGroup) mFollowBtn.getParent();
+            if (parent != null) {
+                parent.removeView(mFollowBtn);
+            }
         }
         ParseQuery<ParseObject> query = ParseQuery.getQuery("_User");
         query.whereEqualTo("objectId",mUserID);
@@ -335,8 +340,10 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
         if (resultCode == RESULT_OK) {
             if (requestCode == CAMERA_TAKE_PHOTO && data!=null) {
                 Bitmap bitmap = ProfileManager.getCroppedBitmap((Bitmap) data.getExtras().get("data"));
-                mProfilePicture.setImageBitmap(bitmap);
-                ParseUtilities.uploadProfilePicture(bitmap);
+                if(bitmap!=null) {
+                    mProfilePicture.setImageBitmap(bitmap);
+                    ParseUtilities.uploadProfilePicture(bitmap);
+                }
             } else if(requestCode == SELECT_FROM_GALLERY && data!=null){
 
                 Uri selectedImage = data.getData();
