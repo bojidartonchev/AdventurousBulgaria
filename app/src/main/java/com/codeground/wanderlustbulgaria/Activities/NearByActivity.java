@@ -20,9 +20,8 @@ import android.widget.TextView;
 
 import com.codeground.wanderlustbulgaria.R;
 import com.codeground.wanderlustbulgaria.Utilities.Adapters.MarkerInfoWindowAdapter;
-import com.codeground.wanderlustbulgaria.Utilities.AllLocationsManager;
 import com.codeground.wanderlustbulgaria.Utilities.CustomLocationSource;
-import com.codeground.wanderlustbulgaria.Utilities.ParseUtils.ParseLocation;
+import com.codeground.wanderlustbulgaria.Utilities.ParseUtils.LocalParseLocation;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -194,27 +193,23 @@ public class NearByActivity extends AppCompatActivity implements OnMapReadyCallb
     }
 
     private void loadMarkersOnMap(int radius){
-        if(AllLocationsManager.getInstance().isLoaded()){
-            List<ParseLocation> locations = AllLocationsManager.getInstance().getLocations();
+        List<LocalParseLocation> locations = LocalParseLocation.listAll(LocalParseLocation.class);
 
-            for (ParseLocation location : locations) {
-                Location loc = new Location("");
-                loc.setLatitude(location.getLocation().getLatitude());
-                loc.setLongitude(location.getLocation().getLongitude());
-                double distance = mLastLocation.distanceTo(loc);
+        for (LocalParseLocation location : locations) {
+            Location loc = location.getLocation();
+            double distance = mLastLocation.distanceTo(loc);
 
-                if(mMap != null){
-                    Marker marker = mMap.addMarker(new MarkerOptions()
-                            .visible(distance <= radius)
-                            .position(new LatLng(loc.getLatitude(), loc.getLongitude()))
-                            .title(location.getName())
-                            .snippet(location.getDescription()));
-                    marker.setTag(location.getObjectId());
+            if(mMap != null){
+                Marker marker = mMap.addMarker(new MarkerOptions()
+                        .visible(distance <= radius)
+                        .position(new LatLng(loc.getLatitude(), loc.getLongitude()))
+                        .title(location.getName())
+                        .snippet(location.getDescription()));
+                marker.setTag(location.getObjectId());
 
-                    mMarkers.add(marker);
-                }
-
+                mMarkers.add(marker);
             }
+
         }
     }
 

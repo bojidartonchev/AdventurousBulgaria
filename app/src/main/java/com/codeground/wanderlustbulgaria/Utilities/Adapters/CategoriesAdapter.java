@@ -110,7 +110,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 Category cat = categoryList.get(position);
                 viewHolder2.mName.setText(cat.getName());
-                viewHolder2.mCount.setText(Integer.toString(cat.getCount()));
+                viewHolder2.mCount.setText(Long.toString(cat.getCount()));
                 viewHolder2.mIcon.setImageResource(cat.getIcon());
 
                 viewHolder2.setPosition(position);

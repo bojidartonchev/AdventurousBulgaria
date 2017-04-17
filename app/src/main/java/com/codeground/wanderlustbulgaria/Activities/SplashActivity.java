@@ -6,12 +6,13 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.WindowManager;
 
+import com.codeground.wanderlustbulgaria.Interfaces.IDatabaseInitializer;
 import com.codeground.wanderlustbulgaria.R;
-import com.codeground.wanderlustbulgaria.Utilities.AllLocationsManager;
 import com.codeground.wanderlustbulgaria.Utilities.LocaleUtils;
+import com.codeground.wanderlustbulgaria.Utilities.ParseUtils.LocalParseLocation;
 
 
-public class SplashActivity extends Activity
+public class SplashActivity extends Activity implements IDatabaseInitializer
 {
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -25,10 +26,21 @@ public class SplashActivity extends Activity
         //Init locale language
         LocaleUtils.loadLocale(getBaseContext());
 
-        AllLocationsManager.getInstance().loadLocations();
+        LocalParseLocation.updateDatabaseIfNeeded(this);
+    }
 
+    private void proceedToNextActivity(){
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    public void OnDatabaseUpdated(com.parse.ParseException e) {
+        if(e==null){
+            proceedToNextActivity();
+        }else{
+            //TODO notify for update error.
+        }
     }
 }

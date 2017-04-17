@@ -1,10 +1,7 @@
 package com.codeground.wanderlustbulgaria.Utilities;
 
 import com.codeground.wanderlustbulgaria.Utilities.Adapters.CategoriesAdapter;
-import com.codeground.wanderlustbulgaria.Utilities.ParseUtils.ParseLocation;
-import com.parse.CountCallback;
-import com.parse.ParseException;
-import com.parse.ParseQuery;
+import com.codeground.wanderlustbulgaria.Utilities.ParseUtils.LocalParseLocation;
 
 public class Category{
 
@@ -27,7 +24,6 @@ public class Category{
     }
 
     private String mName;
-    private int mCount;
     private int mIcon;
     private Type mType;
     private CategoriesAdapter mAdapter;
@@ -37,8 +33,6 @@ public class Category{
         this.mIcon = icon;
         this.mType = type;
         this.mAdapter = adapter;
-
-        initCount();
     }
 
     public String getName() {
@@ -49,12 +43,8 @@ public class Category{
         this.mName = mName;
     }
 
-    public int getCount() {
-        return mCount;
-    }
-
-    public void setCount(int mCount) {
-        this.mCount = mCount;
+    public long getCount() {
+        return LocalParseLocation.getCategoryCount(mName);
     }
 
     public int getIcon() {
@@ -67,19 +57,5 @@ public class Category{
 
     public Type getType() {
         return mType;
-    }
-
-    private void initCount(){
-        ParseQuery<ParseLocation> query = ParseQuery.getQuery("Location");
-        query.whereEqualTo("category", mName);
-        query.countInBackground(new CountCallback() {
-            public void done(int count, ParseException e) {
-                if (e == null) {
-                    // all good
-                    mCount = count;
-                    mAdapter.notifyDataSetChanged();
-                }
-            }
-        });
     }
 }

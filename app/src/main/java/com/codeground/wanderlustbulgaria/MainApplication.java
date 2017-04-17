@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.codeground.wanderlustbulgaria.Utilities.LifecycleHandler;
 import com.codeground.wanderlustbulgaria.Utilities.ParseUtils.ParseLocation;
+import com.orm.SugarContext;
 import com.parse.Parse;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseInstallation;
@@ -22,9 +23,8 @@ public class MainApplication extends Application {
                         .clientKey(getString(R.string.parse_client_key))
                         .server(getString(R.string.parse_server)).build());
 
-        //Facebook SDK Initialization
-        //FacebookSdk.sdkInitialize(getApplicationContext());
-        //AppEventsLogger.activateApp(this);
+        SugarContext.init(this);
+
         ParseFacebookUtils.initialize(this);
 
         ParseInstallation installation = ParseInstallation.getCurrentInstallation();
@@ -34,5 +34,9 @@ public class MainApplication extends Application {
         registerActivityLifecycleCallbacks(new LifecycleHandler());
     }
 
-
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        SugarContext.terminate();
+    }
 }

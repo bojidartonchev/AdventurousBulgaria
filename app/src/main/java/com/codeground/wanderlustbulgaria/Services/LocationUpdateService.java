@@ -12,15 +12,17 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.widget.Toast;
 
-import com.parse.ParseException;
-import com.parse.ParseGeoPoint;
+import com.codeground.wanderlustbulgaria.Utilities.ParseUtils.LocalParseLocation;
+import com.parse.ParseCloud;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
+
+import java.util.HashMap;
+import java.util.List;
 
 public class LocationUpdateService extends Service{
     public static final int TWO_MINUTES = 120000; // 120 seconds
+    public static final int FIVE_HUNDRED_METERS = 500;
     public static Boolean isRunning = false;
 
     public LocationManager mLocationManager;
@@ -81,20 +83,22 @@ public class LocationUpdateService extends Service{
             if (isBetterLocation(location, previousBestLocation)) {
                 previousBestLocation = location;
                 try {
-                    ParseGeoPoint point = new ParseGeoPoint(location.getLatitude(), location.getLongitude());
-                    ParseUser user = ParseUser.getCurrentUser();
-                    user.put("last_location", point);
-                    user.saveInBackground(new SaveCallback() {
-                        @Override
-                        public void done(ParseException e) {
-                            if(e!=null)
-                            {
-                                Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                    List<LocalParseLocation> locations = LocalParseLocation.listAll(LocalParseLocation.class);
+
+                    for (LocalParseLocation localParseLocation : locations) {
+                        Location landmarkLocation = localParseLocation.getLocation();
+
+                        if(landmarkLocation.distanceTo(location) <= FIVE_HUNDRED_METERS){
+                            //count as visited
+
+                            if(ParseUser.getCurrentUser() != null){
+                                HashMap<String, Object> params = new HashMap<>();
+                                params.put("locationId", localParseLocation.getObjectId());
+                                params.put("locationName", localParseLocation.getName());
+                                ParseCloud.callFunctionInBackground("visitLocation", params);
                             }
                         }
-                    });
-
-                    //Toast.makeText(getApplicationContext(), location.toString(), Toast.LENGTH_SHORT).show();
+                    }
                 }
                 catch (Exception e) {
                     e.printStackTrace();
