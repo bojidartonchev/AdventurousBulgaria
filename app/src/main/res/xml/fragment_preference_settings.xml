@@ -32,14 +32,4 @@
 
 
     </PreferenceCategory>
-    <PreferenceCategory
-        android:title="@string/pref_settings_title"
-        android:key="pref_key_device_settings">
-        <ListPreference
-            android:key="pref_key_language_preference"
-            android:title="Language"
-            android:entries="@array/Language"
-            android:entryValues="@array/languageAlias"
-            android:defaultValue="en"/>
-    </PreferenceCategory>
 </PreferenceScreen>

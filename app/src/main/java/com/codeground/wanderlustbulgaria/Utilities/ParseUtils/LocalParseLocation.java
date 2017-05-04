@@ -2,7 +2,6 @@ package com.codeground.wanderlustbulgaria.Utilities.ParseUtils;
 
 import android.location.Location;
 
-import com.codeground.wanderlustbulgaria.Interfaces.IDatabaseInitializer;
 import com.orm.SugarRecord;
 import com.orm.query.Condition;
 import com.orm.query.Select;
@@ -69,7 +68,7 @@ public class LocalParseLocation extends SugarRecord {
         this.mObjectId = parseLoc.getObjectId();
     }
 
-    public static void updateDatabaseIfNeeded(final IDatabaseInitializer caller){
+    public static void updateDatabaseIfNeeded(){
         ParseQuery<ParseLocation> query = ParseQuery.getQuery(ParseLocation.class);
         query.selectKeys(Arrays.asList("location", "updatedAt", "category", "name", "description"));
         query.findInBackground(new FindCallback<ParseLocation>() {
@@ -97,10 +96,6 @@ public class LocalParseLocation extends SugarRecord {
                     }
                 }
 
-                //Notify caller
-                if(caller != null){
-                    caller.OnDatabaseUpdated(e);
-                }
             }
         });
     }

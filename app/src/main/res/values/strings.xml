@@ -3,14 +3,11 @@
     <string name="app_name">Wanderlust Bulgaria</string>
     <string name="profile_picture_title">Adventurous_Bulgaria_Profile_Picture</string>
     <string name="sign_up_hint_text">You don\'t have an account?</string>
-    <string name="messenger_btn">Messages</string>
     <string name="near_by_button">Near By</string>
     <string name="pending_wanderers_title">Pending wanderers</string>
     <string name="search_users_title">Find wanderer</string>
     <string name="calendar_button">Calendar</string>
     <string name="landmarks_button">Categories</string>
-    <string name="push_notification_title_unlock_landmark">Landmark Unlocked</string>
-    <string name="push_notification_content_unlock_landmark">Congratulations! You have just visited %1$s</string>
 
     <!--PARSE-->
     <string name="parse_app_id">Aev0cw9ckqsWq9BGiGfnPXACPbLTHypE0ZpejrPQ</string>

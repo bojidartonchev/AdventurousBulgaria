@@ -1,13 +1,11 @@
 package com.codeground.wanderlustbulgaria.Activities;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
 import com.codeground.wanderlustbulgaria.Fragments.SettingsFragment;
-import com.codeground.wanderlustbulgaria.Utilities.LocaleUtils;
 import com.parse.ParseUser;
 
 
@@ -32,14 +30,6 @@ public class SettingsActivity extends Activity implements SharedPreferences.OnSh
             //Update user
             ParseUser.getCurrentUser().put("is_follow_allowed", !isPrivate);
             ParseUser.getCurrentUser().saveInBackground();
-        }else if (key.equals("pref_key_language_preference")) {
-            String lang = sharedPreferences.getString(key, "en");
-
-            LocaleUtils.changeLang(getBaseContext(), lang);
-
-            Intent refresh = new Intent(this, SettingsActivity.class);
-            startActivity(refresh);
-            finish();
         }
     }
 }
