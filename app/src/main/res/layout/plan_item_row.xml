@@ -1,0 +1,29 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/chatItemBackgroundColor"
+    >
+
+<com.codeground.wanderlustbulgaria.Utilities.RoundedParseImageView
+    android:id="@android:id/icon"
+    android:layout_width="50dp"
+    android:layout_height="50dp"
+    android:layout_alignParentLeft="true"
+    android:layout_margin="10dp"
+    android:layout_marginLeft="5dip"
+    android:layout_marginRight="5dip"
+    />
+
+<TextView
+    android:id="@+id/profile_name"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="@dimen/pad_10dp"
+    android:textColor="@color/main_color_gray_dk"
+    android:textSize="@dimen/txt_18sp"
+    android:drawablePadding="@dimen/pad_10dp"
+    android:layout_centerVertical="true"
+    android:layout_toRightOf="@android:id/icon"
+    android:layout_toEndOf="@android:id/icon" />
+</RelativeLayout>

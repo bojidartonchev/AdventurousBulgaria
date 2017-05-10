@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="75dp"
+    android:layout_height="100dp"
+    android:background="@color/mainMenuTabColor">
+
+    <TextView
+        android:textColor="@color/mainMenuTabTextColor"
+        android:textSize="15sp"
+        android:layout_gravity="center"
+        android:padding="5dp"
+        android:text="M"
+        android:id="@+id/day_of_week"
+        android:textAlignment="center"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:textColor="@color/mainMenuTabTextColor"
+        android:textSize="25sp"
+        android:layout_gravity="center"
+        android:padding="5dp"
+        android:text="25"
+        android:id="@+id/date_label"
+        android:textAlignment="center"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:textColor="@color/mainMenuTabTextColor"
+        android:textSize="12sp"
+        android:layout_gravity="center"
+        android:padding="5dp"
+        android:text="January"
+        android:id="@+id/month_label"
+        android:textAlignment="center"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content" />
+</LinearLayout>

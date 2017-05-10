@@ -80,7 +80,7 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
                 this,                  /* host Activity */
                 mDrawerLayout,         /* DrawerLayout object */
                 R.string.accept,  /* "open drawer" description */
-                R.string.afternoon  /* "close drawer" description */
+                R.string.alert_location_desc_short  /* "close drawer" description */
         ) {
 
             /** Called when a drawer has settled in a completely closed state. */
