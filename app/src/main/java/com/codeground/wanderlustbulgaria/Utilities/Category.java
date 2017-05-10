@@ -1,8 +1,5 @@
 package com.codeground.wanderlustbulgaria.Utilities;
 
-import com.codeground.wanderlustbulgaria.Utilities.Adapters.CategoriesAdapter;
-import com.codeground.wanderlustbulgaria.Utilities.ParseUtils.LocalParseLocation;
-
 public class Category{
 
     public enum Type {
@@ -26,13 +23,11 @@ public class Category{
     private String mName;
     private int mIcon;
     private Type mType;
-    private CategoriesAdapter mAdapter;
 
-    public Category(String name, int icon, Type type, CategoriesAdapter adapter) {
+    public Category(String name, int icon, Type type) {
         this.mName = name;
         this.mIcon = icon;
         this.mType = type;
-        this.mAdapter = adapter;
     }
 
     public String getName() {
@@ -41,10 +36,6 @@ public class Category{
 
     public void setName(String mName) {
         this.mName = mName;
-    }
-
-    public long getCount() {
-        return LocalParseLocation.getCategoryCount(mName);
     }
 
     public int getIcon() {

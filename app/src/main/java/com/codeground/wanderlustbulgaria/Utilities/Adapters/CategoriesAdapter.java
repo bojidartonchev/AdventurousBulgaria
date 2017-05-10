@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.codeground.wanderlustbulgaria.Interfaces.IOnItemClicked;
 import com.codeground.wanderlustbulgaria.R;
 import com.codeground.wanderlustbulgaria.Utilities.Category;
+import com.codeground.wanderlustbulgaria.Utilities.ParseUtils.LocalParseLocation;
 
 import java.util.List;
 
@@ -110,7 +111,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 Category cat = categoryList.get(position);
                 viewHolder2.mName.setText(cat.getName());
-                viewHolder2.mCount.setText(Long.toString(cat.getCount()));
+                viewHolder2.mCount.setText(Long.toString(LocalParseLocation.getCategoryCount(cat.getName())));
                 viewHolder2.mIcon.setImageResource(cat.getIcon());
 
                 viewHolder2.setPosition(position);

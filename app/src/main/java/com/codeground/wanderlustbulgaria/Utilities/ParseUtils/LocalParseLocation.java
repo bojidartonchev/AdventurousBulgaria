@@ -2,12 +2,13 @@ package com.codeground.wanderlustbulgaria.Utilities.ParseUtils;
 
 import android.location.Location;
 
+import com.codeground.wanderlustbulgaria.Utilities.NotificationsManager;
+import com.codeground.wanderlustbulgaria.Utilities.UpdateLocalDatabase;
 import com.orm.SugarRecord;
-import com.orm.query.Condition;
-import com.orm.query.Select;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
+import com.sdsmdg.tastytoast.TastyToast;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -57,7 +58,7 @@ public class LocalParseLocation extends SugarRecord {
         return mObjectId;
     }
 
-    private void updateLocation(ParseLocation parseLoc){
+    public void updateLocation(ParseLocation parseLoc){
         this.mLatitude = parseLoc.getLocation().getLatitude();
         this.mLongitude = parseLoc.getLocation().getLongitude();
 
@@ -74,26 +75,10 @@ public class LocalParseLocation extends SugarRecord {
         query.findInBackground(new FindCallback<ParseLocation>() {
             @Override
             public void done(List<ParseLocation> objects, ParseException e) {
-                if(e == null && objects != null){
-                    for (ParseLocation object : objects) {
-
-                        Select query = Select.from(LocalParseLocation.class)
-                                .where(Condition.prop("m_object_id").eq(object.getObjectId()));
-
-                        LocalParseLocation localLocation = (LocalParseLocation) query.first();
-
-                        if(localLocation!=null){
-                            if(localLocation.getUpdatedAt().before(object.getUpdatedAt())){
-                                //update
-                                localLocation.updateLocation(object);
-                                localLocation.save();
-                            }
-                        }else{
-                            //item does not exist
-                            LocalParseLocation newLocation = new LocalParseLocation(object);
-                            newLocation.save();
-                        }
-                    }
+                if(e==null) {
+                    new UpdateLocalDatabase().execute(objects);
+                }else{
+                    NotificationsManager.showToast(e.getMessage(), TastyToast.ERROR);
                 }
 
             }
