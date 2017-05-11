@@ -21,6 +21,7 @@ import com.codeground.wanderlustbulgaria.Activities.SubmitTravellerActivity;
 import com.codeground.wanderlustbulgaria.Interfaces.IOnItemClicked;
 import com.codeground.wanderlustbulgaria.R;
 import com.codeground.wanderlustbulgaria.Utilities.Adapters.PlannerCalendarAdapter;
+import com.codeground.wanderlustbulgaria.Utilities.CenterLayoutManager;
 import com.codeground.wanderlustbulgaria.Utilities.NotificationsManager;
 import com.codeground.wanderlustbulgaria.Utilities.ParseUtils.ParseLocation;
 import com.codeground.wanderlustbulgaria.Utilities.RoundedParseImageView;
@@ -34,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class PlannerFragment extends Fragment implements ParseQueryAdapter.OnQueryLoadListener,View.OnClickListener, IOnItemClicked {
 
@@ -41,12 +43,12 @@ public class PlannerFragment extends Fragment implements ParseQueryAdapter.OnQue
     private RecyclerView mCalendarView;
     private FloatingActionButton mAddBtn;
     private PlannerCalendarAdapter mAdapter;
-    private View mContainer;
     private View mProgress;
     private RelativeLayout mNoItemsLabel;
     private Button mAddPlanButton;
+    private RecyclerView.LayoutManager mLayoutManager;
 
-    private ParseQueryAdapter mResultsAdapter;
+    private PlanAdapter mResultsAdapter;
     private ListView mResults;
 
     @Override
@@ -54,14 +56,13 @@ public class PlannerFragment extends Fragment implements ParseQueryAdapter.OnQue
         View v = inflater.inflate(R.layout.fragment_planner, container, false);
         mCalendarView = (RecyclerView)v.findViewById(R.id.calendarView);
 
-        mContainer = v.findViewById(R.id.list_container);
         mProgress = v.findViewById(R.id.list_progress);
         mNoItemsLabel = (RelativeLayout)v.findViewById(R.id.plan_no_items_label);
         mAddPlanButton = (Button)mNoItemsLabel.findViewById(R.id.alternative_add_plan_btn);
         mAddPlanButton.setOnClickListener(this);
 
         mAdapter = new PlannerCalendarAdapter(dateList, this);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        mLayoutManager = new CenterLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         mCalendarView.setLayoutManager(mLayoutManager);
         mCalendarView.setItemAnimator(new DefaultItemAnimator());
         mCalendarView.setAdapter(mAdapter);
@@ -83,6 +84,7 @@ public class PlannerFragment extends Fragment implements ParseQueryAdapter.OnQue
         mResultsAdapter.setImageKey("photo");
         mResultsAdapter.addOnQueryLoadListener(this);
         mResults.setAdapter(mResultsAdapter);
+
         return v;
     }
 
@@ -100,6 +102,7 @@ public class PlannerFragment extends Fragment implements ParseQueryAdapter.OnQue
     }
 
     private void initDates(){
+        int todayIndex = -1;
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_YEAR, -15);
         Date startDate = calendar.getTime();
@@ -108,6 +111,14 @@ public class PlannerFragment extends Fragment implements ParseQueryAdapter.OnQue
         for (Date i = startDate; i.before(endDate);){
             dateList.add(i);
 
+            long msDiff = Calendar.getInstance().getTimeInMillis() - i.getTime();
+            long daysDiff = TimeUnit.MILLISECONDS.toDays(msDiff);
+
+            if(Math.abs(daysDiff) < 1 && msDiff >= 0){
+                //assume its today
+                todayIndex = dateList.size() - 1;
+            }
+
             //increment i
             calendar.setTime(i);
             calendar.add(Calendar.DATE, 1);
@@ -115,16 +126,24 @@ public class PlannerFragment extends Fragment implements ParseQueryAdapter.OnQue
         }
 
         mAdapter.notifyDataSetChanged();
+        mLayoutManager.smoothScrollToPosition(mCalendarView, null, todayIndex);
     }
 
     @Override
     public void onItemClicked(int pos) {
         Date selectedDate = dateList.get(pos);
+        if(selectedDate.compareTo(mResultsAdapter.mDate) == 0)
+        {
+            //same date click
+            return;
+        }
+
         mResultsAdapter = new PlanAdapter(getActivity(), selectedDate);
         mResultsAdapter.setTextKey("title");
         mResultsAdapter.setImageKey("photo");
         mResultsAdapter.addOnQueryLoadListener(this);
         mResults.setAdapter(mResultsAdapter);
+        mLayoutManager.smoothScrollToPosition(mCalendarView, null, pos);
     }
 
     @Override
@@ -155,6 +174,8 @@ public class PlannerFragment extends Fragment implements ParseQueryAdapter.OnQue
     private class PlanAdapter extends ParseQueryAdapter
     {
 
+        public Date mDate;
+
         public PlanAdapter(Context context, final Date date)
         {
             super(context, new ParseQueryAdapter.QueryFactory<ParseUser>() {
@@ -175,6 +196,8 @@ public class PlannerFragment extends Fragment implements ParseQueryAdapter.OnQue
                     return query;
                 }
             });
+
+            mDate = date;
         }
 
         @Override

@@ -11,8 +11,10 @@ import com.codeground.wanderlustbulgaria.Interfaces.IOnItemClicked;
 import com.codeground.wanderlustbulgaria.R;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class PlannerCalendarAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<Date> dateList;
@@ -82,14 +84,23 @@ public class PlannerCalendarAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
         viewHolder.setPosition(position);
 
+        long msDiff = Calendar.getInstance().getTimeInMillis() - date.getTime();
+        long daysDiff = TimeUnit.MILLISECONDS.toDays(msDiff);
+
         if(position == selectedItem) {
             viewHolder.mDayLabel.setTextColor(Color.WHITE);
             viewHolder.mDateLabel.setTextColor(Color.WHITE);
             viewHolder.mMonthLabel.setTextColor(Color.WHITE);
         } else {
-            viewHolder.mDayLabel.setTextColor(Color.parseColor("#a1a1a1"));
-            viewHolder.mDateLabel.setTextColor(Color.parseColor("#a1a1a1"));
-            viewHolder.mMonthLabel.setTextColor(Color.parseColor("#a1a1a1"));
+            if(selectedItem == -1 && Math.abs(daysDiff) < 1 && msDiff >= 0){
+                viewHolder.mDayLabel.setTextColor(Color.WHITE);
+                viewHolder.mDateLabel.setTextColor(Color.WHITE);
+                viewHolder.mMonthLabel.setTextColor(Color.WHITE);
+            }else{
+                viewHolder.mDayLabel.setTextColor(Color.parseColor("#a1a1a1"));
+                viewHolder.mDateLabel.setTextColor(Color.parseColor("#a1a1a1"));
+                viewHolder.mMonthLabel.setTextColor(Color.parseColor("#a1a1a1"));
+            }
         }
     }
 
