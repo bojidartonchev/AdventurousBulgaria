@@ -1,0 +1,15 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/viewInMaps"
+        android:title="Open in Maps"/>
+
+    <item
+        android:id="@+id/viewProfileBtn"
+        android:title="View Profile"/>
+
+    <item
+        android:id="@+id/cancelBtn"
+        android:title="Cancel"/>
+
+</menu>
