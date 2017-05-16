@@ -1,25 +1,31 @@
 package com.codeground.wanderlustbulgaria.Activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.codeground.wanderlustbulgaria.R;
 import com.codeground.wanderlustbulgaria.Utilities.DialogWindowManager;
+import com.codeground.wanderlustbulgaria.Utilities.NotificationsManager;
 import com.codeground.wanderlustbulgaria.Utilities.ParseUtils.ParseLocation;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -34,6 +40,7 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+import com.sdsmdg.tastytoast.TastyToast;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
@@ -54,16 +61,20 @@ public class SubmitTravellerActivity extends AppCompatActivity implements View.O
     private Double mLongitude;
     private Double mLatitude;
     private String mCity;
-    private SimpleDateFormat dateFormatter;
     private Date mDepartureDate;
+    private ArrayAdapter<String> autoCompleteAdapter = null;
 
     private Button mSubmitBtn;
-    private Button mMapBtn;
-    private AutoCompleteTextView mToLocationSearch;
+    private ImageView mToLocationImage;
+    private ImageView mFromLocationImage;
+    private ImageView mDateImage;
+    private ImageView mTimeImage;
+    private TextView mStartLocationLabel;
+    private TextView mEndLocationLabel;
     private TextView mDateTextField;
-    private TextView mLatitudeField;
-    private TextView mLongitudeField;
-    private EditText mCityField;
+    private TextView mTimeTextField;
+
+    private ParseLocation mTargetLocation;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,25 +82,34 @@ public class SubmitTravellerActivity extends AppCompatActivity implements View.O
 
         setContentView(R.layout.activity_submit_traveller);
 
-        mCityField = (EditText) findViewById(R.id.travellers_city_field);
+        mToLocationImage = (ImageView)findViewById(R.id.to_image);
+        mToLocationImage.setOnClickListener(this);
+        mFromLocationImage = (ImageView)findViewById(R.id.from_image);
+        mFromLocationImage.setOnClickListener(this);
 
-        mLatitudeField = (TextView) findViewById(R.id.travellers_latitude);
-        mLongitudeField = (TextView) findViewById(R.id.travellers_longitude);
+        mDateImage = (ImageView)findViewById(R.id.date_image);
+        mDateImage.setOnClickListener(this);
+        mTimeImage = (ImageView)findViewById(R.id.time_image);
+        mTimeImage.setOnClickListener(this);
 
         mSubmitBtn = (Button) findViewById(R.id.travellers_submit_btn);
-        mMapBtn = (Button) findViewById(R.id.travellers_location_btn);
 
         mSubmitBtn.setOnClickListener(this);
-        mMapBtn.setOnClickListener(this);
 
-        mToLocationSearch = (AutoCompleteTextView) findViewById(R.id.to_location_search);
         initAutoComplete();
 
-        mDateTextField = (TextView) findViewById(R.id.travellers_departure_date);
-        mDateTextField.setOnClickListener(this);
-        dateFormatter = new SimpleDateFormat("dd-MM-yyyy HH-mm");
+        mStartLocationLabel = (TextView) findViewById(R.id.start_loc_label);
+        mEndLocationLabel = (TextView) findViewById(R.id.end_loc_label);
+
+        mDateTextField = (TextView) findViewById(R.id.date_label);
+        mTimeTextField = (TextView) findViewById(R.id.time_label);
+
+
 
         initLocation();
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(R.string.add_plan_title);
     }
 
     private void initAutoComplete() {
@@ -104,16 +124,7 @@ public class SubmitTravellerActivity extends AppCompatActivity implements View.O
                     }
                     // Test to see if it was correctly printing out the array I wanted.
                     // System.out.println(Arrays.toString(strings));
-                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.search_result_traveller_target_location_row, strings);
-
-                    if(parseLocations.size() < 40){
-                        mToLocationSearch.setThreshold(1);
-                    }
-                    else {
-                        mToLocationSearch.setThreshold(2);
-                    }
-
-                    mToLocationSearch.setAdapter(adapter);
+                    autoCompleteAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.search_result_traveller_target_location_row, strings);
                 } else {
                     Log.d("users", "Error: " + e.getMessage());
                 }
@@ -127,14 +138,11 @@ public class SubmitTravellerActivity extends AppCompatActivity implements View.O
         if(currLocation != null){
             mLongitude =  currLocation.getLongitude();
             mLatitude =  currLocation.getLatitude();
-            mLongitudeField.setText("Longitude: "+mLongitude);
-            mLatitudeField.setText("Latitude: "+mLatitude);
-
-            updateCity();
+            updateCity(true);
         }
     }
 
-    private void updateCity() {
+    private void updateCity(boolean isAutolocated) {
         Geocoder gcd = new Geocoder(this, Locale.getDefault());
         List<Address> addresses = null;
         try {
@@ -149,8 +157,9 @@ public class SubmitTravellerActivity extends AppCompatActivity implements View.O
                 mCity = getString(R.string.label_undefined_city);
             }
 
-            if(mCityField!=null){
-                mCityField.setText(mCity);
+            if(mStartLocationLabel!=null){
+                String cityText = mCity + (isAutolocated ? "\n(Current location)" : String.format(Locale.ENGLISH, "\n(%.2f, %.2f)", mLatitude, mLongitude));
+                mStartLocationLabel.setText(cityText);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -160,15 +169,78 @@ public class SubmitTravellerActivity extends AppCompatActivity implements View.O
 
     @Override
     public void onClick(View v) {
-        if(v.getId()==R.id.travellers_location_btn){
+        if(v.getId() == R.id.to_image){
+            if(autoCompleteAdapter != null) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+                builder.setTitle(getString(R.string.profile_description));
+                View viewInflated = LayoutInflater.from(v.getContext()).inflate(R.layout.dialog_to_location, (ViewGroup) v.getParent(),false);
+                final AutoCompleteTextView input = (AutoCompleteTextView) viewInflated.findViewById(R.id.input_to_location);
+
+                if(autoCompleteAdapter.getCount() < 40){
+                    input.setThreshold(1);
+                }
+                else {
+                    input.setThreshold(2);
+                }
+
+                input.setAdapter(autoCompleteAdapter);
+                input.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                    }
+                });
+
+                builder.setView(viewInflated);
+
+                builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        final String locationName = input.getText().toString();
+                        ParseQuery<ParseLocation> currentLocation = ParseQuery.getQuery(ParseLocation.class);
+                        currentLocation.whereEqualTo("name", locationName);
+                        currentLocation.getFirstInBackground(new GetCallback<ParseLocation>() {
+                            @Override
+                            public void done(ParseLocation currentLocationObj, ParseException e) {
+                                if(e==null && currentLocationObj != null){
+                                    mTargetLocation = currentLocationObj;
+                                    mEndLocationLabel.setText(currentLocationObj.getName().replaceAll(" ", "\n"));
+                                }else{
+                                    NotificationsManager.showToast(String.format("Invalid location: %s", locationName), TastyToast.ERROR);
+                                }
+                            }
+                        });
+
+                        dialog.dismiss();
+                    }
+                });
+                builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                builder.show();
+            }else{
+                NotificationsManager.showToast("Error while loading target list!", TastyToast.ERROR);
+            }
+        }
+
+        if(v.getId()==R.id.from_image){
             DialogWindowManager.show(this);
             pickLocation();
         }
         if(v.getId()==R.id.travellers_submit_btn){
             submitTraveller();
         }
-        if(v.getId()== R.id.travellers_departure_date){
+
+        if(v.getId()== R.id.date_image){
             showDatePicker();
+        }
+
+        if(v.getId()== R.id.time_image){
+            showTimePicker();
         }
     }
 
@@ -213,6 +285,13 @@ public class SubmitTravellerActivity extends AppCompatActivity implements View.O
 
         traveller.put("from_city", mCity);
 
+        if(mTargetLocation!=null){
+            traveller.put("to_location", mTargetLocation);
+            traveller.put("to_location_name", mTargetLocation.getName());
+        }else{
+            Toast.makeText(getApplicationContext(), "Invalid location", Toast.LENGTH_SHORT).show();
+        }
+
         if(mDepartureDate != null){
             traveller.put("travel_date", mDepartureDate);
         }else{
@@ -220,32 +299,17 @@ public class SubmitTravellerActivity extends AppCompatActivity implements View.O
         }
 
         DialogWindowManager.show(this);
-
-        final String locationName = mToLocationSearch.getText().toString();
-        ParseQuery<ParseLocation> currentLocation = ParseQuery.getQuery(ParseLocation.class);
-        currentLocation.whereEqualTo("name", locationName);
-        currentLocation.getFirstInBackground(new GetCallback<ParseLocation>() {
+        traveller.saveInBackground(new SaveCallback() {
             @Override
-            public void done(ParseLocation currentLocationObj, ParseException e) {
-                if(e==null && currentLocationObj != null){
-                    traveller.put("to_location", currentLocationObj);
-                    traveller.put("to_location_name", locationName);
-                    traveller.saveInBackground(new SaveCallback() {
-                        @Override
-                        public void done(ParseException e) {
-                            if(e!=null){
-                                Log.d("Save",e.getMessage());
-                            }
-                            DialogWindowManager.dismiss();
-                            finish();
-                        }
-                    });
-                }else{
-                    DialogWindowManager.dismiss();
-                    Toast.makeText(getApplicationContext(), "Location "+ mToLocationSearch.getText().toString() + " was not found!", Toast.LENGTH_SHORT).show();
+            public void done(ParseException e) {
+                if(e!=null){
+                    NotificationsManager.showToast(e.getMessage(), TastyToast.ERROR);
                 }
+
+                DialogWindowManager.dismiss();
             }
         });
+
 
     }
 
@@ -278,9 +342,7 @@ public class SubmitTravellerActivity extends AppCompatActivity implements View.O
                     LatLng coords = place.getLatLng();
                     mLatitude = coords.latitude;
                     mLongitude = coords.longitude;
-                    mLatitudeField.setText("Latitude: "+ mLatitude);
-                    mLongitudeField.setText("Longitude: "+ mLongitude);
-                    updateCity();
+                    updateCity(false);
                     DialogWindowManager.dismiss();
             }
         }
@@ -312,22 +374,33 @@ public class SubmitTravellerActivity extends AppCompatActivity implements View.O
         cal.set(Calendar.MINUTE,minute);
         cal.set(Calendar.SECOND,second);
 
-        mDepartureDate.setTime(cal.getTimeInMillis());
-        mDateTextField.setText(dateFormatter.format(mDepartureDate));
+        mDepartureDate = cal.getTime();
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("HH:mm");
+        mTimeTextField.setText(dateFormatter.format(mDepartureDate));
     }
 
     @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
         Calendar newDate = Calendar.getInstance();
+        if(mDepartureDate!=null) {
+            newDate.setTime(mDepartureDate);
+        }
+
         newDate.set(year, monthOfYear, dayOfMonth);
         mDepartureDate = newDate.getTime();
-        mDateTextField.setText(dateFormatter.format(mDepartureDate));
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                showTimePicker();
-            }
-        },500);
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy");
+        mDateTextField.setText(dateFormatter.format(mDepartureDate));
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
