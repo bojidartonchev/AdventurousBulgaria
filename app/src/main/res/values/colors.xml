@@ -25,7 +25,8 @@
     <color name="white_smoke">#F7F7F7</color>
     <color name="transparent">#00000000</color>
 
-    <color name="main_color_green">#00b863</color>
+    <color name="main_color_green">#a6c61a</color>
+    <color name="main_color_red">#ff0000</color>
     <color name="main_color_gray_dk">#3b3b3b</color>
     <color name="main_color_gray_lt">#acacac</color>
     <color name="main_color_gray">#7d7d7d</color>

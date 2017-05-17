@@ -73,8 +73,6 @@
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-
-
                 android:layout_gravity="center"
                 android:background="@color/menuColor"
                 android:text="@string/login_sign_in"

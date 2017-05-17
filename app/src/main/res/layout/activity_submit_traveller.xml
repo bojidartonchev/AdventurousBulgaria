@@ -3,12 +3,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/backgroundColor">
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/logomount" />
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/locations_container"
-        android:layout_margin="20dp">
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="20dp"
+        android:paddingRight="20dp"
+        android:layout_below="@+id/logo"
+        android:paddingLeft="20dp">
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -21,7 +32,7 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:src="@drawable/question"
-                android:tint="@color/colorAccent"
+                android:tint="@color/main_color_red"
                 android:layout_alignParentLeft="true"
                 android:id="@+id/from_image"
                 android:layout_margin="20dp"/>
@@ -31,7 +42,6 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/start_loc_label"
                 android:scrollHorizontally="false"
-                android:text="Sofia"
                 android:textColor="@color/aliceBlue"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="3dp"
@@ -50,7 +60,7 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:src="@drawable/question"
-                android:tint="@color/colorAccent"
+                android:tint="@color/main_color_red"
                 android:layout_alignParentLeft="true"
                 android:id="@+id/to_image"
                 android:layout_margin="20dp"/>
@@ -60,7 +70,6 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/end_loc_label"
                 android:scrollHorizontally="false"
-                android:text="Sofia"
                 android:textColor="@color/aliceBlue"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="3dp"
@@ -84,12 +93,24 @@
         android:paddingLeft="40dp"
         android:paddingRight="40dp"/>
 
+    <View
+        android:layout_width="fill_parent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="30dp"
+        android:layout_height="0.3dp"
+        android:id="@+id/plan_separator"
+        android:background="@color/colorAccent"
+        android:layout_below="@id/path_dots"/>
+
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:id="@+id/travel_time_container"
-        android:layout_below="@id/path_dots">
+        android:layout_below="@id/plan_separator"
+        android:paddingRight="20dp"
+        android:paddingLeft="20dp">
 
         <RelativeLayout
         android:layout_width="wrap_content"
@@ -102,7 +123,7 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:src="@drawable/calendar"
-                android:tint="@color/colorAccent"
+                android:tint="@color/main_color_red"
                 android:layout_alignParentLeft="true"
                 android:id="@+id/date_image"
                 android:layout_margin="20dp"/>
@@ -112,7 +133,6 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/date_label"
                 android:scrollHorizontally="false"
-                android:text="Sofia"
                 android:textColor="@color/aliceBlue"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="3dp"
@@ -131,7 +151,7 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:src="@drawable/ic_time"
-                android:tint="@color/colorAccent"
+                android:tint="@color/main_color_red"
                 android:layout_alignParentLeft="true"
                 android:id="@+id/time_image"
                 android:layout_margin="20dp"/>
@@ -141,7 +161,6 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/time_label"
                 android:scrollHorizontally="false"
-                android:text="Sofia"
                 android:textColor="@color/aliceBlue"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="3dp"
@@ -151,20 +170,19 @@
 
     </RelativeLayout>
 
-
-
-
     <Button
         android:id="@+id/travellers_submit_btn"
-        android:layout_width="match_parent"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:text="Submit"
-        android:layout_marginBottom="91dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-
-
+        android:layout_marginTop="15dp"
+        android:layout_gravity="center"
+        android:background="@color/mainMenuTabTextColor"
+        android:text="@string/add_plan_title"
+        android:textAllCaps="false"
+        android:textColor="#fff"
+        android:enabled="false"
+        android:layout_below="@+id/travel_time_container"
+        android:layout_centerInParent="true"
+        android:textSize="18sp" />
 
 </RelativeLayout>

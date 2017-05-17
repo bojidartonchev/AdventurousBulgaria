@@ -6,8 +6,12 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -15,6 +19,9 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -50,6 +57,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.TreeMap;
 
 public class SubmitTravellerActivity extends AppCompatActivity implements View.OnClickListener,
         TimePickerDialog.OnTimeSetListener,
@@ -75,6 +83,9 @@ public class SubmitTravellerActivity extends AppCompatActivity implements View.O
     private TextView mTimeTextField;
 
     private ParseLocation mTargetLocation;
+
+    private TreeMap<Integer, Boolean> blinkingMap = new TreeMap<>();
+    private ImageView currentBlinkingView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -104,12 +115,48 @@ public class SubmitTravellerActivity extends AppCompatActivity implements View.O
         mDateTextField = (TextView) findViewById(R.id.date_label);
         mTimeTextField = (TextView) findViewById(R.id.time_label);
 
-
-
         initLocation();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(R.string.add_plan_title);
+
+        initBlinkingStack();
+    }
+
+    private void initBlinkingStack() {
+        blinkingMap.put(mTimeImage.getId(), false);
+        blinkingMap.put(mDateImage.getId(), false);
+        blinkingMap.put(mToLocationImage.getId(), false);
+        blinkingMap.put(mFromLocationImage.getId(), false);
+
+        currentBlinkingView = mFromLocationImage;
+        setBlinking(currentBlinkingView);
+    }
+
+    private void proceedBlinking(){
+        if(blinkingMap.get(currentBlinkingView.getId())){
+            switch (currentBlinkingView.getId()){
+                case R.id.from_image:
+                    currentBlinkingView = mToLocationImage;
+                    setBlinking(currentBlinkingView);
+                    proceedBlinking();
+                    return;
+                case R.id.to_image:
+                    currentBlinkingView = mDateImage;
+                    setBlinking(currentBlinkingView);
+                    proceedBlinking();
+                    return;
+                case R.id.date_image:
+                    currentBlinkingView = mTimeImage;
+                    setBlinking(currentBlinkingView);
+                    proceedBlinking();
+                    return;
+                case R.id.time_image:
+                    mSubmitBtn.setEnabled(true);
+                    mSubmitBtn.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),R.color.main_color_green));
+                    return;
+            }
+        }
     }
 
     private void initAutoComplete() {
@@ -133,16 +180,21 @@ public class SubmitTravellerActivity extends AppCompatActivity implements View.O
     }
 
     private void initLocation() {
-        Location currLocation = getLastKnownLocation();
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                Location currLocation = getLastKnownLocation();
 
-        if(currLocation != null){
-            mLongitude =  currLocation.getLongitude();
-            mLatitude =  currLocation.getLatitude();
-            updateCity(true);
-        }
+                if(currLocation != null){
+                    mLongitude =  currLocation.getLongitude();
+                    mLatitude =  currLocation.getLatitude();
+                    updateCity(true);
+                }
+            }
+        });
     }
 
-    private void updateCity(boolean isAutolocated) {
+    private void updateCity(final boolean isAutolocated) {
         Geocoder gcd = new Geocoder(this, Locale.getDefault());
         List<Address> addresses = null;
         try {
@@ -157,10 +209,17 @@ public class SubmitTravellerActivity extends AppCompatActivity implements View.O
                 mCity = getString(R.string.label_undefined_city);
             }
 
-            if(mStartLocationLabel!=null){
-                String cityText = mCity + (isAutolocated ? "\n(Current location)" : String.format(Locale.ENGLISH, "\n(%.2f, %.2f)", mLatitude, mLongitude));
-                mStartLocationLabel.setText(cityText);
-            }
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    if(mStartLocationLabel!=null){
+                        String cityText = mCity + (isAutolocated ? "\n(Current location)" : String.format(Locale.ENGLISH, "\n(%.2f, %.2f)", mLatitude, mLongitude));
+                        mStartLocationLabel.setText(cityText);
+                        setCompleted(mFromLocationImage);
+                    }
+                }
+            });
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -205,6 +264,7 @@ public class SubmitTravellerActivity extends AppCompatActivity implements View.O
                                 if(e==null && currentLocationObj != null){
                                     mTargetLocation = currentLocationObj;
                                     mEndLocationLabel.setText(currentLocationObj.getName().replaceAll(" ", "\n"));
+                                    setCompleted(mToLocationImage);
                                 }else{
                                     NotificationsManager.showToast(String.format("Invalid location: %s", locationName), TastyToast.ERROR);
                                 }
@@ -338,12 +398,14 @@ public class SubmitTravellerActivity extends AppCompatActivity implements View.O
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             if (requestCode == PLACE_PICKER_REQUEST) {
-                    Place place = PlacePicker.getPlace(getApplicationContext(),data);
-                    LatLng coords = place.getLatLng();
-                    mLatitude = coords.latitude;
-                    mLongitude = coords.longitude;
-                    updateCity(false);
-                    DialogWindowManager.dismiss();
+                Place place = PlacePicker.getPlace(getApplicationContext(),data);
+                LatLng coords = place.getLatLng();
+                mLatitude = coords.latitude;
+                mLongitude = coords.longitude;
+                updateCity(false);
+                DialogWindowManager.dismiss();
+
+                setCompleted(mFromLocationImage);
             }
         }
         else {
@@ -377,6 +439,8 @@ public class SubmitTravellerActivity extends AppCompatActivity implements View.O
         mDepartureDate = cal.getTime();
         SimpleDateFormat dateFormatter = new SimpleDateFormat("HH:mm");
         mTimeTextField.setText(dateFormatter.format(mDepartureDate));
+
+        setCompleted(mTimeImage);
     }
 
     @Override
@@ -391,6 +455,8 @@ public class SubmitTravellerActivity extends AppCompatActivity implements View.O
 
         SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy");
         mDateTextField.setText(dateFormatter.format(mDepartureDate));
+
+        setCompleted(mDateImage);
     }
 
     @Override
@@ -402,5 +468,28 @@ public class SubmitTravellerActivity extends AppCompatActivity implements View.O
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void setBlinking(View v){
+        if(v!=null && blinkingMap.get(v.getId()) == false){
+            final Animation animation = new AlphaAnimation(1, 0);
+            animation.setDuration(1000);
+            animation.setInterpolator(new LinearInterpolator());
+            animation.setRepeatCount(Animation.INFINITE);
+            animation.setRepeatMode(Animation.REVERSE);
+            v.startAnimation(animation);
+        }
+    }
+
+    private void setCompleted(ImageView v){
+        if(v!=null){
+            v.setAnimation(null);
+            v.setColorFilter(ContextCompat.getColor(getApplicationContext(),R.color.main_color_green));
+            if(v.getId() == R.id.from_image || v.getId() == R.id.to_image){
+                v.setImageResource(R.drawable.tick);
+            }
+            blinkingMap.put(v.getId(), true);
+            proceedBlinking();
+        }
     }
 }
