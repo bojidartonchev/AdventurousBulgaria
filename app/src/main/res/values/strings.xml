@@ -165,4 +165,10 @@
     <!-- ACTION_BAR_TITLES-->
     <string name="actionbar_profile">Profile</string>
 
+    <!-- DEFAULT_TEXT_FIELDS_VALUES-->
+    <string name="submit_plan_default_start_location">&lt;Start location&gt;\n(Click to change)</string>
+    <string name="submit_plan_default_end_location">&lt;Destination&gt;\n(Click to change)</string>
+    <string name="submit_plan_default_start_date">&lt;Date&gt;\n(Click to change)</string>
+    <string name="submit_plan_default_start_time">&lt;Time&gt;\n(Click to change)</string>
+    <string name="submit_plan_to_location_dialog_title">Enter destination</string>
 </resources>

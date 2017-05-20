@@ -32,8 +32,8 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:src="@drawable/question"
-                android:tint="@color/main_color_red"
-                android:layout_alignParentLeft="true"
+                android:tint="@color/colorAccent"
+                android:layout_centerHorizontal="true"
                 android:id="@+id/from_image"
                 android:layout_margin="20dp"/>
 
@@ -43,6 +43,7 @@
                 android:id="@+id/start_loc_label"
                 android:scrollHorizontally="false"
                 android:textColor="@color/aliceBlue"
+                android:text="@string/submit_plan_default_start_location"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="3dp"
                 android:textAlignment="center"
@@ -60,8 +61,8 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:src="@drawable/question"
-                android:tint="@color/main_color_red"
-                android:layout_alignParentLeft="true"
+                android:tint="@color/colorAccent"
+                android:layout_centerHorizontal="true"
                 android:id="@+id/to_image"
                 android:layout_margin="20dp"/>
 
@@ -71,6 +72,7 @@
                 android:id="@+id/end_loc_label"
                 android:scrollHorizontally="false"
                 android:textColor="@color/aliceBlue"
+                android:text="@string/submit_plan_default_end_location"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="3dp"
                 android:textAlignment="center"
@@ -106,7 +108,9 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="20dp"
         android:id="@+id/travel_time_container"
         android:layout_below="@id/plan_separator"
         android:paddingRight="20dp"
@@ -123,8 +127,8 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:src="@drawable/calendar"
-                android:tint="@color/main_color_red"
-                android:layout_alignParentLeft="true"
+                android:tint="@color/colorAccent"
+                android:layout_centerHorizontal="true"
                 android:id="@+id/date_image"
                 android:layout_margin="20dp"/>
 
@@ -135,6 +139,7 @@
                 android:scrollHorizontally="false"
                 android:textColor="@color/aliceBlue"
                 android:layout_centerHorizontal="true"
+                android:text="@string/submit_plan_default_start_date"
                 android:layout_marginTop="3dp"
                 android:textAlignment="center"
                 android:layout_below="@+id/date_image"/>
@@ -151,8 +156,8 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:src="@drawable/ic_time"
-                android:tint="@color/main_color_red"
-                android:layout_alignParentLeft="true"
+                android:tint="@color/colorAccent"
+                android:layout_centerHorizontal="true"
                 android:id="@+id/time_image"
                 android:layout_margin="20dp"/>
 
@@ -161,6 +166,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/time_label"
                 android:scrollHorizontally="false"
+                android:text="@string/submit_plan_default_start_time"
                 android:textColor="@color/aliceBlue"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="3dp"
@@ -172,13 +178,13 @@
 
     <Button
         android:id="@+id/travellers_submit_btn"
-        android:layout_width="100dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
         android:layout_gravity="center"
         android:background="@color/mainMenuTabTextColor"
         android:text="@string/add_plan_title"
         android:textAllCaps="false"
+        android:layout_marginTop="20dp"
         android:textColor="#fff"
         android:enabled="false"
         android:layout_below="@+id/travel_time_container"

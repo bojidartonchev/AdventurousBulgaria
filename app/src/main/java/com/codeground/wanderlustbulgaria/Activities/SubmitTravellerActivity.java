@@ -231,7 +231,7 @@ public class SubmitTravellerActivity extends AppCompatActivity implements View.O
         if(v.getId() == R.id.to_image){
             if(autoCompleteAdapter != null) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
-                builder.setTitle(getString(R.string.profile_description));
+                builder.setTitle(getString(R.string.submit_plan_to_location_dialog_title));
                 View viewInflated = LayoutInflater.from(v.getContext()).inflate(R.layout.dialog_to_location, (ViewGroup) v.getParent(),false);
                 final AutoCompleteTextView input = (AutoCompleteTextView) viewInflated.findViewById(R.id.input_to_location);
 
