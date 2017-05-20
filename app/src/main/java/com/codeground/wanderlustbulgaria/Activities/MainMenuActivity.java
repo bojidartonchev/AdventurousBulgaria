@@ -37,6 +37,7 @@ import com.parse.CountCallback;
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseInstallation;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
@@ -285,6 +286,12 @@ public class MainMenuActivity extends AppCompatActivity implements NavigationVie
 
 
     private void logout() {
+        //reset installation
+        ParseInstallation installation = ParseInstallation.getCurrentInstallation();
+        installation.put("username", "");
+        installation.put("GCMSenderId", "");
+        installation.saveInBackground();
+
         updateUserStatus(false);
         ParseUser.getCurrentUser().logOut();
         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
