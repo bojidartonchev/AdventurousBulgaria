@@ -255,6 +255,9 @@ public class NearByActivity extends AppCompatActivity implements OnMapReadyCallb
             }
         });
 
+        activateGPS.setCancelable(false);
+        activateGPS.setCanceledOnTouchOutside(false);
+
         activateGPS.show();
     }
 
