@@ -4,6 +4,7 @@
     <string name="profile_picture_title">Adventurous_Bulgaria_Profile_Picture</string>
     <string name="sign_up_hint_text">You don\'t have an account?</string>
     <string name="near_by_button">Near By</string>
+    <string name="submit_location">Submit location</string>
     <string name="pending_wanderers_title">Pending wanderers</string>
     <string name="search_users_title">Find wanderer</string>
     <string name="add_plan_title">Add plan</string>

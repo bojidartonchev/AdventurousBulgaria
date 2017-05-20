@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -88,6 +89,9 @@ public class SubmitLocationActivity extends AppCompatActivity implements View.On
         mPhoto3=null;
 
         initLocation();
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(R.string.submit_location);
     }
 
     private void initLocation() {
@@ -254,7 +258,6 @@ public class SubmitLocationActivity extends AppCompatActivity implements View.On
     private void pickLocation(){
 
         PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-        
 
         try {
             startActivityForResult(builder.build(this), PLACE_PICKER_REQUEST);
@@ -265,8 +268,14 @@ public class SubmitLocationActivity extends AppCompatActivity implements View.On
         }
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
 
-
-
-
+        return super.onOptionsItemSelected(item);
+    }
 }
