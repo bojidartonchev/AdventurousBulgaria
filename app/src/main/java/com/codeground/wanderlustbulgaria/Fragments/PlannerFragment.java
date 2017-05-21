@@ -124,7 +124,7 @@ public class PlannerFragment extends Fragment implements ParseQueryAdapter.OnQue
         super.onActivityResult(requestCode, resultCode, data);
 
         // check if the request code is same as what is passed  here it is 2
-        if(requestCode==1122)
+        if(requestCode==1122 && data != null)
         {
             Long millis = data.getLongExtra("date", 0);
 
