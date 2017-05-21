@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,7 +31,9 @@ import com.codeground.wanderlustbulgaria.Utilities.Adapters.PlannerCalendarAdapt
 import com.codeground.wanderlustbulgaria.Utilities.CenterLayoutManager;
 import com.codeground.wanderlustbulgaria.Utilities.NotificationsManager;
 import com.codeground.wanderlustbulgaria.Utilities.ParseUtils.ParseLocation;
+import com.codeground.wanderlustbulgaria.Utilities.ParseUtils.ParseTraveller;
 import com.codeground.wanderlustbulgaria.Utilities.RoundedParseImageView;
+import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -42,8 +45,10 @@ import com.parse.ParseUser;
 import com.sdsmdg.tastytoast.TastyToast;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -52,7 +57,7 @@ import bolts.Task;
 
 public class PlannerFragment extends Fragment implements ParseQueryAdapter.OnQueryLoadListener,View.OnClickListener, IOnItemClicked {
 
-    private List<Date> dateList = new ArrayList<>();
+    private ArrayList<Pair<Date, Integer>> dateList = new ArrayList<>();
     private RecyclerView mCalendarView;
     private FloatingActionButton mAddBtn;
     private PlannerCalendarAdapter mAdapter;
@@ -110,41 +115,105 @@ public class PlannerFragment extends Fragment implements ParseQueryAdapter.OnQue
     public void onClick(View v) {
         if(v.getId() == R.id.add_new_traveller_btn || v.getId() == R.id.alternative_add_plan_btn){
             Intent i = new Intent(getActivity(), SubmitTravellerActivity.class);
-            startActivity(i);
+            startActivityForResult(i, 1122);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // check if the request code is same as what is passed  here it is 2
+        if(requestCode==1122)
+        {
+            Long millis = data.getLongExtra("date", 0);
+
+            for (int i = 0; i < dateList.size(); i++) {
+                if(isSameDay(dateList.get(i).first, new Date(millis))){
+                    int prevCount = dateList.get(i).second;
+                    dateList.set(i, Pair.create(dateList.get(i).first, prevCount + 1));
+                    mAdapter.notifyDataSetChanged();
+                }
+            }
         }
     }
 
     private void initDates(){
-        int todayIndex = -1;
-        Calendar calendar = Calendar.getInstance();
+        final Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_YEAR, -15);
-        Date startDate = calendar.getTime();
+        final Date startDate = calendar.getTime();
         calendar.add(Calendar.MONTH, 1);
-        Date endDate = calendar.getTime();
-        for (Date i = startDate; i.before(endDate);){
-            dateList.add(i);
+        final Date endDate = calendar.getTime();
 
-            long msDiff = Calendar.getInstance().getTimeInMillis() - i.getTime();
-            long daysDiff = TimeUnit.MILLISECONDS.toDays(msDiff);
+        ParseQuery<ParseObject> q = ParseQuery.getQuery("Traveller");
+        q.whereGreaterThanOrEqualTo("travel_date", startDate);
+        q.whereLessThanOrEqualTo("travel_date", endDate);
+        q.selectKeys(Arrays.asList("travel_date"));
+        q.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> plans, ParseException e) {
+                int todayIndex = -1;
 
-            if(Math.abs(daysDiff) < 1 && msDiff >= 0){
-                //assume its today
-                todayIndex = dateList.size() - 1;
+                for (Date i = startDate; i.before(endDate);){
+                    int count = 0;
+
+                    if(e==null && plans!=null){
+                        for (ParseObject plan : plans) {
+                            Date travelDate = plan.getDate("travel_date");
+
+                            //check if day matches
+                            if (isSameDay(i, travelDate)) {
+                                count++;
+                            }
+                        }
+                    }
+
+                    dateList.add(Pair.create(i, count));
+
+                    long msDiff = Calendar.getInstance().getTimeInMillis() - i.getTime();
+                    long daysDiff = TimeUnit.MILLISECONDS.toDays(msDiff);
+
+                    if(Math.abs(daysDiff) < 1 && msDiff >= 0){
+                        //assume its today
+                        todayIndex = dateList.size() - 1;
+                    }
+
+                    //increment i
+                    calendar.setTime(i);
+                    calendar.add(Calendar.DATE, 1);
+                    i = calendar.getTime();
+                }
+
+                if(e!=null){
+                    NotificationsManager.showToast(e.getMessage(), TastyToast.ERROR);
+                }
+
+                mAdapter.notifyDataSetChanged();
+                mLayoutManager.smoothScrollToPosition(mCalendarView, null, todayIndex);
             }
 
-            //increment i
-            calendar.setTime(i);
-            calendar.add(Calendar.DATE, 1);
-            i = calendar.getTime();
-        }
+        });
+    }
 
-        mAdapter.notifyDataSetChanged();
-        mLayoutManager.smoothScrollToPosition(mCalendarView, null, todayIndex);
+    private boolean isSameDay(Date d1, Date d2){
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+        cal1.setTime(d1);
+        cal2.setTime(d2);
+
+        return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+                cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mResultsAdapter.loadObjects();
     }
 
     @Override
     public void onItemClicked(int pos) {
-        Date selectedDate = dateList.get(pos);
+        Date selectedDate = dateList.get(pos).first;
         if(selectedDate.compareTo(mResultsAdapter.mDate) == 0)
         {
             //same date click

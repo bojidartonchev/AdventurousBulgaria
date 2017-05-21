@@ -1,6 +1,7 @@
 package com.codeground.wanderlustbulgaria.Utilities.Adapters;
 
 import android.graphics.Color;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +18,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class PlannerCalendarAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private List<Date> dateList;
+    private List<Pair<Date, Integer>> dateList;
     private IOnItemClicked mCb;
     private int selectedItem = -1;
 
@@ -25,6 +26,7 @@ public class PlannerCalendarAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         public TextView mDayLabel;
         public TextView mDateLabel;
         public TextView mMonthLabel;
+        public TextView mBadgeCount;
 
         private int mPosition;
 
@@ -33,6 +35,7 @@ public class PlannerCalendarAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             mDayLabel = (TextView) view.findViewById(R.id.day_of_week);
             mDateLabel = (TextView) view.findViewById(R.id.date_label);
             mMonthLabel = (TextView) view.findViewById(R.id.month_label);
+            mBadgeCount = (TextView) view.findViewById(R.id.calendar_count_badge);
 
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -49,7 +52,7 @@ public class PlannerCalendarAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         }
     }
 
-    public PlannerCalendarAdapter(List<Date> dates, IOnItemClicked cb) {
+    public PlannerCalendarAdapter(List<Pair<Date, Integer>> dates, IOnItemClicked cb) {
         this.dateList = dates;
         this.mCb = cb;
     }
@@ -67,7 +70,8 @@ public class PlannerCalendarAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         CalendarViewHolder viewHolder = (CalendarViewHolder)holder;
 
-        Date date = dateList.get(position);
+        Date date = dateList.get(position).first;
+        int count = dateList.get(position).second;
 
         SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE");
         String dayOfTheWeek = dayFormat.format(date);
@@ -81,6 +85,16 @@ public class PlannerCalendarAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         viewHolder.mDayLabel.setText(Character.toString(Character.toUpperCase(dayOfTheWeek.charAt(0))));
         viewHolder.mDateLabel.setText(dateLabelText);
         viewHolder.mMonthLabel.setText(monthLabelText);
+
+        if(count>99){
+            viewHolder.mBadgeCount.setVisibility(View.VISIBLE);
+            viewHolder.mBadgeCount.setText("99+");
+        }else if(count>0){
+            viewHolder.mBadgeCount.setVisibility(View.VISIBLE);
+            viewHolder.mBadgeCount.setText(Integer.toString(count));
+        }else{
+            viewHolder.mBadgeCount.setVisibility(View.GONE);
+        }
 
         viewHolder.setPosition(position);
 

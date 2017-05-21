@@ -367,6 +367,13 @@ public class SubmitTravellerActivity extends AppCompatActivity implements View.O
                 }
 
                 DialogWindowManager.dismiss();
+
+                if(e==null){
+                    Intent intent=new Intent();
+                    intent.putExtra("date", mDepartureDate.getTime());
+                    setResult(1122,intent);
+                    finish();
+                }
             }
         });
 
