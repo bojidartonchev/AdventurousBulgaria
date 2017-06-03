@@ -50,7 +50,6 @@ public class AllLandmarksActivity extends AppCompatActivity implements AdapterVi
             intent.putExtra("locationId", entry.getObjectId());
             startActivity(intent);
         }
-
     }
 
     @Override
@@ -72,7 +71,6 @@ public class AllLandmarksActivity extends AppCompatActivity implements AdapterVi
                 return true;
             }
         }
-
 
         return super.onOptionsItemSelected(item);
     }

@@ -88,6 +88,8 @@
     <string name="comment_added_success">Your comment was added!</string>
     <string name="open_in_gps_hint">Get directions.</string>
     <string name="no_items_found_label">No items found.</string>
+    <string name="no_visited_found_label">No items found.</string>
+    <string name="visited_no_access_label">%1$s\'s profile is private. Only approved members can access his visited locations.</string>
     <string name="no_chat_items_found_label">You have no friends at this moment. Do you want to find a new friend?</string>
     <string name="no_plans_found_label">No plans for this day. Do you want to add a new plan?</string>
 
@@ -105,6 +107,8 @@
     <string name="profile_following">Following</string>
     <string name="profile_follow">Follow</string>
     <string name="profile_description">Profile description</string>
+    <string name="profile_visited_count">Visited locations: %1$d</string>
+    <string name="requested_notification">%1$s\'s profile is private. Pending invitation...</string>
 
     <!--MENUS-->
     <string name="menu_choose_option">Choose option</string>

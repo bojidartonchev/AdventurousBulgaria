@@ -1,51 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
+
+<RelativeLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="1"
-    android:background="@drawable/radial_grad">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/head_layout"
+    android:background="@drawable/radial_grad"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/head_layout">
-
-    <com.jmedeisis.windowview.WindowView
-        android:id="@+id/header_cover_image"
-        android:layout_width="match_parent"
-        android:layout_height="170dp"
-        android:scaleType="centerCrop"
-        app:wwv_translate_mode="Constant"
-        app:wwv_max_constant_translation="20dp"
-        app:wwv_max_pitch="45"
-        app:wwv_max_roll="45"/>
-
-    <com.codeground.wanderlustbulgaria.Utilities.RoundedParseImageView
-        android:id="@+id/user_profile_photo"
-        android:layout_width="125dp"
-        android:layout_height="125dp"
-        android:layout_below="@+id/header_cover_image"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="-140dp"
-        android:padding="2dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/com_facebook_profile_picture_blank_square"
-    />
-        <TextView
-            android:textAlignment="center"
-            android:layout_below="@id/header_cover_image"
-            android:text=""
-            android:layout_height="30dp"
-            android:gravity="center"
-            android:textColor="@android:color/white"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:textSize="24sp"
-            android:id="@+id/name"
+        <RelativeLayout
             android:layout_width="match_parent"
-            />
+            android:layout_height="wrap_content"
+            android:id="@+id/profile_header_wrapper"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="10dp">
+            <TextView
+                android:id="@+id/followers"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/id"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
+
+            <TextView
+                android:id="@+id/following"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/id"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"/>
+
+            <com.codeground.wanderlustbulgaria.Utilities.RoundedParseImageView
+                android:id="@+id/user_profile_photo"
+                android:layout_width="125dp"
+                android:layout_height="125dp"
+                android:layout_centerHorizontal="true"
+                android:padding="2dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/com_facebook_profile_picture_blank_square"/>
+
+            <TextView
+                android:textAlignment="center"
+                android:layout_below="@id/user_profile_photo"
+                android:layout_height="30dp"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:textSize="24sp"
+                android:id="@+id/name"
+                android:layout_width="match_parent"
+                />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/follow_btn"
+                android:tint="@color/white"
+                android:background="@color/transparent"
+                android:layout_alignBottom="@+id/name"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignLeft="@+id/followers"
+                android:layout_alignStart="@+id/followers" />
+
+        </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
@@ -54,113 +84,65 @@
             android:layout_marginRight="10dp"
             android:layout_marginBottom="10dp"
             android:id="@+id/divider"
-            android:layout_below="@id/name"
+            android:layout_below="@id/profile_header_wrapper"
             android:background="@color/mainMenuTabColor"/>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/divider"
+        android:id="@+id/visited_container">
 
-
-
-        <LinearLayout
-            android:layout_width="340dp"
-            android:layout_centerHorizontal="true"
+        <RelativeLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:weightSum="3"
-            android:id="@+id/numbers"
-            android:layout_below="@id/divider"
-            android:background="@color/colorPrimarySuperDarkTrans">
-
+            android:id="@+id/visited_visible_cont">
 
             <TextView
                 android:textAlignment="center"
-                android:text=""
-                android:drawableTop="@drawable/id"
-                android:layout_marginTop="5dp"
-                android:layout_height="100dp"
+                android:layout_height="wrap_content"
                 android:gravity="center"
                 android:textColor="@android:color/white"
-                android:textSize="18sp"
-                android:id="@+id/followers"
-                android:layout_width="0dp"
-
-                android:layout_weight="1"
-                />
-
-            <TextView
-                android:textAlignment="center"
-                android:text=""
-                android:textSize="18sp"
-                android:textColor="@android:color/white"
-                android:drawableTop="@drawable/id"
-                android:layout_marginTop="5dp"
-                android:layout_height="100dp"
-                android:gravity="center"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:id="@+id/following"
-                />
-            <TextView
-                android:textAlignment="center"
-                android:text=""
-                android:textSize="18sp"
-                android:textColor="@android:color/white"
-                android:drawableTop="@drawable/id"
-                android:layout_marginTop="5dp"
-                android:layout_height="100dp"
-                android:gravity="center"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:id="@+id/visited_locations"
-                />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_below="@id/numbers"
-            android:id="@+id/description">
-
-
-            <TextView
-                android:layout_width="230dp"
-                android:layout_height="90dp"
-                android:text=""
-                android:textSize="14sp"
-                android:layout_gravity="center"
-                android:textAlignment="center"
-                android:gravity="center_vertical"
-                android:background="@android:color/transparent"
-                android:maxLength="140"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
-                android:id="@+id/profile_desc"/>
-
-
-            <View
+                android:textSize="20sp"
+                android:id="@+id/visited_count"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_below="@id/name"
-                android:background="@color/mainMenuTabColor"/>
+                android:visibility="gone"
+                />
 
-            <Button
-                android:layout_marginTop="15dp"
-                android:layout_gravity="center"
-                android:layout_width="140dp"
-                android:layout_height="50dp"
-                android:background="@color/colorPrimary"
-                android:textColor="@android:color/black"
-                android:id="@+id/follow_btn"
-                android:layout_weight="1"
-            />
+            <ListView
+                android:id="@+id/visited_landmarks_list"
+                android:layout_below="@id/visited_count"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/transparent"
+                tools:listitem="@layout/list_view_landmark_row"
+                android:visibility="gone"/>
+        </RelativeLayout>
 
-        </LinearLayout>
->
+        <TextView
+            android:id="@+id/visited_no_items_label"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:text="@string/no_visited_found_label"
+            android:visibility="gone" />
 
+        <TextView
+            android:id="@+id/visited_no_access_label"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textColor="@color/white"
+            android:padding="50dp"
+            android:gravity="center"
+            android:visibility="gone" />
+
+        <ProgressBar
+            android:id="@+id/visited_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"/>
     </RelativeLayout>
 
-
-
-</LinearLayout>
+</RelativeLayout>

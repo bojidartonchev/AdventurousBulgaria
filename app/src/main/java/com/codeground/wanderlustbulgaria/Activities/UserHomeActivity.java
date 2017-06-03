@@ -2,6 +2,8 @@ package com.codeground.wanderlustbulgaria.Activities;
 
 
 import android.Manifest;
+import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -21,16 +23,30 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.codeground.wanderlustbulgaria.Enums.UnfollowActions;
 import com.codeground.wanderlustbulgaria.R;
+import com.codeground.wanderlustbulgaria.Utilities.Adapters.LandmarksAdapter;
+import com.codeground.wanderlustbulgaria.Utilities.Adapters.VisitedLandmarksAdapter;
+import com.codeground.wanderlustbulgaria.Utilities.NotificationsManager;
 import com.codeground.wanderlustbulgaria.Utilities.ParseUtils.ParseUtilities;
 import com.codeground.wanderlustbulgaria.Utilities.ProfileManager;
+import com.codeground.wanderlustbulgaria.Utilities.RoundedParseImageView;
+import com.devspark.appmsg.AppMsg;
+import com.google.android.gms.vision.text.Text;
 import com.parse.CountCallback;
 import com.parse.FindCallback;
 import com.parse.FunctionCallback;
@@ -39,7 +55,10 @@ import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseQueryAdapter;
+import com.parse.ParseRelation;
 import com.parse.ParseUser;
+import com.sdsmdg.tastytoast.TastyToast;
 
 import java.util.List;
 
@@ -48,17 +67,24 @@ import static com.codeground.wanderlustbulgaria.Enums.UnfollowActions.UNFOLLOW_U
 import static com.codeground.wanderlustbulgaria.Utilities.ProfileManager.PARSE_CLOUD_CODE_RESPONSE_CODE_FOLLOWED;
 import static com.codeground.wanderlustbulgaria.Utilities.ProfileManager.PARSE_CLOUD_CODE_RESPONSE_CODE_FOLLOW_REQUESTED;
 
-public class UserHomeActivity extends AppCompatActivity implements View.OnClickListener{
+public class UserHomeActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener, ParseQueryAdapter.OnQueryLoadListener{
 
     private ParseUser mUser;
     private String mUserID;
-    private ImageView mProfilePicture;
+    private RoundedParseImageView mProfilePicture;
     private TextView mFollowers;
     private TextView mFollowing;
-    private TextView mVisitedLocations;
-    private TextView mProfileDesc;
     private TextView mName;
-    private Button mFollowBtn;
+    private ImageButton mFollowBtn;
+    private ListView mVisitedLocations;
+
+    private ParseQueryAdapter mAdapter;
+    private TextView mVisitedCount;
+    private TextView mNoItemsLabel;
+    private TextView mNoAccessLabel;
+    private ProgressBar mVisitedProgress;
+    private boolean alreadyFollowed = false;
+    private Activity mActivity;
 
     private static final int CAMERA_TAKE_PHOTO = 1338;
     private static final int CAMERA_REQUEST = 1339;
@@ -80,25 +106,27 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_user_home);
-
-        mProfilePicture = (ImageView) findViewById(R.id.user_profile_photo);
+        mActivity = this;
+        mProfilePicture = (RoundedParseImageView) findViewById(R.id.user_profile_photo);
         mProfilePicture.setOnClickListener(this);
         mName = (TextView) findViewById(R.id.name);
         mFollowing = (TextView) findViewById(R.id.following);
         mFollowers = (TextView) findViewById(R.id.followers);
-        mVisitedLocations = (TextView) findViewById(R.id.visited_locations);
-        mProfileDesc = (TextView) findViewById(R.id.profile_desc);
-        mFollowBtn = (Button) findViewById(R.id.follow_btn);
+        mVisitedLocations = (ListView) findViewById(R.id.visited_landmarks_list) ;
+        mFollowBtn = (ImageButton) findViewById(R.id.follow_btn);
         mFollowBtn.setOnClickListener(this);
 
+        mNoItemsLabel = (TextView) findViewById(R.id.visited_no_items_label);
+        mNoAccessLabel = (TextView) findViewById(R.id.visited_no_access_label);
+        mVisitedProgress = (ProgressBar) findViewById(R.id.visited_progress);
+        mVisitedCount = (TextView) findViewById(R.id.visited_count);
+
+        mUserID=getIntent().getStringExtra("userID");
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(getString(R.string.actionbar_profile));
 
-        mUserID=getIntent().getStringExtra("userID");
-
         if(ParseUser.getCurrentUser().getObjectId().equals(mUserID)) {
-            mProfileDesc.setOnClickListener(this);
 
             ViewGroup parent = (ViewGroup) mFollowBtn.getParent();
             if (parent != null) {
@@ -112,12 +140,14 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
                 if (e == null) {
                     mUser=(ParseUser)objects.get(0);
                     mName.setText(mUser.getString("first_name") +" "+ mUser.getString("last_name"));
-                    mProfileDesc.setText(mUser.getString("profile_description"));
+                    mNoAccessLabel.setText(String.format(getString(R.string.visited_no_access_label), mUser.getString("first_name")));
+
+                    //Init visited locations
+                    loadVisitedLocations(mUser.getRelation("visited_locations"));
+
                     loadPicture();
                     getFollowingCount();
                     getFollowersCount();
-                    getVisitedCount();
-
                 } else {
                     // error
                 }
@@ -125,22 +155,6 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
         });
 
         loadFollowButton();
-
-    }
-
-
-    private void getVisitedCount() {
-        ParseQuery followingQuery = mUser.getRelation("visited_locations").getQuery();
-        followingQuery.countInBackground(new CountCallback() {
-            @Override
-            public void done(int count, ParseException e) {
-                if(e==null){
-                    mVisitedLocations.setText(String.valueOf(count));
-                } else {
-                    mVisitedLocations.setText(0);
-                }
-            }
-        });
     }
 
 
@@ -182,7 +196,9 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
                 public void done(int count, ParseException e) {
                     if(count > 0){
                         //Already followed
-                        mFollowBtn.setText(R.string.followed_btn_text);
+                        mFollowBtn.setImageResource(R.drawable.user_already_added_icon);
+                        mFollowBtn.setTag("Followed");
+                        alreadyFollowed = true;
                     }else{
                         ParseQuery pendingQuery = ParseUser.getCurrentUser().getRelation("pending_following").getQuery();
                         pendingQuery.whereContains("objectId", mUserID);
@@ -191,9 +207,20 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
                             public void done(int count, ParseException e) {
                                 if(count > 0){
                                     //Pending follow
-                                    mFollowBtn.setText(R.string.pending_follow_btn_text);
+                                    if(mFollowBtn!=null){
+                                        mFollowBtn.setImageResource(R.drawable.add_user_icon);
+                                        mFollowBtn.setTag("Requested");
+
+                                        final Animation animation = new AlphaAnimation(1, 0);
+                                        animation.setDuration(1000);
+                                        animation.setInterpolator(new LinearInterpolator());
+                                        animation.setRepeatCount(Animation.INFINITE);
+                                        animation.setRepeatMode(Animation.REVERSE);
+                                        mFollowBtn.startAnimation(animation);
+                                    }
                                 }else{
-                                    mFollowBtn.setText(R.string.follow_btn_text);
+                                    mFollowBtn.setTag("Follow");
+                                    mFollowBtn.setImageResource(R.drawable.add_user_icon);
                                 }
                             }
                         });
@@ -207,34 +234,46 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
         ParseFile pic = (ParseFile) mUser.get("profile_picture");
 
         if(pic != null){
-            pic.getDataInBackground(new GetDataCallback() {
-                @Override
-                public void done(byte[] data, ParseException e) {
-                    if (e == null) {
-                        Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
-                        mProfilePicture.setImageBitmap(bmp);
-                    } else {
-                    }
-                }
-            });
+            mProfilePicture.setParseFile(pic);
+            mProfilePicture.loadInBackground();
         }
     }
+
+    private void loadVisitedLocations(ParseRelation<ParseObject> visitedRelation){
+        mAdapter = new VisitedLandmarksAdapter(getApplicationContext(), visitedRelation);
+        mAdapter.addOnQueryLoadListener(this);
+        mVisitedLocations.setOnItemClickListener(this);
+        mVisitedLocations.setAdapter(mAdapter);
+    }
+
 
     @Override
     public void onClick(View v) {
         if(v.getId()==R.id.follow_btn){
-            Button followBtn = (Button) v.findViewById(R.id.follow_btn);
-            if(followBtn.getText().toString().equals(getString(R.string.follow_btn_text))){
+            ImageButton followBtn = (ImageButton) v.findViewById(R.id.follow_btn);
+            if(followBtn.getTag().toString().equals(getString(R.string.follow_btn_text))){
                 ProfileManager.followUser(mUser, new FunctionCallback<Integer>() {
                     @Override
                     public void done(Integer result, ParseException e) {
                         if (e == null){
                             if(mFollowBtn != null){
                                 if(result == PARSE_CLOUD_CODE_RESPONSE_CODE_FOLLOWED){
-                                    mFollowBtn.setText(R.string.followed_btn_text);
+                                    mFollowBtn.setImageResource(R.drawable.user_already_added_icon);
+                                    mFollowBtn.setTag("Followed");
                                     getFollowersCount();
+                                    alreadyFollowed = true;
+                                    mAdapter.loadObjects();
                                 }else if(result == PARSE_CLOUD_CODE_RESPONSE_CODE_FOLLOW_REQUESTED){
-                                    mFollowBtn.setText(R.string.pending_follow_btn_text);
+                                    mFollowBtn.setTag("Requested");
+                                    alreadyFollowed = false;
+                                    final Animation animation = new AlphaAnimation(1, 0);
+                                    animation.setDuration(1000);
+                                    animation.setInterpolator(new LinearInterpolator());
+                                    animation.setRepeatCount(Animation.INFINITE);
+                                    animation.setRepeatMode(Animation.REVERSE);
+                                    mFollowBtn.startAnimation(animation);
+
+                                    NotificationsManager.showDropDownNotification(mActivity, String.format(getString(R.string.requested_notification), mUser.get("first_name")), AppMsg.STYLE_INFO);
                                 }
                             }
                         }else{
@@ -243,42 +282,14 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
                         }
                     }
                 });
-            }else if(followBtn.getText().toString().equals(getString(R.string.followed_btn_text))){
+            }else if(followBtn.getTag().toString().equals(getString(R.string.followed_btn_text))){
                 promptUnfollow(UNFOLLOW_USER);
-            }else if(followBtn.getText().toString().equals(getString(R.string.pending_follow_btn_text))){
+            }else if(followBtn.getTag().toString().equals(getString(R.string.pending_follow_btn_text))){
                 promptUnfollow(REMOVE_PENDING_FROM_USER);
             }
         }
         if(v.getId() == R.id.user_profile_photo){
             selectPictureOption();
-        }
-        if(v.getId() == R.id.profile_desc){
-            AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
-            builder.setTitle(getString(R.string.profile_description));
-            View viewInflated = LayoutInflater.from(v.getContext()).inflate(R.layout.dialog_input_description, (ViewGroup) v.getParent(),false);
-            final EditText input = (EditText) viewInflated.findViewById(R.id.input);
-            input.setText(mProfileDesc.getText());
-
-            builder.setView(viewInflated);
-
-            builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    ParseUser currUser = ParseUser.getCurrentUser();
-                    currUser.put("profile_description", input.getText().toString());
-                    currUser.saveInBackground();
-                    mProfileDesc.setText(input.getText());
-                    dialog.dismiss();
-                }
-            });
-            builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                }
-            });
-
-            builder.show();
         }
     }
 
@@ -310,9 +321,18 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
                     @Override
                     public void done(Integer object, ParseException e) {
                         if (e == null){
-                            if(mFollowBtn != null){
-                                mFollowBtn.setText(R.string.follow_btn_text);
+                            if(mFollowBtn != null) {
+                                mFollowBtn.setTag("Follow");
+                                mFollowBtn.setImageResource(R.drawable.add_user_icon);
+                                mFollowBtn.setAnimation(null);
+                                alreadyFollowed = false;
+
+                                mVisitedCount.setVisibility(View.GONE);
+                                mVisitedLocations.setVisibility(View.GONE);
+                                mNoItemsLabel.setVisibility(View.GONE);
+                                mNoAccessLabel.setVisibility(View.VISIBLE);
                             }
+
                             getFollowersCount();
                         }else{
                             //error
@@ -390,25 +410,6 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
         builder.show();
     }
 
-
-    private void loadProfilePicture() {
-        ParseUser currUser = ParseUser.getCurrentUser();
-        ParseFile pic = (ParseFile) currUser.get("profile_picture");
-
-        if(pic != null){
-            pic.getDataInBackground(new GetDataCallback() {
-                @Override
-                public void done(byte[] data, ParseException e) {
-                    if (e == null) {
-                        Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
-                        mProfilePicture.setImageBitmap(bmp);
-                    } else {
-                    }
-                }
-            });
-        }
-    }
-
     private void checkGalleryPerms(){
         if (ContextCompat.checkSelfPermission(this,STORAGE_PERMS[0])
                 != PackageManager.PERMISSION_GRANTED) {
@@ -469,4 +470,46 @@ public class UserHomeActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Intent intent = new Intent(getApplicationContext(), LandmarkActivity.class);
+
+        ParseObject entry = (ParseObject) parent.getItemAtPosition(position);
+        if(entry!=null){
+            intent.putExtra("locationId", entry.getObjectId());
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    public void onLoading() {
+        mNoAccessLabel.setVisibility(View.GONE);
+        mVisitedProgress.setVisibility(View.VISIBLE);
+        mNoItemsLabel.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onLoaded(List objects, Exception e) {
+        if(mVisitedLocations !=null){
+            mVisitedProgress.setVisibility(View.GONE);
+
+            if(shouldPrivacyShow()) {
+                mVisitedCount.setVisibility(View.VISIBLE);
+                mVisitedCount.setText(String.format(getString(R.string.profile_visited_count), objects.size()));
+                if(objects.size()>0)
+                {
+                    mVisitedLocations.setVisibility(View.VISIBLE);
+                }else{
+                    mNoItemsLabel.setVisibility(View.VISIBLE);
+                }
+
+            }else{
+                mNoAccessLabel.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
+    private boolean shouldPrivacyShow() {
+        return ParseUser.getCurrentUser().getObjectId().equals(mUserID) || mUser.getBoolean("is_follow_allowed") || alreadyFollowed;
+    }
 }
