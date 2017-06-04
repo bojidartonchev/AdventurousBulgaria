@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.codeground.wanderlustbulgaria.R;
@@ -15,6 +16,7 @@ public class LocationDescriptionFragment extends Fragment {
 
     private TextView mDescription;
     private TextView mCity;
+    private ProgressBar mDetailsProgress;
 
 
     @Override
@@ -23,6 +25,7 @@ public class LocationDescriptionFragment extends Fragment {
 
         mDescription = (TextView) v.findViewById(R.id.location_description);
         mCity = (TextView) v.findViewById(R.id.location_city);
+        mDetailsProgress = (ProgressBar) v.findViewById(R.id.details_progress);
 
         return v;
     }
@@ -35,7 +38,9 @@ public class LocationDescriptionFragment extends Fragment {
     }
 
     public void setDescription(String text){
+        mDescription.setVisibility(View.VISIBLE);
         mDescription.setText(text);
+        mDetailsProgress.setVisibility(View.GONE);
     }
     public void setCity(String text){
         mCity.setText(text);
