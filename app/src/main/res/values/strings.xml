@@ -148,6 +148,7 @@
     <!-- SETTINGS-->
     <string name="pref_profile_title">Profile</string>
     <string name="pref_settings_title">Settings</string>
+    <string name="pref_about_title">About</string>
     <string name="pref_private_profile_title">Private profile</string>
     <string name="pref_private_profile_summary">When your profile is "private", only approved by you people can see your activities.</string>
 

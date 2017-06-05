@@ -6,21 +6,21 @@
     <PreferenceCategory
         android:title="@string/pref_profile_title"
         android:key="pref_key_profile_settings">
-        <!-- Edit profile -->
+        <!-- Edit profile
         <PreferenceScreen
             android:key="button_edit_profile_key"
             android:title="@string/pref_profile_edit_title"
             android:persistent="false">
 
-        </PreferenceScreen>
+        </PreferenceScreen>-->
 
-        <!-- Change password -->
+        <!-- Change password
         <PreferenceScreen
             android:key="button_edit_profile_key"
             android:title="@string/pref_password_change_title"
             android:persistent="false">
 
-        </PreferenceScreen>
+        </PreferenceScreen>-->
 
         <!-- Private profile -->
         <SwitchPreference
@@ -29,7 +29,6 @@
             android:summary="@string/pref_private_profile_summary">
 
         </SwitchPreference>
-
 
     </PreferenceCategory>
 </PreferenceScreen>
