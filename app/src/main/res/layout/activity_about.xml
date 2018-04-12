@@ -5,26 +5,62 @@
     android:layout_height="match_parent"
     android:background="@color/white_smoke">
 
-    <TextView
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Wanderlust Bulgaria is blablabla"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/textView" />
+        android:src="@drawable/wanderlust_logo"
+        android:id="@+id/logo"
+        android:adjustViewBounds="true"
+        android:tint="@color/mainMenuListTextColor"/>
 
-    <TextView
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="version 1.0.3"
-        android:layout_below="@+id/textView"
+        android:id="@+id/textContainer"
+        android:layout_below="@+id/logo"
+        android:layout_above="@+id/venomLogo">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/about_main_text"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/about_text"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_above="@+id/version_name"
+            android:scrollbars = "vertical"
+            android:padding="10dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="v1242"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="20dp"
+            android:layout_alignParentBottom="true"
+            android:id="@+id/version_name" />
+    </RelativeLayout>
+
+
+
+
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/venomeyelogo"
+        android:id="@+id/venomLogo"
+        android:adjustViewBounds="true"
+        android:layout_above="@+id/cr"
+        android:layout_marginBottom="20dp"
         android:layout_centerHorizontal="true" />
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Copyright @ VenomEye 2017"
-        android:layout_centerHorizontal="true"
+        android:text="© 2017 VenomEye All Rights Reserved"
+        android:id="@+id/cr"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="20dp"/>
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp" />
 
 </RelativeLayout>
