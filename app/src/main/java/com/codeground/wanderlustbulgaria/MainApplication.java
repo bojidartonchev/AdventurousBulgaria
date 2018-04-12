@@ -1,6 +1,7 @@
 package com.codeground.wanderlustbulgaria;
 
 import android.app.Application;
+import android.support.multidex.MultiDex;
 
 import com.codeground.wanderlustbulgaria.Utilities.LifecycleHandler;
 import com.codeground.wanderlustbulgaria.Utilities.ParseUtils.ParseLocation;
@@ -15,7 +16,7 @@ public class MainApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
+        MultiDex.install((this));
         //Parse Initialization
         ParseObject.registerSubclass(ParseLocation.class);
         Parse.initialize(new Parse.Configuration.Builder(this)

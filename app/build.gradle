@@ -1,8 +1,17 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion '25.0.0'
+    signingConfigs {
+        config {
+            keyAlias 'VenomEye'
+            keyPassword 'valentnazona'
+            storeFile file('C:/Users/bojid/Документи/KeyStores/Wanderlust/wanderlust.jks')
+            storePassword 'valentnazona'
+        }
+    }
+
+    compileSdkVersion 27
+    buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "com.codeground.wanderlustbulgaria"
         minSdkVersion 15
@@ -19,6 +28,10 @@ android {
             lintOptions {
                 disable 'MissingTranslation'
             }
+            signingConfig signingConfigs.config
+        }
+        debug {
+            signingConfig signingConfigs.config
         }
     }
 }
@@ -31,30 +44,30 @@ repositories {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:24.2.1'
-    compile 'com.facebook.android:facebook-android-sdk:4.+'
-    compile 'com.android.support:recyclerview-v7:24.2.1'
-    compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.google.android.gms:play-services:10.0.1'
-    compile 'com.google.firebase:firebase-messaging:10.0.1'
-    compile 'com.google.firebase:firebase-core:10.0.1'
-    compile 'com.parse.bolts:bolts-android:1.+'
-    compile 'com.parse:parsefacebookutils-v4-android:1.10.3@aar'
-    compile 'com.parse:parse-android:1.13.1'
-    compile 'com.parse:parseui-widget-android:0.0.1'
-    compile 'com.android.support:design:24.2.1'
-    compile 'com.android.support:support-v4:24.2.1'
-    compile 'com.github.d-max:spots-dialog:0.4@aar'
-    compile 'com.jmedeisis:windowview:0.2.0'
-    compile 'com.google.maps.android:android-maps-utils:0.4+'
-    compile 'com.wdullaer:materialdatetimepicker:3.1.0'
-    compile 'com.github.johnkil.android-appmsg:appmsg:1.2.0'
-    compile 'com.sdsmdg.tastytoast:tastytoast:0.1.1'
-    compile 'com.github.satyan:sugar:1.4'
-    testCompile 'junit:junit:4.12'
+    implementation 'com.android.support:appcompat-v7:27.0.0'
+    implementation 'com.facebook.android:facebook-android-sdk:4.+'
+    implementation 'com.android.support:recyclerview-v7:27.0.0'
+    implementation 'com.squareup.picasso:picasso:2.5.2'
+    implementation 'com.google.android.gms:play-services:10.0.1'
+    implementation 'com.google.firebase:firebase-messaging:10.0.1'
+    implementation 'com.google.firebase:firebase-core:10.0.1'
+    implementation 'com.parse.bolts:bolts-android:1.+'
+    implementation 'com.parse:parsefacebookutils-v4-android:1.10.4@aar'
+    implementation 'com.parse:parse-android:1.13.1'
+    implementation 'com.parse:parseui-widget-android:0.0.1'
+    implementation 'com.android.support:design:27.0.0'
+    implementation 'com.android.support:support-v4:27.0.0'
+    implementation 'com.github.d-max:spots-dialog:0.4@aar'
+    implementation 'com.jmedeisis:windowview:0.2.0'
+    implementation 'com.google.maps.android:android-maps-utils:0.4+'
+    implementation 'com.wdullaer:materialdatetimepicker:3.1.0'
+    implementation 'com.github.johnkil.android-appmsg:appmsg:1.2.0'
+    implementation 'com.sdsmdg.tastytoast:tastytoast:0.1.1'
+    implementation 'com.github.satyan:sugar:1.5'
+    testImplementation 'junit:junit:4.12'
 }
 apply plugin: 'com.google.gms.google-services'
